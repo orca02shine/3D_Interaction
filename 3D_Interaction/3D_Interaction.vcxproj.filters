@@ -16,6 +16,9 @@
     <Filter Include="ソース ファイル\Applications">
       <UniqueIdentifier>{fa4c21d6-aac2-4cfd-b231-45460204df13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{58012b78-453e-4ec1-bda5-5e2fe97ad5d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -27,6 +30,15 @@
     <ClCompile Include="Window.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="VertexObject.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -35,5 +47,19 @@
     <ClInclude Include="Window.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shader.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shader.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
