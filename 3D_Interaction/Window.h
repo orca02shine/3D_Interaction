@@ -37,3 +37,26 @@ public:
 
 	float GetAspect();
 };
+
+//-------------------------------------------------
+
+
+class SimulationWindow :Window {
+
+public:
+
+
+	const float minArea = 0.4f;
+	float limX = 2.0f;
+	float limY = 1.0f;
+
+public:
+
+	SimulationWindow(int width, int height, const char* title);
+
+	~SimulationWindow();
+
+
+	bool LoopEvents() override;
+
+};

@@ -9,7 +9,7 @@
 
 class Application {
 
-	class Window* _MainWindow;
+	class SimulationWindow* _MainWindow;
 
 
 public:

@@ -57,7 +57,7 @@ void Window::MouseCallback(GLFWwindow* const window, int button, int action, int
 
 	if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
 		instance->GetCursorPos(instance->_ClickedLocation[0], instance->_ClickedLocation[1]);
-		std::cout << "Mouse pos is  " <<instance-> _ClickedLocation[0] << "  " <<instance-> _ClickedLocation[1] << std::endl;
+		//std::cout << "Mouse pos is  " <<instance-> _ClickedLocation[0] << "  " <<instance-> _ClickedLocation[1] << std::endl;
 		instance->isClicked = true;
 	}
 
@@ -100,3 +100,53 @@ GLFWwindow* Window::getGLFW() {
 }
 
 float Window::GetAspect() { return aspect; }
+
+
+
+
+//-----------------------------
+
+
+SimulationWindow::SimulationWindow(int width = 1920, int height = 1080, const char* title = "No_Title")
+	:Window(width, height, title)
+{
+	//useShader = new Shader();
+	//useShader->Load("shader.vert", "shader.frag");
+
+	//aspectLoc = glGetUniformLocation(useShader->GetShaderID(), "aspect");
+
+
+}
+
+SimulationWindow::~SimulationWindow()
+{
+	//delete useShader;
+
+}
+
+bool SimulationWindow::LoopEvents() {
+
+	glfwMakeContextCurrent(window);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwPollEvents();
+
+	//glUniform1f(aspectLoc, aspect);
+
+	//MeshContoroller();
+
+
+
+	//í∑âüÇµèÛë‘
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_1) != GLFW_RELEASE)
+	{
+		GetCursorPos(_CurrentLocation[0], _CurrentLocation[1]);
+		//std::cout << "Mouse pos is  " << _CurrentLocation[0] << "  " << _CurrentLocation[1] << std::endl;
+	}
+
+
+
+	glfwSwapBuffers(window);
+	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
+
+
+}

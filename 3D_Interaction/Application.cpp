@@ -42,7 +42,7 @@ void Application::ShutDown()
 
 void Application::MakeWindow()
 {
-	_MainWindow = new Window(1920, 1080, "Main_Window");
+	_MainWindow = new SimulationWindow(1920, 1080, "Main_Window");
 
 	//_GuiWindow = new GuiWindow(512,512,"Gui_Window");
 
