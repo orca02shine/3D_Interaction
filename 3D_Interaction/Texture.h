@@ -12,6 +12,9 @@ class Texture {
 	~Texture();
 
 
+	bool Load();
+	void Unload();
+
 	void LinkShader();
 
 	int GetWidth() const { return _Width; }

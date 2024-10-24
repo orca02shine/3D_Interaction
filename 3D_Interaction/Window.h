@@ -5,6 +5,8 @@
 #include <iostream>
 #include <vector>
 
+#include"Shader.h"
+
 class Window {
 
 public:
@@ -51,6 +53,8 @@ public:
 	float limY = 1.0f;
 
 public:
+
+	std::vector<Shader*> UseShader;
 
 	SimulationWindow(int width, int height, const char* title);
 

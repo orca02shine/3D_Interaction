@@ -1,13 +1,11 @@
 #pragma once
 #include <GLEW/glew.h>
 #include <iostream>
+#include <glm/glm.hpp>
 
-struct Vertex {
 
-	GLfloat x;
-	GLfloat y;
-	GLfloat z;
-};
+using namespace glm;
+
 
 class VertexObject
 {
@@ -23,14 +21,14 @@ class VertexObject
 
 public:
 
-	//const Vertex* _Vert;
+	const vec3* _Vert;
 	GLsizei _NumVerts;
 	GLsizei _NumIndices;
 
 public:
 
 	//size ’¸“_‚ÌŽŸŒ³
-	VertexObject(GLint size, GLsizei numVerts, const Vertex* vert,
+	VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
 		GLsizei numUV, const GLfloat* uv,
 		GLsizei numindices, const GLuint* index);
 	~VertexObject();
