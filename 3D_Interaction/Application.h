@@ -1,0 +1,26 @@
+#pragma once
+
+#include <opencv2/opencv.hpp>
+#include <GLEW/glew.h>
+#include <GLFW/glfw3.h>
+
+#include  "Window.h"
+
+
+class Application {
+
+	class Window* _MainWindow;
+
+
+public:
+	Application();
+
+	bool Initialize();
+	void RunLoop();
+	void ShutDown();
+
+	void MakeWindow();
+
+
+
+};

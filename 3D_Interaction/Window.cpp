@@ -1,0 +1,102 @@
+#include "Window.h"
+
+
+Window::Window(int width = 1920, int height = 1080, const char* title = "No_Title")
+	:window(glfwCreateWindow(width, height, title, nullptr, nullptr)),
+	name(title)
+{
+	if (window == NULL) {
+		std::cerr << "Can't create GLFW window." << std::endl;
+		exit(1);
+	}
+
+	glfwMakeContextCurrent(window);
+
+	glewExperimental = GL_TRUE;
+	if (glewInit() != GLEW_OK) {
+		std::cerr << "Can't initialize GLEW" << std::endl;
+		exit(1);
+	}
+	glfwSwapInterval(1);
+
+	glfwSetWindowUserPointer(window, this);
+
+	glfwSetWindowSizeCallback(window, Resize);
+	glfwSetMouseButtonCallback(window, MouseCallback);
+
+
+	Resize(window, width, height);
+
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
+
+Window::~Window()
+{
+	glfwDestroyWindow(window);
+}
+
+
+bool Window::LoopEvents()
+{
+	glfwMakeContextCurrent(window);
+	glClear(GL_COLOR_BUFFER_BIT);
+	glfwPollEvents();
+
+	glfwSwapBuffers(window);
+	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
+
+}
+
+void Window::MouseCallback(GLFWwindow* const window, int button, int action, int mods) {
+
+	Window* const
+		instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+
+	if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+		instance->GetCursorPos(instance->_ClickedLocation[0], instance->_ClickedLocation[1]);
+		std::cout << "Mouse pos is  " <<instance-> _ClickedLocation[0] << "  " <<instance-> _ClickedLocation[1] << std::endl;
+		instance->isClicked = true;
+	}
+
+
+	if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
+		instance->isClicked = false;
+	}
+
+}
+
+void Window::GetCursorPos(float& X, float& Y) {
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+
+	X = (x) * 2.0f / size[0] - 1.0f;
+	Y = 1.0f - (y) * 2.0f / size[1];
+}
+
+void Window::Resize(GLFWwindow* const window, int width, int height) {
+
+	int fbWidth, fbHeight;;
+	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+	glViewport(0, 0, fbWidth, fbHeight);
+
+	Window* const
+		instance(static_cast<Window*>(glfwGetWindowUserPointer(window)));
+	if (instance != NULL)
+	{
+		// 開いたウィンドウのサイズを保存する
+		instance->size[0] = static_cast<GLfloat>(width);
+		instance->size[1] = static_cast<GLfloat>(height);
+
+		instance->aspect = static_cast<GLfloat>(width) / static_cast<GLfloat>(height);
+	}
+
+}
+
+GLFWwindow* Window::getGLFW() {
+	return this->window;
+}
+
+float Window::GetAspect() { return aspect; }
