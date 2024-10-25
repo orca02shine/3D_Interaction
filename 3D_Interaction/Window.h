@@ -49,10 +49,12 @@ class SimulationWindow :Window {
 
 public:
 	std::vector<class Mesh*> _Meshes;
-	std::vector<class Texture*> _Texxtures;
+	std::vector<class Texture*> _Textures;
 
 	Shader* _Shader;
+	Shader* _WireShader;
 
+	GLuint _Model;
 	GLuint _Aspect;
 
 	const float minArea = 0.4f;
@@ -61,8 +63,6 @@ public:
 
 public:
 
-	std::vector<Shader*> UseShader;
-
 
 	SimulationWindow(int width, int height, const char* title);
 
@@ -70,5 +70,7 @@ public:
 
 
 	bool LoopEvents() override;
+
+	void test();
 
 };

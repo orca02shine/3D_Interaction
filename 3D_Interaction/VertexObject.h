@@ -18,17 +18,20 @@ class VertexObject
 
 	GLuint _UvBuffer;
 
+	int _DimSize;
+
+
 
 public:
 
-	const vec3* _Vert;
+	const vec2* _Vert;
 	GLsizei _NumVerts;
 	GLsizei _NumIndices;
 
 public:
 
 	//size ’¸“_‚ÌŽŸŒ³
-	VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
+	VertexObject(GLint size, GLsizei numVerts, const vec2* vert,
 		GLsizei numUV, const GLfloat* uv,
 		GLsizei numindices, const GLuint* index);
 	~VertexObject();

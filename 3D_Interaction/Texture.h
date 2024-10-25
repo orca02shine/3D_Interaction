@@ -20,6 +20,8 @@ public:
 	void LinkShader();
 	void SetActive();
 
+	void ProtoTex();
+
 	int GetWidth() const { return _Width; }
 	int GetHeight() const { return _Height; }
 

@@ -113,7 +113,14 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	_Shader = new Shader();
 	_Shader->Load("shader.vert", "shader.frag");
 
-	_Aspect = glGetUniformLocation(_Shader->GetShaderID(), "aspect");
+	_WireShader = new Shader();
+	_WireShader->Load("shader.vert", "shader_wire.frag");
+
+	//_Model = glGetUniformLocation(_Shader->GetShaderID(), "model");
+	_Aspect= glGetUniformLocation(_Shader->GetShaderID(), "aspect");
+
+
+	test();
 
 
 }
@@ -130,7 +137,10 @@ bool SimulationWindow::LoopEvents() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwPollEvents();
 
+
 	glUniform1f(_Aspect, aspect);
+
+
 
 	//MeshContoroller();
 
@@ -151,5 +161,19 @@ bool SimulationWindow::LoopEvents() {
 	glfwSwapBuffers(window);
 	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
 
+
+}
+
+void SimulationWindow::test() {
+	Texture* t = new Texture(_Shader->GetShaderID());
+	Mesh* m = new Mesh(this);
+	m->LinkShader(_Shader,_WireShader);
+	m->LinkTexture(t);
+
+
+	_Shader->SetActive();//‚±‚êâ‘Î‚¢‚é
+
+	_Meshes.push_back(m);
+	_Textures.push_back(t);
 
 }

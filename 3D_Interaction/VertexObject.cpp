@@ -2,10 +2,10 @@
 
 
 
-VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
+VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec2* vert,
 	GLsizei numUV, const GLfloat* uv,
 	GLsizei numindices, const GLuint* index)
-	:_Vert(vert), _NumVerts(numVerts), _NumIndices(numindices)
+	:_Vert(vert), _NumVerts(numVerts), _NumIndices(numindices), _DimSize(size)
 {
 	//create vertex array
 	glGenVertexArrays(1, &_VertArray);
@@ -15,7 +15,7 @@ VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
 	glGenBuffers(1, &_VertBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, _VertBuffer);
 	glBufferData(GL_ARRAY_BUFFER,
-		numVerts * 3 * sizeof(float), vert, GL_DYNAMIC_DRAW);
+		numVerts * size * sizeof(float), vert, GL_DYNAMIC_DRAW);
 
 	//éQè∆Ç≈Ç´ÇÈ
 	glVertexAttribPointer(0, size, GL_FLOAT, GL_FALSE, 0, 0);
@@ -65,5 +65,5 @@ void VertexObject::SetActive() {
 
 void VertexObject::Update() {
 	glBindBuffer(GL_ARRAY_BUFFER, _VertBuffer);
-	glBufferSubData(GL_ARRAY_BUFFER, 0, _NumVerts * 3 * sizeof(float), _Vert);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, _NumVerts * _DimSize * sizeof(float), _Vert);
 }
