@@ -107,13 +107,13 @@ float Window::GetAspect() { return aspect; }
 //-----------------------------
 
 
-SimulationWindow::SimulationWindow(int width = 1920, int height = 1080, const char* title = "No_Title")
+SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const char* title = "No_Title")
 	:Window(width, height, title)
 {
-	//useShader = new Shader();
-	//useShader->Load("shader.vert", "shader.frag");
+	_Shader = new Shader();
+	_Shader->Load("shader.vert", "shader.frag");
 
-	//aspectLoc = glGetUniformLocation(useShader->GetShaderID(), "aspect");
+	_Aspect = glGetUniformLocation(_Shader->GetShaderID(), "aspect");
 
 
 }
@@ -130,7 +130,7 @@ bool SimulationWindow::LoopEvents() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwPollEvents();
 
-	//glUniform1f(aspectLoc, aspect);
+	glUniform1f(_Aspect, aspect);
 
 	//MeshContoroller();
 
@@ -143,6 +143,9 @@ bool SimulationWindow::LoopEvents() {
 		//std::cout << "Mouse pos is  " << _CurrentLocation[0] << "  " << _CurrentLocation[1] << std::endl;
 	}
 
+	for (int i = 0; i < _Meshes.size(); ++i) {
+		_Meshes[i]->UpdateMesh();
+	}
 
 
 	glfwSwapBuffers(window);

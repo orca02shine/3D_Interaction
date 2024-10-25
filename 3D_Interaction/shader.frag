@@ -1,15 +1,17 @@
 #version 330
-uniform float aspect;
-layout (location = 0) in vec4 position;
-layout(location = 1) in vec2 vertexUV;
-out vec2 UV;
+
+in vec2 UV ;
+uniform sampler2D texSampler;
+layout (location = 0) out vec4 fragment;
 
 void main()
 {
-	vec4 pos=vec4(1.0/aspect, 1.0,1.0,1.0)*position;
+vec4 col=texture( texSampler,UV);
+vec3 c=vec3(1.0,0.0,0.0);
 
-  gl_Position =pos;
 
-  UV=vertexUV;
+ fragment =col;
+ //fragment= vec4(col.rgb,0.9);
+ fragment= vec4(c,1.0);
+
 }
-

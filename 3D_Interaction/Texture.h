@@ -8,6 +8,7 @@
 
 
 class Texture {
+public:
 	Texture(GLuint shaderProgram);
 	~Texture();
 
@@ -15,7 +16,9 @@ class Texture {
 	bool Load();
 	void Unload();
 
+	void SetShader(int width, int height,int* data);
 	void LinkShader();
+	void SetActive();
 
 	int GetWidth() const { return _Width; }
 	int GetHeight() const { return _Height; }

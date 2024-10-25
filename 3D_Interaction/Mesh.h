@@ -15,8 +15,10 @@
 class Mesh {
 
 private:
-	Texture*  _Texture;
-	VertexObject* _VertexObject;
+	class Texture*  _Texture;
+	class VertexObject* _VertexObject;
+
+	class SimulationWindow* _Parent;
 
 	std::vector<vec3> _Vertices; //íºê⁄Ç¢Ç∂ÇÈ
 	std::vector<GLfloat> _UV;
@@ -25,10 +27,13 @@ private:
 
 
 public:
-	Mesh(GLuint shadrProgram, class SimulationWindow* window);
+	Mesh(class SimulationWindow* window);
 	~Mesh();
 
-
+	void ProtoMesh();
+	void UpdateMesh();
+	void MakeVertices();
+	void LinkTexture(Texture* tex);
 
 
 };

@@ -6,6 +6,8 @@
 #include <vector>
 
 #include"Shader.h"
+#include"Mesh.h"
+#include"Texture.h"
 
 class Window {
 
@@ -46,7 +48,12 @@ public:
 class SimulationWindow :Window {
 
 public:
+	std::vector<class Mesh*> _Meshes;
+	std::vector<class Texture*> _Texxtures;
 
+	Shader* _Shader;
+
+	GLuint _Aspect;
 
 	const float minArea = 0.4f;
 	float limX = 2.0f;
@@ -55,6 +62,7 @@ public:
 public:
 
 	std::vector<Shader*> UseShader;
+
 
 	SimulationWindow(int width, int height, const char* title);
 
