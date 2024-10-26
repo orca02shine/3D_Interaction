@@ -66,6 +66,15 @@ void Window::MouseCallback(GLFWwindow* const window, int button, int action, int
 		instance->isClicked = false;
 	}
 
+	if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS) {
+		instance->_IsMid = true;
+	}
+	if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_RELEASE) {
+		instance->_IsMid = false;
+	}
+
+
+
 }
 
 void Window::GetCursorPos(float& X, float& Y) {
@@ -118,10 +127,14 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 
 	_MatrixID = glGetUniformLocation(_Shader->GetShaderID(), "MVP");
 
+
+	_CameraPos = glm::vec3(5, 5, 5);
+	_CameraCenter = glm::vec3(0, 0, 0);
+
 	_Model = glm::mat4(1.0f);
 	_View= glm::lookAt(
-		glm::vec3(6, 5, 4), // カメラの位置
-		glm::vec3(0, 0, 0), // カメラの視点
+		_CameraPos, // カメラの位置
+		_CameraCenter, // カメラの視点
 		glm::vec3(0, 1, 0)  // カメラの頭の方向
 	);
 	_Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
@@ -146,6 +159,7 @@ bool SimulationWindow::LoopEvents() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwPollEvents();
 
+	UpdateMousePos();
 	UpdateMVP();
 	glUniformMatrix4fv(_MatrixID, 1, GL_FALSE, glm::value_ptr(_MVP));
 
@@ -175,10 +189,43 @@ bool SimulationWindow::LoopEvents() {
 
 void SimulationWindow::UpdateMVP() {
 
+	_View = glm::lookAt(
+		_CameraPos, // カメラの位置
+		_CameraCenter, // カメラの視点
+		glm::vec3(0, 1, 0)  // カメラの頭の方向
+	);
 
 	_Projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
 
 	_MVP = _Projection * _View * _Model;
+}
+
+void SimulationWindow::UpdateMousePos() {
+
+	if (_IsMid) {
+		float prex = _PreMid[0]; float prey = _PreMid[1];	
+		GetCursorPos(_CurMid[0], _CurMid[1]);
+		Revolution(prex,prey);
+	}
+	GetCursorPos(_PreMid[0], _PreMid[1]);
+
+}
+
+void SimulationWindow::Revolution(float prex, float prey) {
+	auto u = glm::normalize(_Up);
+	auto w = glm::normalize(glm::cross(u, _CameraPos));
+
+	float theta_u = -(_CurMid[0] - prex) * _Speed;
+	auto q = glm::angleAxis(glm::radians(theta_u), u);
+	auto tmp_pos = q * _CameraPos * glm::conjugate(q);
+
+	const float theta_w = (_CurMid[1] - prey) * _Speed;
+	q = glm::angleAxis(glm::radians(theta_w), w);
+	auto p = glm::conjugate(q);
+	tmp_pos = q * tmp_pos * p;
+
+	_CameraPos = tmp_pos;
+	//_Up = q * _Up* p;
 }
 
 void SimulationWindow::test() {

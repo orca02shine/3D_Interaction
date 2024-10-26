@@ -28,6 +28,10 @@ public:
 	float _ClickedLocation[2];
 	bool isClicked = false;
 
+	float _CurMid[2];
+	float _PreMid[2];
+	float _IsMid = false;
+
 
 
 public:
@@ -65,9 +69,14 @@ public:
 	glm::mat4 _Projection;
 	glm::mat4 _MVP;
 
+	glm::vec3 _CameraPos;
+	glm::vec3 _CameraCenter;
+	glm::vec3 _Up = glm::vec3(0, 1, 0);
+
 	const float minArea = 0.4f;
 	float limX = 2.0f;
 	float limY = 1.0f;
+	float _Speed = 50.0f;
 
 public:
 
@@ -77,7 +86,8 @@ public:
 	~SimulationWindow();
 
 	void UpdateMVP();
-
+	void UpdateMousePos();
+	void Revolution(float prex, float prey);
 
 	bool LoopEvents() override;
 
