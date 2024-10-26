@@ -116,8 +116,17 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	_WireShader = new Shader();
 	_WireShader->Load("shader.vert", "shader_wire.frag");
 
-	//_Model = glGetUniformLocation(_Shader->GetShaderID(), "model");
-	_Aspect= glGetUniformLocation(_Shader->GetShaderID(), "aspect");
+	_MatrixID = glGetUniformLocation(_Shader->GetShaderID(), "MVP");
+
+	_Model = glm::mat4(1.0f);
+	_View= glm::lookAt(
+		glm::vec3(6, 5, 4), // カメラの位置
+		glm::vec3(0, 0, 0), // カメラの視点
+		glm::vec3(0, 1, 0)  // カメラの頭の方向
+	);
+	_Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 100.0f);
+
+	_MVP = _Projection * _View * _Model;
 
 
 	test();
@@ -137,8 +146,8 @@ bool SimulationWindow::LoopEvents() {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glfwPollEvents();
 
-
-	glUniform1f(_Aspect, aspect);
+	UpdateMVP();
+	glUniformMatrix4fv(_MatrixID, 1, GL_FALSE, glm::value_ptr(_MVP));
 
 
 
@@ -162,6 +171,14 @@ bool SimulationWindow::LoopEvents() {
 	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
 
 
+}
+
+void SimulationWindow::UpdateMVP() {
+
+
+	_Projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 100.0f);
+
+	_MVP = _Projection * _View * _Model;
 }
 
 void SimulationWindow::test() {

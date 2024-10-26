@@ -2,7 +2,7 @@
 
 
 
-VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec2* vert,
+VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
 	GLsizei numUV, const GLfloat* uv,
 	GLsizei numindices, const GLuint* index)
 	:_Vert(vert), _NumVerts(numVerts), _NumIndices(numindices), _DimSize(size)

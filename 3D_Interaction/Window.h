@@ -4,6 +4,10 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <vector>
+#include<glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 #include"Shader.h"
 #include"Mesh.h"
@@ -53,9 +57,13 @@ public:
 
 	Shader* _Shader;
 	Shader* _WireShader;
+	GLuint _MatrixID;
 
-	GLuint _Model;
-	GLuint _Aspect;
+
+	glm::mat4 _Model;
+	glm::mat4 _View;
+	glm::mat4 _Projection;
+	glm::mat4 _MVP;
 
 	const float minArea = 0.4f;
 	float limX = 2.0f;
@@ -67,6 +75,8 @@ public:
 	SimulationWindow(int width, int height, const char* title);
 
 	~SimulationWindow();
+
+	void UpdateMVP();
 
 
 	bool LoopEvents() override;

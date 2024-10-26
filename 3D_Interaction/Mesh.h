@@ -24,7 +24,7 @@ private:
 
 	class SimulationWindow* _Parent;
 
-	std::vector<vec2> _Vertices; //íºê⁄Ç¢Ç∂ÇÈ
+	std::vector<vec3> _Vertices; //íºê⁄Ç¢Ç∂ÇÈ
 	std::vector<GLfloat> _UV;
 	std::vector<GLuint> _Indices;
 	std::vector<GLuint> _WireIdx;
@@ -38,6 +38,8 @@ public:
 	~Mesh();
 
 	void ProtoMesh();
+	void ProtoMesh2();
+
 	void UpdateMesh();
 	void MakeVertices();
 	void LinkTexture(Texture* tex);

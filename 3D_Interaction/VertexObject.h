@@ -24,14 +24,14 @@ class VertexObject
 
 public:
 
-	const vec2* _Vert;
+	const vec3* _Vert;
 	GLsizei _NumVerts;
 	GLsizei _NumIndices;
 
 public:
 
 	//size ’¸“_‚ÌŽŸŒ³
-	VertexObject(GLint size, GLsizei numVerts, const vec2* vert,
+	VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
 		GLsizei numUV, const GLfloat* uv,
 		GLsizei numindices, const GLuint* index);
 	~VertexObject();
