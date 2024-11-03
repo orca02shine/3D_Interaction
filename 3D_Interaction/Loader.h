@@ -16,11 +16,12 @@
 class Loader {
 
 public:
+
 	std::string _FileName;
 	std::string _FilePath;
 
-	//cv::Mat _LoadImg;
-	//cv::Mat _ResultImg;
+	cv::Mat _LoadImg;
+	cv::Mat _ResultImg;
 
 	Loader();
 	~Loader();

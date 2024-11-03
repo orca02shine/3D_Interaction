@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "Loader.h"
 
 Application::Application()
 	:_MainWindow(nullptr)

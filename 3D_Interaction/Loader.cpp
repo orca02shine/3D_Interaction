@@ -38,7 +38,7 @@ void Loader::LoadImage() {
 
 	cv::Mat Img= cv::imread(_FilePath, cv::IMREAD_UNCHANGED);
 
-	resize(Img, Img, cv::Size(512, 512), 0, 0, 1);
+	//resize(Img, Img, cv::Size(512, 512), 0, 0, 1);
 
 	cv::imshow("Input Image", Img);
 
