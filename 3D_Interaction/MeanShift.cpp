@@ -278,10 +278,15 @@ void MeanShift::MSSegmentation(Mat& Img) {
 	}
 	RegionNumber = label + 1;										// Get region number
 
+	SuperPixels.resize(RegionNumber);
+
 	// Get result image from Mode array
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
 			label = Labels[i][j];
+
+			SuperPixels[label].push_back({j,i});
+
 			float l = Mode[label * 3 + 0];
 			float a = Mode[label * 3 + 1];
 			float b = Mode[label * 3 + 2];
@@ -308,4 +313,15 @@ void MeanShift::MSSegmentation(Mat& Img) {
 	for (int i = 0; i < ROWS; i++)
 		delete[] Labels[i];
 	delete[] Labels;
+
+	/*
+	for (int i = 0; i < RegionNumber; ++i) {
+		cout << "Label " << i << " is ";
+		for (auto p: SuperPixels[i]) {
+			cout <<"{" << p.first << " " << p.second<<"}";
+		}
+		cout << endl;
+	}
+	*/
+	cout <<"Region Count is " << RegionNumber << endl;
 }

@@ -37,6 +37,9 @@ public:
 	float hs;				// spatial radius
 	float hr;				// color radius
 	vector<Mat> IMGChannels;
+
+	vector<vector<pair<int,int>>> SuperPixels;
+
 public:
 	MeanShift(float, float);									// Constructor for spatial bandwidth and color bandwidth
 	void MSFiltering(Mat&);										// Mean Shift Filtering

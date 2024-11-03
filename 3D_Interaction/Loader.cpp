@@ -47,7 +47,7 @@ void Loader::LoadImage() {
 	// Initilize Mean Shift with spatial bandwith and color bandwith
 	MeanShift MSProc(8, 16);
 	// Filtering Process
-	MSProc.MSFiltering(Img);
+	MSProc.MSSegmentation(Img);
 	// Segmentation Process include Filtering Process (Region Growing)
 //	MSProc.MSSegmentation(Img);
 
