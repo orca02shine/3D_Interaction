@@ -45,6 +45,15 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="MeanShift.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="Loader.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -60,6 +69,9 @@
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="MeanShift.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
   </ItemGroup>

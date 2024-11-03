@@ -21,7 +21,7 @@ public:
 
 	void MakeWindow();
 
-
+	void Test();
 
 
 };

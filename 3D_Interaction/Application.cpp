@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "Loader.h"
 
 Application::Application()
 	:_MainWindow(nullptr)
@@ -26,7 +27,7 @@ bool Application::Initialize()
 	MakeWindow();
 
 
-	//Test();
+	Test();
 
 
 
@@ -68,4 +69,11 @@ void Application::RunLoop()
 
 
 
+}
+
+void Application::Test() 
+{
+	Loader loder;
+
+	loder.LoadImage();
 }
