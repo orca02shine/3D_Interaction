@@ -347,14 +347,14 @@ void MeanShift::MakeGraph() {
 
 	int dy[8] = { 0,0,1,-1,1,-1,-1,1 };
 	int dx[8] = { 1,-1,0,0,1,-1,1,-1 };
+	const float INF = 10000000000;
 
 	int n = SuperPixels.size();
-	Graph.resize(n);
+	Graph.resize(n+2);//n->start, n+1->target
 	vector<vector<bool>> seen(n, vector<bool>(n, false));
 
 	for (int i = 0; i < Rows; ++i) {
 		for (int j = 0; j < Cols; ++j) {
-
 
 			for (int d = 0; d < 8; ++d) {
 
@@ -377,21 +377,26 @@ void MeanShift::MakeGraph() {
 					float db = b0 - b1;
 
 					float D = sqrtf(dl * dl + da * da + db * db);
-
 					//add graph
 					if (!seen[id0][id1] && !seen[id1][id0]) {
-						Graph[id0].push_back({ id1,D });
-						Graph[id1].push_back({ id0,D });
-
+						Graph[id0].push_back({ id1, 1 / (D + 1) });
+						Graph[id1].push_back({ id0, 1 / (D + 1) });
 						seen[id0][id1] = true;
 						seen[id1][id0] = true;
 					}
-
 				}
 
 			}
 
 		}
+	}
+
+	int ns = n;
+	int nt = n + 1;
+
+	for (int i = 0; i < n; ++i) {
+
+
 	}
 
 

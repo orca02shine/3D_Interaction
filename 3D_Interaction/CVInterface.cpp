@@ -66,10 +66,9 @@ void CVInterface::UseInterface() {
 	cv::Mat src = Img.clone();
 
 	cv::imshow(WinName, Img);
-
 	while(Loop()){}
 
-	Clustering(src);
+	//Clustering(src);
 
 
 }
