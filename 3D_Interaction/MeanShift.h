@@ -45,6 +45,7 @@ public:
 	vector<vector<Edge>> Graph;
 	int Rows;
 	int Cols;
+	vector<vector<int>> LabelST;
 
 public:
 	MeanShift(float, float);									// Constructor for spatial bandwidth and color bandwidth
@@ -53,5 +54,8 @@ public:
 	// Mean Shift Segmentation
 
 	void MakeGraph();
+	void SetupLabelST(Mat &);
+
+	void UpdateLabelST(int y, int x, int l);
 };
 

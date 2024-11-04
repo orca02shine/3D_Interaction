@@ -15,15 +15,15 @@ class Loader {
 
 public:
 
-	std::string _FileName;
-	std::string _FilePath;
+	static std::string _FileName;
+	static std::string _FilePath;
 
 
-	Loader();
-	~Loader();
+	//Loader();
+	//~Loader();
 
-	bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
+	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
-	cv::Mat LoadImg();
+	static cv::Mat LoadImg();
 
 };

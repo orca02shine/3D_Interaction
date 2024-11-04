@@ -1,6 +1,8 @@
 #pragma once
 
-#include "Loader.h"
+#include <windows.h>
+#include <shobjidl.h>
+
 #include "MeanShift.h"
 
 #include <opencv2/opencv.hpp>
@@ -13,11 +15,16 @@
 class CVInterface {
 
 public:
+	static std::string _FileName;
+	static std::string _FilePath;
+
 	static std::string WinName;
 
 	static int IsClicked;
 	static cv::Point PrePos;
 	static cv::Mat Img;
+
+	static MeanShift MSProc;
 
 	static bool Loop();
 
@@ -26,6 +33,9 @@ public:
 	static void UseInterface();
 
 	static void Clustering(cv::Mat img);
+
+	static cv::Mat LoadImg();
+	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
 
 

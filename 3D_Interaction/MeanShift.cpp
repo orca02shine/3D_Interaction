@@ -158,8 +158,6 @@ void MeanShift::MSSegmentation(Mat& Img) {
 	int ROWS = Img.rows;
 	int COLS = Img.cols;
 
-	Rows = ROWS;
-	Cols = COLS;
 	split(Img, IMGChannels);
 
 	Point5D PtCur;
@@ -400,4 +398,20 @@ void MeanShift::MakeGraph() {
 	}
 
 
+}
+
+void MeanShift::SetupLabelST(Mat &img) {
+	Rows = img.rows;
+	Cols = img.cols;
+
+	LabelST.resize(Rows, vector<int>(Cols, 0));
+
+}
+
+void MeanShift::UpdateLabelST(int y, int x, int l) {
+
+	if (y < 0 || y >= Rows || x < 0 || x >= Cols)return;
+
+	LabelST[y][x] = l;
+	return;
 }

@@ -1,12 +1,15 @@
 #include "Loader.h"
 
+/*
 Loader::Loader(){
 }
 Loader:: ~Loader() {
 
 }
+*/
 
-
+std::string Loader::_FilePath;
+std::string Loader::_FileName;
 
 bool Loader::FileOpen(std::string& sSelectedFile, std::string& sFilePath)
 {
