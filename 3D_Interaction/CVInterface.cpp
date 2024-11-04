@@ -1,37 +1,53 @@
 #include"CVInterface.h"
 
 std::string CVInterface::WinName = "Input Image";
+int CVInterface::IsClicked = false;
+cv::Point CVInterface::PrePos = cv::Point(0, 0);
+cv::Mat CVInterface::Img;
 
 void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
+	//IsClicked,0:no,1:left,2:right,3:middle;
+
+	vector<cv::Point> ar = { cv::Point(x,y),PrePos };
 
 	switch (event) {
 	case cv::EVENT_LBUTTONDOWN:
-
-		cout << "Now Botton is" << x << " " << y << endl;
+		IsClicked = 1;
+		cv::circle(Img, { x,y }, 2, { 0,0,255 },-1);
 
 		break;
 
 	case cv::EVENT_RBUTTONDOWN:
-
+		IsClicked = 2;
+		cv::circle(Img, { x,y }, 2, { 255,0,0 }, -1);
 		break;
 
 	case cv::EVENT_LBUTTONUP:
-
+		IsClicked = 0;
 		break;
 
 	case cv::EVENT_RBUTTONUP:
-
+		IsClicked = 0;
 		break;
 
 	case cv::EVENT_MOUSEMOVE:
+		if (IsClicked==1) {
+			cv::polylines(Img,ar,false, { 0,0,255 },4);
+		}
+		else if (IsClicked==2) {
+			cv::polylines(Img, ar, false, { 255,0,0 }, 4);
+		}
 
 		break;
 	}
+	if (IsClicked) {
+		PrePos = cv::Point(x, y);
+	}
+	cv::imshow(WinName, Img);
 
 }
 
 bool CVInterface::Loop() {
-
 
 	int key = cv::waitKey();
 
@@ -45,13 +61,15 @@ void CVInterface::UseInterface() {
 
 	Loader loader;
 
-	Mat img = loader.LoadImage();
+	Img = loader.LoadImage();
 
-	imshow(WinName, img);
+	cv::Mat src = Img.clone();
+
+	cv::imshow(WinName, Img);
 
 	while(Loop()){}
 
-	Clustering(img);
+	Clustering(src);
 
 
 }
