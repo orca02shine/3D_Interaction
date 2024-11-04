@@ -345,7 +345,6 @@ void MeanShift::MakeGraph() {
 
 	int dy[8] = { 0,0,1,-1,1,-1,-1,1 };
 	int dx[8] = { 1,-1,0,0,1,-1,1,-1 };
-	const float INF = 10000000000;
 
 	int n = SuperPixels.size();
 	Graph.resize(n+2);//n->start, n+1->target
@@ -389,14 +388,90 @@ void MeanShift::MakeGraph() {
 		}
 	}
 
-	int ns = n;
-	int nt = n + 1;
+	SetSTLink();
+
+}
+
+void MeanShift::SetSTLink() {
+	const float INF = 10000000000;
+	int n = SuperPixels.size();
+
+	vector<int> seen(n, -1);
+	set<int> FP;
+	set<int> BP;
+
+	for (int i = 0; i < Rows; ++i) {
+		for (int j = 0; j < Cols; ++j) {
+
+			int ST = LabelST[i][j];
+			int pixelNum = LabelIndex[i][j];
+			if (ST ==1) {
+				if (seen[pixelNum] == -1) {
+					seen[pixelNum] = 1;
+					FP.insert(pixelNum);
+				}
+			}
+			else if (ST == 2) {
+				if (seen[pixelNum] == -1) {
+					seen[pixelNum] = 2;
+					BP.insert(pixelNum);
+				}
+			}
+
+		}
+	}
+	for (int i = 0; i < n; ++i) {
+		if (seen[i] == -1)seen[i] = 0;
+	}
+
+	//------------------
+	int ns = n;//foreground,1
+	int nt = n + 1;//background,2
 
 	for (int i = 0; i < n; ++i) {
 
+		if (seen[i] == 1) {
+			Graph[n].push_back({ i,0 });
+			Graph[i].push_back({ n+1,INF });
+		}
+		else if (seen[i] == 2) {
+			Graph[n].push_back({ i,INF });
+			Graph[i].push_back({ n + 1,0 });
+		}
+		else {
+			float l0 = LabelColor[i][0];
+			float a0 = LabelColor[i][1];
+			float b0 = LabelColor[i][2];
+
+			float df = INF;
+			float db = INF;
+
+			for (auto& p : FP) {
+				float l= LabelColor[p][0];
+				float a= LabelColor[p][1];
+				float b= LabelColor[p][2];
+				float dl = l0 - l;
+				float da = a0 - a;
+				float db = b0 - b;
+				float d = sqrtf(dl * dl + da * da + db * db);
+				df = min(df, d);
+			}
+			for (auto& p : BP) {
+				float l = LabelColor[p][0];
+				float a = LabelColor[p][1];
+				float b = LabelColor[p][2];
+				float dl = l0 - l;
+				float da = a0 - a;
+				float db = b0 - b;
+				float d = sqrtf(dl * dl + da * da + db * db);
+				db = min(df, d);
+			}
+
+			Graph[n].push_back({i,	df/(df+db)});
+			Graph[i].push_back({n+1,db/(df+db)});
+		}
 
 	}
-
 
 }
 

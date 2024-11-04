@@ -4,6 +4,7 @@
 #include <opencv2\highgui\highgui.hpp>
 #include <opencv2\imgproc\imgproc.hpp>
 #include <vector>
+#include <set>
 #include <iostream>
 
 #include "GraphCut.h"
@@ -54,8 +55,9 @@ public:
 	// Mean Shift Segmentation
 
 	void MakeGraph();
-	void SetupLabelST(Mat &);
+	void SetSTLink();
 
+	void SetupLabelST(Mat &);
 	void UpdateLabelST(int y, int x, int l);
 };
 

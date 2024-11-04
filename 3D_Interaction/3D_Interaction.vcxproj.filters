@@ -48,12 +48,6 @@
     <ClCompile Include="MeanShift.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
-    <ClCompile Include="Loader.cpp">
-      <Filter>ソース ファイル\Applications</Filter>
-    </ClCompile>
-    <ClCompile Include="Loader.h">
-      <Filter>ソース ファイル\Applications</Filter>
-    </ClCompile>
     <ClCompile Include="GraphCut.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
