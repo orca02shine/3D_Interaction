@@ -6,6 +6,7 @@
 #include <vector>
 #include <iostream>
 
+#include "GraphCut.h"
 //---------------- Name space ---------------------------------------
 using namespace cv;
 using namespace std;
@@ -38,10 +39,19 @@ public:
 	float hr;				// color radius
 	vector<Mat> IMGChannels;
 
-	vector<vector<pair<int,int>>> SuperPixels;
+	vector<vector<pair<int,int>>> SuperPixels;//y,x
+	vector<vector<int>> LabelIndex;//y,x
+	vector<Vec3b> LabelColor;
+	vector<vector<Edge>> Graph;
+	int Rows;
+	int Cols;
 
 public:
 	MeanShift(float, float);									// Constructor for spatial bandwidth and color bandwidth
 	void MSFiltering(Mat&);										// Mean Shift Filtering
-	void MSSegmentation(Mat&);									// Mean Shift Segmentation
+	void MSSegmentation(Mat&);		
+	// Mean Shift Segmentation
+
+	void MakeGraph();
 };
+

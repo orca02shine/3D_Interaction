@@ -32,7 +32,7 @@ bool Loader::FileOpen(std::string& sSelectedFile, std::string& sFilePath)
 	
 }
 
-cv::Mat Loader::LoadImage() {
+cv::Mat Loader::LoadImg() {
 
 	FileOpen(_FileName, _FilePath);
 

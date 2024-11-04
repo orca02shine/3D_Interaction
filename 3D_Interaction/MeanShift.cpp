@@ -157,6 +157,9 @@ void MeanShift::MSSegmentation(Mat& Img) {
 		// Same as MSFiltering function
 	int ROWS = Img.rows;
 	int COLS = Img.cols;
+
+	Rows = ROWS;
+	Cols = COLS;
 	split(Img, IMGChannels);
 
 	Point5D PtCur;
@@ -279,13 +282,24 @@ void MeanShift::MSSegmentation(Mat& Img) {
 	RegionNumber = label + 1;										// Get region number
 
 	SuperPixels.resize(RegionNumber);
+	LabelIndex.resize(ROWS, vector<int>(COLS));
+	LabelColor.resize(RegionNumber);
+
+	for (int i =0 ; i < RegionNumber; ++i) {
+		float l = Mode[i * 3 + 0];
+		float a = Mode[i * 3 + 1];
+		float b = Mode[i * 3 + 2];
+
+		LabelColor[i] = Vec3b(l, a, b);
+	}
 
 	// Get result image from Mode array
 	for (int i = 0; i < ROWS; i++) {
 		for (int j = 0; j < COLS; j++) {
 			label = Labels[i][j];
 
-			SuperPixels[label].push_back({j,i});
+			LabelIndex[i][j] = label;
+			SuperPixels[label].push_back({i,j});
 
 			float l = Mode[label * 3 + 0];
 			float a = Mode[label * 3 + 1];
@@ -295,6 +309,7 @@ void MeanShift::MSSegmentation(Mat& Img) {
 			Pixel.PointRGB();
 			//			Pixel.Print();
 			Img.at<Vec3b>(i, j) = Vec3b(Pixel.l, Pixel.a, Pixel.b);
+
 		}
 	}
 	//--------------------------------------------------------------------
@@ -324,4 +339,60 @@ void MeanShift::MSSegmentation(Mat& Img) {
 	}
 	*/
 	cout <<"Region Count is " << RegionNumber << endl;
+	MakeGraph();
+}
+
+
+void MeanShift::MakeGraph() {
+
+	int dy[8] = { 0,0,1,-1,1,-1,-1,1 };
+	int dx[8] = { 1,-1,0,0,1,-1,1,-1 };
+
+	int n = SuperPixels.size();
+	Graph.resize(n);
+	vector<vector<bool>> seen(n, vector<bool>(n, false));
+
+	for (int i = 0; i < Rows; ++i) {
+		for (int j = 0; j < Cols; ++j) {
+
+
+			for (int d = 0; d < 8; ++d) {
+
+				if (i + dy[d] < 0 || i + dy[d] >= Rows || j + dx[d] < 0 || j + dx[d] >= Cols) continue;
+
+				int id0 = LabelIndex[i][j];
+				int id1 = LabelIndex[i + dy[d]][j + dx[d]];
+
+				if (id0!=id1) {
+					float l0=LabelColor[id0][0];
+					float a0= LabelColor[id0][1];
+					float b0 = LabelColor[id0][2];
+
+					float l1 = LabelColor[id1][0];
+					float a1 = LabelColor[id1][1];
+					float b1 = LabelColor[id1][2];
+
+					float dl = l0 - l1;
+					float da = a0 - a1;
+					float db = b0 - b1;
+
+					float D = sqrtf(dl * dl + da * da + db * db);
+
+					//add graph
+					if (!seen[id0][id1] && !seen[id1][id0]) {
+						Graph[id0].push_back({ id1,D });
+						Graph[id1].push_back({ id0,D });
+
+						seen[id0][id1] = true;
+						seen[id1][id0] = true;
+					}
+
+				}
+
+			}
+
+		}
+	}
+
+
 }

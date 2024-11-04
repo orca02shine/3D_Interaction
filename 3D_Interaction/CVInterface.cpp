@@ -43,8 +43,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	if (IsClicked) {
 		PrePos = cv::Point(x, y);
 	}
-	cv::imshow(WinName, Img);
 
+	cv::imshow(WinName, Img);
 }
 
 bool CVInterface::Loop() {
@@ -56,12 +56,12 @@ bool CVInterface::Loop() {
 
 void CVInterface::UseInterface() {
 
+	Loader loader;
+	Img = loader.LoadImg();
+
 	cv::namedWindow(WinName, cv::WINDOW_AUTOSIZE);
 	cv::setMouseCallback(WinName, OnMouse, 0);
 
-	Loader loader;
-
-	Img = loader.LoadImage();
 
 	cv::Mat src = Img.clone();
 
