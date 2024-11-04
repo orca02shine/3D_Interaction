@@ -72,7 +72,5 @@ void Application::RunLoop()
 
 void Application::Test() 
 {
-	Loader loder;
-
-	loder.LoadImage();
+	CVInterface::UseInterface();
 }

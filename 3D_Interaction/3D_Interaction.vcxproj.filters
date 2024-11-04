@@ -54,6 +54,12 @@
     <ClCompile Include="Loader.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="GraphCut.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="CVInterface.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -72,6 +78,12 @@
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
     <ClInclude Include="MeanShift.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphCut.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="CVInterface.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
   </ItemGroup>

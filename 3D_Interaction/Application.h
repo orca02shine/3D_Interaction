@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include  "Window.h"
-#include "Loader.h"
+#include "CVInterface.h"
 
 
 class Application {

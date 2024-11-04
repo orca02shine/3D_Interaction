@@ -32,35 +32,14 @@ bool Loader::FileOpen(std::string& sSelectedFile, std::string& sFilePath)
 	
 }
 
-void Loader::LoadImage() {
+cv::Mat Loader::LoadImage() {
 
 	FileOpen(_FileName, _FilePath);
 
 	cv::Mat Img= cv::imread(_FilePath, cv::IMREAD_UNCHANGED);
 
-	//resize(Img, Img, cv::Size(512, 512), 0, 0, 1);
 
-	cv::imshow("Input Image", Img);
-
-	cvtColor(Img, Img, cv::COLOR_RGB2Lab);
-
-	// Initilize Mean Shift with spatial bandwith and color bandwith
-	MeanShift MSProc(8, 16);
-	// Filtering Process
-	MSProc.MSSegmentation(Img);
-	// Segmentation Process include Filtering Process (Region Growing)
-//	MSProc.MSSegmentation(Img);
-
-	// Print the bandwith
-	cout << "the Spatial Bandwith is " << MSProc.hs << endl;
-	cout << "the Color Bandwith is " << MSProc.hr << endl;
-
-	// Convert color from Lab to RGB
-	cvtColor(Img, Img, cv::COLOR_Lab2RGB);
-
-	// Show the result image
-	namedWindow("MS Picture");
-	imshow("MS Picture", Img);
+	return Img;
 
 
 }

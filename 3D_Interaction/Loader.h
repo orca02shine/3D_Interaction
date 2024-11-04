@@ -20,14 +20,12 @@ public:
 	std::string _FileName;
 	std::string _FilePath;
 
-	cv::Mat _LoadImg;
-	cv::Mat _ResultImg;
 
 	Loader();
 	~Loader();
 
 	bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
-	void LoadImage();
+	cv::Mat LoadImage();
 
 };
