@@ -59,5 +59,6 @@ public:
 
 	void SetupLabelST(Mat &);
 	void UpdateLabelST(int y, int x, int l);
+	void ShowLabelST(Mat&);
 };
 

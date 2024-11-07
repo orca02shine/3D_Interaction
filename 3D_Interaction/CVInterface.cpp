@@ -111,8 +111,8 @@ void CVInterface::UseInterface() {
 	while(Loop()){}
 
 
-
-	Clustering(src);
+	MSProc.ShowLabelST(src);
+	//Clustering(src);
 
 }
 

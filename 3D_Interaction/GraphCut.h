@@ -3,5 +3,6 @@
 
 struct Edge {
 	int to;
-	float cost;
+	float cap;
+	int rev;
 };

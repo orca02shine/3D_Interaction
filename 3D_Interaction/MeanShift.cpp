@@ -431,12 +431,12 @@ void MeanShift::SetSTLink() {
 	for (int i = 0; i < n; ++i) {
 
 		if (seen[i] == 1) {
-			Graph[n].push_back({ i,0 });
-			Graph[i].push_back({ n+1,INF });
+			Graph[n].push_back({ i,0 ,0});
+			Graph[i].push_back({ n+1,INF ,0});
 		}
 		else if (seen[i] == 2) {
-			Graph[n].push_back({ i,INF });
-			Graph[i].push_back({ n + 1,0 });
+			Graph[n].push_back({ i,INF ,0});
+			Graph[i].push_back({ n + 1,0 ,0});
 		}
 		else {
 			float l0 = LabelColor[i][0];
@@ -467,8 +467,8 @@ void MeanShift::SetSTLink() {
 				db = min(df, d);
 			}
 
-			Graph[n].push_back({i,	df/(df+db)});
-			Graph[i].push_back({n+1,db/(df+db)});
+			Graph[n].push_back({i,	df/(df+db),0});
+			Graph[i].push_back({n+1,db/(df+db),0});
 		}
 
 	}
@@ -489,4 +489,36 @@ void MeanShift::UpdateLabelST(int y, int x, int l) {
 
 	LabelST[y][x] = l;
 	return;
+}
+
+void MeanShift::ShowLabelST(Mat &img) {
+	Mat fg = img.clone();
+	Mat bg = img.clone();
+	
+	for (int y = 0; y < Rows; ++y) {
+		for (int x = 0; x < Cols; ++x) {
+			if (LabelST[y][x] == 1) {
+				bg.data[y * bg.step + x * bg.elemSize()] = 0;
+				bg.data[y * bg.step + x * bg.elemSize()+1] = 0;
+				bg.data[y * bg.step + x * bg.elemSize()+2] = 0;
+			}
+			else if (LabelST[y][x]==2) {
+				fg.data[y * fg.step + x * fg.elemSize()] = 0;
+				fg.data[y * fg.step + x * fg.elemSize() + 1] = 0;
+				fg.data[y * fg.step + x * fg.elemSize() + 2] = 0;
+			}
+			else {
+				bg.data[y * bg.step + x * bg.elemSize()] = 0;
+				bg.data[y * bg.step + x * bg.elemSize() + 1] = 0;
+				bg.data[y * bg.step + x * bg.elemSize() + 2] = 0;
+
+				fg.data[y * fg.step + x * fg.elemSize()] = 0;
+				fg.data[y * fg.step + x * fg.elemSize() + 1] = 0;
+				fg.data[y * fg.step + x * fg.elemSize() + 2] = 0;
+			}
+		}
+	}
+	
+	imshow("foreground", fg);
+	imshow("backGround", bg);
 }
