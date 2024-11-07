@@ -47,6 +47,8 @@ public:
 	int Rows;
 	int Cols;
 	vector<vector<int>> LabelST;
+	set<int> FP;
+	set<int> BP;
 
 public:
 	MeanShift(float, float);									// Constructor for spatial bandwidth and color bandwidth
@@ -57,6 +59,7 @@ public:
 	void MakeGraph();
 	void SetSTLink();
 
+	void SetLabelToPixel();
 	void SetupLabelST(Mat &);
 	void UpdateLabelST(int y, int x, int l);
 	void ShowLabelST(Mat&);

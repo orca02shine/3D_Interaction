@@ -389,6 +389,7 @@ void MeanShift::MakeGraph() {
 	}
 
 	SetSTLink();
+	SetLabelToPixel();
 
 }
 
@@ -397,8 +398,6 @@ void MeanShift::SetSTLink() {
 	int n = SuperPixels.size();
 
 	vector<int> seen(n, -1);
-	set<int> FP;
-	set<int> BP;
 
 	for (int i = 0; i < Rows; ++i) {
 		for (int j = 0; j < Cols; ++j) {
@@ -471,6 +470,22 @@ void MeanShift::SetSTLink() {
 			Graph[i].push_back({n+1,db/(df+db),0});
 		}
 
+	}
+
+}
+
+void MeanShift::SetLabelToPixel() {
+
+	for (auto& lav: FP) {
+		for (auto& pi : SuperPixels[lav]) {
+			LabelST[pi.first][pi.second] = 1;
+		}
+	}
+
+	for (auto& lav : BP) {
+		for (auto& pi : SuperPixels[lav]) {
+			LabelST[pi.first][pi.second] = 2;
+		}
 	}
 
 }

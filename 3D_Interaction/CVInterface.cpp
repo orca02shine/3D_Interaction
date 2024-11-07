@@ -110,9 +110,8 @@ void CVInterface::UseInterface() {
 	cv::imshow(WinName, Img);
 	while(Loop()){}
 
-
+	Clustering(src);
 	MSProc.ShowLabelST(src);
-	//Clustering(src);
 
 }
 
