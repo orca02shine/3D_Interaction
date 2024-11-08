@@ -28,7 +28,8 @@ double Dinic::MaxFlow(int s, int t) {
 	double flow = 0;
 	for (;;) {
 		bfs(s);
-		if (level[t] < 0)break;
+		if (level[t] < 0) {
+			break; }
 		std::fill(iter.begin(), iter.end(), 0);
 		double f;
 		while ((f = dfs(s, t, INF)) > 0); {

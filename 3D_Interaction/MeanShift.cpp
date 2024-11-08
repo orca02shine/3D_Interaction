@@ -346,7 +346,7 @@ void MeanShift::MakeGraph() {
 
 	int dy[8] = { 0,0,1,-1,1,-1,-1,1 };
 	int dx[8] = { 1,-1,0,0,1,-1,1,-1 };
-	const double INF = 10000000000;
+	const double INF = 1000000000000;
 
 	int n = SuperPixels.size();
 	Graph.resize(n+2);
@@ -432,22 +432,22 @@ void MeanShift::MakeGraph() {
 			if (seen[i] == 1) {
 				//Graph[n].push_back({ i,0 ,0 });
 				//Graph[i].push_back({ n + 1,INF ,0 });
-				dinic.AddEdge(n, i, 0);
-				dinic.AddEdge(i, n + 1, INF);
+				dinic.AddEdge(n, i, INF);
+				dinic.AddEdge(i, n + 1, 0);
 			}
 			else if (seen[i] == 2) {
 				//Graph[n].push_back({ i,INF ,0 });
 				//Graph[i].push_back({ n + 1,0 ,0 });
-				dinic.AddEdge(n, i, INF);
-				dinic.AddEdge(i, n + 1, 0);
+				dinic.AddEdge(n, i, 0);
+				dinic.AddEdge(i, n + 1, INF);
 			}
 			else {
 				double l0 = LabelColor[i][0];
 				double a0 = LabelColor[i][1];
 				double b0 = LabelColor[i][2];
 
-				double df = INF;
-				double db = INF;
+				double dfp = INF;
+				double dbp = INF;
 
 				for (auto& p : FP) {
 					double l = LabelColor[p][0];
@@ -457,7 +457,7 @@ void MeanShift::MakeGraph() {
 					double da = a0 - a;
 					double db = b0 - b;
 					double d = sqrtf(dl * dl + da * da + db * db);
-					df = min(df, d);
+					dfp = min(dfp, d);
 				}
 				for (auto& p : BP) {
 					double l = LabelColor[p][0];
@@ -467,13 +467,13 @@ void MeanShift::MakeGraph() {
 					double da = a0 - a;
 					double db = b0 - b;
 					double d = sqrtf(dl * dl + da * da + db * db);
-					db = min(df, d);
+					dbp = min(dbp, d);
 				}
 
 				//Graph[n].push_back({ i,	df / (df + db),0 });
 				//Graph[i].push_back({ n + 1,db / (df + db),0 });
-				dinic.AddEdge(n, i, df / (df + db));
-				dinic.AddEdge(i, n+1, db / (df + db));
+				dinic.AddEdge(n, i, dbp / (dfp + dbp));
+				dinic.AddEdge(i, n+1, dfp / (dfp + dbp));
 			}
 
 		}
@@ -483,18 +483,19 @@ void MeanShift::MakeGraph() {
 	}
 
 	double flow = dinic.MaxFlow(n, n + 1);
-	cout << "flow is" << flow<<endl;
-	std:vector<bool> st = dinic.GetNodes(n);
+	//cout << "flow is" << flow<<endl;
+	
+    std:vector<bool> stp = dinic.GetNodes(n);
 
 	for (int i = 0; i < n; ++i) {
-		if (st[i] == true) {
+		if (stp[i] == true) {
 			FP.insert(i);
 		}
 		else {
 			BP.insert(i);
 		}
 	}
-
+	
 
 
 
