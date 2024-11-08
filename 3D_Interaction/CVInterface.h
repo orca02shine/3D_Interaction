@@ -23,6 +23,9 @@ public:
 	static int IsClicked;
 	static cv::Point PrePos;
 	static cv::Mat Img;
+	static cv::Mat Mask_FP;
+	static cv::Mat Mask_BP;
+	static cv::Mat Mask_Constraint;
 
 	static MeanShift MSProc;
 

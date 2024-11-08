@@ -501,88 +501,7 @@ void MeanShift::MakeGraph() {
 
 	SetLabelToPixel();
 }
-/*
-void MeanShift::SetSTLink() {
-	const float INF = 10000000000;
-	int n = SuperPixels.size();
 
-	vector<int> seen(n, -1);
-
-	for (int i = 0; i < Rows; ++i) {
-		for (int j = 0; j < Cols; ++j) {
-
-			int ST = LabelST[i][j];
-			int pixelNum = LabelIndex[i][j];
-			if (ST ==1) {
-				if (seen[pixelNum] == -1) {
-					seen[pixelNum] = 1;
-					FP.insert(pixelNum);
-				}
-			}
-			else if (ST == 2) {
-				if (seen[pixelNum] == -1) {
-					seen[pixelNum] = 2;
-					BP.insert(pixelNum);
-				}
-			}
-
-		}
-	}
-	for (int i = 0; i < n; ++i) {
-		if (seen[i] == -1)seen[i] = 0;
-	}
-
-	//------------------
-	int ns = n;//foreground,1
-	int nt = n + 1;//background,2
-
-	for (int i = 0; i < n; ++i) {
-
-		if (seen[i] == 1) {
-			Graph[n].push_back({ i,0 ,0});
-			Graph[i].push_back({ n+1,INF ,0});
-		}
-		else if (seen[i] == 2) {
-			Graph[n].push_back({ i,INF ,0});
-			Graph[i].push_back({ n + 1,0 ,0});
-		}
-		else {
-			double l0 = LabelColor[i][0];
-			double a0 = LabelColor[i][1];
-			double b0 = LabelColor[i][2];
-
-			double df = INF;
-			double db = INF;
-
-			for (auto& p : FP) {
-				double l= LabelColor[p][0];
-				double a= LabelColor[p][1];
-				double b= LabelColor[p][2];
-				double dl = l0 - l;
-				double da = a0 - a;
-				double db = b0 - b;
-				double d = sqrtf(dl * dl + da * da + db * db);
-				df = min(df, d);
-			}
-			for (auto& p : BP) {
-				double l = LabelColor[p][0];
-				double a = LabelColor[p][1];
-				double b = LabelColor[p][2];
-				double dl = l0 - l;
-				double da = a0 - a;
-				double db = b0 - b;
-				double d = sqrtf(dl * dl + da * da + db * db);
-				db = min(df, d);
-			}
-
-			Graph[n].push_back({i,	df/(df+db),0});
-			Graph[i].push_back({n+1,db/(df+db),0});
-		}
-
-	}
-
-}
-*/
 
 void MeanShift::SetLabelToPixel() {
 
@@ -608,12 +527,21 @@ void MeanShift::SetupLabelST(Mat &img) {
 
 }
 
-void MeanShift::UpdateLabelST(int y, int x, int l) {
 
-	if (y < 0 || y >= Rows || x < 0 || x >= Cols)return;
+void MeanShift::SetMask(Mat &fp, Mat &bp) {
 
-	LabelST[y][x] = l;
-	return;
+	for (int y = 0; y < Rows; ++y) {
+		for (int x = 0; x < Cols; ++x) {
+			if (fp.data[y * fp.step + x * fp.elemSize()] == 255) {
+				LabelST[y][x] = 1;
+			}
+
+			if (bp.data[y * bp.step + x * bp.elemSize()] == 255) {
+				LabelST[y][x] = 2;
+			}
+		}
+	}
+
 }
 
 void MeanShift::ShowLabelST(Mat &img) {

@@ -7,6 +7,9 @@ std::string CVInterface::WinName = "Input Image";
 int CVInterface::IsClicked = false;
 cv::Point CVInterface::PrePos = cv::Point(0, 0);
 cv::Mat CVInterface::Img;
+cv::Mat CVInterface::Mask_FP;
+cv::Mat CVInterface::Mask_BP;
+cv::Mat CVInterface::Mask_Constraint;
 
 MeanShift CVInterface::MSProc(8, 16);
 
@@ -55,13 +58,19 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	case cv::EVENT_LBUTTONDOWN:
 		IsClicked = 1;
 		cv::circle(Img, { x,y }, 2, { 0,0,255 },-1);
-		MSProc.UpdateLabelST(y, x, 1);
+		cv::circle(Mask_FP, { x,y }, 2,255, -1);
 		break;
 
 	case cv::EVENT_RBUTTONDOWN:
 		IsClicked = 2;
 		cv::circle(Img, { x,y }, 2, { 255,0,0 }, -1);
-		MSProc.UpdateLabelST(y, x, 2);
+		cv::circle(Mask_BP, { x,y }, 2, 255, -1);
+		break;
+
+	case cv::EVENT_MBUTTONDOWN:
+		IsClicked = 3;
+		cv::circle(Img, { x,y }, 2, { 255,255,255 }, -1);
+		cv::circle(Mask_Constraint, { x,y }, 2, 255, -1);
 		break;
 
 	case cv::EVENT_LBUTTONUP:
@@ -72,19 +81,26 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 		IsClicked = 0;
 		break;
 
+	case cv::EVENT_MBUTTONUP:
+		IsClicked = 0;
+		break;
+
 	case cv::EVENT_MOUSEMOVE:
 		if (IsClicked==1) {
 			cv::polylines(Img,ar,false, { 0,0,255 },4);
-			MSProc.UpdateLabelST(y, x, 1);
+			cv::polylines(Mask_FP, ar, false, 255, 4);
 		}
 		else if (IsClicked==2) {
 			cv::polylines(Img, ar, false, { 255,0,0 }, 4);
-			MSProc.UpdateLabelST(y, x, 2);
+			cv::polylines(Mask_BP, ar, false, 255, 4);
 		}
-
+		else if (IsClicked == 3) {
+			cv::polylines(Img, ar, false, { 255,255,255}, 4);
+			cv::polylines(Mask_Constraint, ar, false, 255, 4);
+		}
 		break;
 	}
-	if (IsClicked) {
+	if (IsClicked>0) {
 		PrePos = cv::Point(x, y);
 	}
 
@@ -101,6 +117,11 @@ bool CVInterface::Loop() {
 void CVInterface::UseInterface() {
 
 	Img =LoadImg();
+	Mask_FP= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
+	Mask_BP= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
+	Mask_Constraint= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
+
+
 	cv::Mat src = Img.clone();
 	cv::Mat result = Img.clone();
 	MSProc.SetupLabelST(src);
@@ -111,6 +132,7 @@ void CVInterface::UseInterface() {
 	cv::imshow(WinName, Img);
 	while(Loop()){}
 
+	MSProc.SetMask(Mask_FP,Mask_BP);
 	Clustering(src);
 	MSProc.ShowLabelST(result);
 

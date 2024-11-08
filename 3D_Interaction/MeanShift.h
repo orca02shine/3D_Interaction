@@ -57,11 +57,10 @@ public:
 	// Mean Shift Segmentation
 
 	void MakeGraph();
-	void SetSTLink();
+	void SetMask(Mat& fp, Mat& bp);
 
 	void SetLabelToPixel();
 	void SetupLabelST(Mat &);
-	void UpdateLabelST(int y, int x, int l);
 	void ShowLabelST(Mat&);
 };
 
