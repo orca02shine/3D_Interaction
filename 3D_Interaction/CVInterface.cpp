@@ -102,6 +102,7 @@ void CVInterface::UseInterface() {
 
 	Img =LoadImg();
 	cv::Mat src = Img.clone();
+	cv::Mat result = Img.clone();
 	MSProc.SetupLabelST(src);
 
 
@@ -111,7 +112,7 @@ void CVInterface::UseInterface() {
 	while(Loop()){}
 
 	Clustering(src);
-	MSProc.ShowLabelST(src);
+	MSProc.ShowLabelST(result);
 
 }
 

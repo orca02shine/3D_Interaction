@@ -341,13 +341,18 @@ void MeanShift::MSSegmentation(Mat& Img) {
 }
 
 
+
 void MeanShift::MakeGraph() {
 
 	int dy[8] = { 0,0,1,-1,1,-1,-1,1 };
 	int dx[8] = { 1,-1,0,0,1,-1,1,-1 };
+	const double INF = 10000000000;
 
 	int n = SuperPixels.size();
-	Graph.resize(n+2);//n->start, n+1->target
+	Graph.resize(n+2);
+
+	Dinic dinic(n + 2);//n->start, n+1->target
+
 	vector<vector<bool>> seen(n, vector<bool>(n, false));
 
 	for (int i = 0; i < Rows; ++i) {
@@ -361,23 +366,26 @@ void MeanShift::MakeGraph() {
 				int id1 = LabelIndex[i + dy[d]][j + dx[d]];
 
 				if (id0!=id1) {
-					float l0=LabelColor[id0][0];
-					float a0= LabelColor[id0][1];
-					float b0 = LabelColor[id0][2];
+					double l0=LabelColor[id0][0];
+					double a0= LabelColor[id0][1];
+					double b0 = LabelColor[id0][2];
 
-					float l1 = LabelColor[id1][0];
-					float a1 = LabelColor[id1][1];
-					float b1 = LabelColor[id1][2];
+					double l1 = LabelColor[id1][0];
+					double a1 = LabelColor[id1][1];
+					double b1 = LabelColor[id1][2];
 
-					float dl = l0 - l1;
-					float da = a0 - a1;
-					float db = b0 - b1;
+					double dl = l0 - l1;
+					double da = a0 - a1;
+					double db = b0 - b1;
 
-					float D = sqrtf(dl * dl + da * da + db * db);
+					double D = sqrtf(dl * dl + da * da + db * db);
+
 					//add graph
 					if (!seen[id0][id1] && !seen[id1][id0]) {
-						Graph[id0].push_back({ id1, 1 / (D + 1) });
-						Graph[id1].push_back({ id0, 1 / (D + 1) });
+						//Graph[id0].push_back({ id1, 1 / (D + 1) });
+
+						dinic.AddEdgeBoth(id0,id1,1/(D+1));
+
 						seen[id0][id1] = true;
 						seen[id1][id0] = true;
 					}
@@ -387,12 +395,112 @@ void MeanShift::MakeGraph() {
 
 		}
 	}
+	////setlink
+	{
+		vector<int> seen(n, -1);
 
-	SetSTLink();
+		for (int i = 0; i < Rows; ++i) {
+			for (int j = 0; j < Cols; ++j) {
+
+				int ST = LabelST[i][j];
+				int pixelNum = LabelIndex[i][j];
+				if (ST == 1) {
+					if (seen[pixelNum] == -1) {
+						seen[pixelNum] = 1;
+						FP.insert(pixelNum);
+					}
+				}
+				else if (ST == 2) {
+					if (seen[pixelNum] == -1) {
+						seen[pixelNum] = 2;
+						BP.insert(pixelNum);
+					}
+				}
+
+			}
+		}
+		for (int i = 0; i < n; ++i) {
+			if (seen[i] == -1)seen[i] = 0;
+		}
+
+
+		int ns = n;//foreground,1
+		int nt = n + 1;//background,2
+
+		for (int i = 0; i < n; ++i) {
+
+			if (seen[i] == 1) {
+				//Graph[n].push_back({ i,0 ,0 });
+				//Graph[i].push_back({ n + 1,INF ,0 });
+				dinic.AddEdge(n, i, 0);
+				dinic.AddEdge(i, n + 1, INF);
+			}
+			else if (seen[i] == 2) {
+				//Graph[n].push_back({ i,INF ,0 });
+				//Graph[i].push_back({ n + 1,0 ,0 });
+				dinic.AddEdge(n, i, INF);
+				dinic.AddEdge(i, n + 1, 0);
+			}
+			else {
+				double l0 = LabelColor[i][0];
+				double a0 = LabelColor[i][1];
+				double b0 = LabelColor[i][2];
+
+				double df = INF;
+				double db = INF;
+
+				for (auto& p : FP) {
+					double l = LabelColor[p][0];
+					double a = LabelColor[p][1];
+					double b = LabelColor[p][2];
+					double dl = l0 - l;
+					double da = a0 - a;
+					double db = b0 - b;
+					double d = sqrtf(dl * dl + da * da + db * db);
+					df = min(df, d);
+				}
+				for (auto& p : BP) {
+					double l = LabelColor[p][0];
+					double a = LabelColor[p][1];
+					double b = LabelColor[p][2];
+					double dl = l0 - l;
+					double da = a0 - a;
+					double db = b0 - b;
+					double d = sqrtf(dl * dl + da * da + db * db);
+					db = min(df, d);
+				}
+
+				//Graph[n].push_back({ i,	df / (df + db),0 });
+				//Graph[i].push_back({ n + 1,db / (df + db),0 });
+				dinic.AddEdge(n, i, df / (df + db));
+				dinic.AddEdge(i, n+1, db / (df + db));
+			}
+
+		}
+
+
+
+	}
+
+	double flow = dinic.MaxFlow(n, n + 1);
+	cout << "flow is" << flow<<endl;
+	std:vector<bool> st = dinic.GetNodes(n);
+
+	for (int i = 0; i < n; ++i) {
+		if (st[i] == true) {
+			FP.insert(i);
+		}
+		else {
+			BP.insert(i);
+		}
+	}
+
+
+
+
 	SetLabelToPixel();
-
 }
-
+/*
 void MeanShift::SetSTLink() {
 	const float INF = 10000000000;
 	int n = SuperPixels.size();
@@ -438,31 +546,31 @@ void MeanShift::SetSTLink() {
 			Graph[i].push_back({ n + 1,0 ,0});
 		}
 		else {
-			float l0 = LabelColor[i][0];
-			float a0 = LabelColor[i][1];
-			float b0 = LabelColor[i][2];
+			double l0 = LabelColor[i][0];
+			double a0 = LabelColor[i][1];
+			double b0 = LabelColor[i][2];
 
-			float df = INF;
-			float db = INF;
+			double df = INF;
+			double db = INF;
 
 			for (auto& p : FP) {
-				float l= LabelColor[p][0];
-				float a= LabelColor[p][1];
-				float b= LabelColor[p][2];
-				float dl = l0 - l;
-				float da = a0 - a;
-				float db = b0 - b;
-				float d = sqrtf(dl * dl + da * da + db * db);
+				double l= LabelColor[p][0];
+				double a= LabelColor[p][1];
+				double b= LabelColor[p][2];
+				double dl = l0 - l;
+				double da = a0 - a;
+				double db = b0 - b;
+				double d = sqrtf(dl * dl + da * da + db * db);
 				df = min(df, d);
 			}
 			for (auto& p : BP) {
-				float l = LabelColor[p][0];
-				float a = LabelColor[p][1];
-				float b = LabelColor[p][2];
-				float dl = l0 - l;
-				float da = a0 - a;
-				float db = b0 - b;
-				float d = sqrtf(dl * dl + da * da + db * db);
+				double l = LabelColor[p][0];
+				double a = LabelColor[p][1];
+				double b = LabelColor[p][2];
+				double dl = l0 - l;
+				double da = a0 - a;
+				double db = b0 - b;
+				double d = sqrtf(dl * dl + da * da + db * db);
 				db = min(df, d);
 			}
 
@@ -473,6 +581,7 @@ void MeanShift::SetSTLink() {
 	}
 
 }
+*/
 
 void MeanShift::SetLabelToPixel() {
 
