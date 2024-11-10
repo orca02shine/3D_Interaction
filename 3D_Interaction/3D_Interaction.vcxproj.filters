@@ -54,6 +54,9 @@
     <ClCompile Include="CVInterface.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="PatchMatch.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -78,6 +81,9 @@
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
     <ClInclude Include="CVInterface.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchMatch.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
   </ItemGroup>

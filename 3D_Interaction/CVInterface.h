@@ -4,6 +4,7 @@
 #include <shobjidl.h>
 
 #include "MeanShift.h"
+#include "PatchMatch.h"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>

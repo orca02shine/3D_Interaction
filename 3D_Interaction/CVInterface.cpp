@@ -63,8 +63,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 
 	case cv::EVENT_RBUTTONDOWN:
 		IsClicked = 2;
-		cv::circle(Img, { x,y }, 2, { 255,0,0 }, -1);
-		cv::circle(Mask_BP, { x,y }, 2, 255, -1);
+		cv::circle(Img, { x,y }, 10, { 255,0,0 }, -1);
+		cv::circle(Mask_BP, { x,y }, 10, 255, -1);
 		break;
 
 	case cv::EVENT_MBUTTONDOWN:
@@ -91,8 +91,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::polylines(Mask_FP, ar, false, 255, 4);
 		}
 		else if (IsClicked==2) {
-			cv::polylines(Img, ar, false, { 255,0,0 }, 4);
-			cv::polylines(Mask_BP, ar, false, 255, 4);
+			cv::polylines(Img, ar, false, { 255,0,0 }, 20);
+			cv::polylines(Mask_BP, ar, false, 255, 20);
 		}
 		else if (IsClicked == 3) {
 			cv::polylines(Img, ar, false, { 255,255,255}, 4);
@@ -132,9 +132,12 @@ void CVInterface::UseInterface() {
 	cv::imshow(WinName, Img);
 	while(Loop()){}
 
-	MSProc.SetMask(Mask_FP,Mask_BP);
-	Clustering(src);
-	MSProc.ShowLabelST(result);
+	//MSProc.SetMask(Mask_FP,Mask_BP);
+	//Clustering(src);
+	//MSProc.ShowLabelST(result);
+
+	PatchMatch pm;
+	//pm.image_complete(result, Mask_BP, Mask_Constraint);
 
 }
 
