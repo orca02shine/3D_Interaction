@@ -23,6 +23,7 @@ public:
 
 	static int IsClicked;
 	static cv::Point PrePos;
+	static cv::Point ClickedPos;
 	static cv::Mat Img;
 	static cv::Mat Mask_FP;
 	static cv::Mat Mask_BP;

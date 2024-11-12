@@ -452,7 +452,7 @@ void::PatchMatch::image_complete(Mat im_orig, Mat mask, Mat constraint) {
         */
 
         // iterations of image completion
-        int im_iterations = 10;
+        int im_iterations = 5;
         for (int im_iter = 0; im_iter < im_iterations; ++im_iter) {
             printf("im_iter = %d\n", im_iter);
 
@@ -560,7 +560,7 @@ void::PatchMatch::image_complete(Mat im_orig, Mat mask, Mat constraint) {
             }
 
             string outfile = "r_scale" + to_string(index) + "_imiter" + to_string(im_iter) + ".png";
-            imwrite(outfile, R);
+            //imwrite(outfile, R);
 
             delete ann;
             delete annd;
@@ -592,7 +592,7 @@ void::PatchMatch::image_complete(Mat im_orig, Mat mask, Mat constraint) {
         }
     }
 
-    imwrite("final_out.png", resize_img);
+    imshow("final_out.png", resize_img);
 }
 
 PatchMatch::PatchMatch() {

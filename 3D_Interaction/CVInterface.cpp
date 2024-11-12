@@ -6,6 +6,7 @@ std::string CVInterface::_FileName;
 std::string CVInterface::WinName = "Input Image";
 int CVInterface::IsClicked = false;
 cv::Point CVInterface::PrePos = cv::Point(0, 0);
+cv::Point CVInterface::ClickedPos = cv::Point(0, 0);
 cv::Mat CVInterface::Img;
 cv::Mat CVInterface::Mask_FP;
 cv::Mat CVInterface::Mask_BP;
@@ -53,6 +54,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	//IsClicked,0:no,1:left,2:right,3:middle;
 
 	vector<cv::Point> ar = { cv::Point(x,y),PrePos };
+	vector<cv::Point> li = { cv::Point(x,y),ClickedPos };
 
 	switch (event) {
 	case cv::EVENT_LBUTTONDOWN:
@@ -69,8 +71,9 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 
 	case cv::EVENT_MBUTTONDOWN:
 		IsClicked = 3;
-		cv::circle(Img, { x,y }, 2, { 255,255,255 }, -1);
-		cv::circle(Mask_Constraint, { x,y }, 2, 255, -1);
+		cv::circle(Img, { x,y }, 10, { 255,255,255 }, -1);
+		cv::circle(Mask_Constraint, { x,y }, 10, 255, -1);
+		ClickedPos= cv::Point(x, y);
 		break;
 
 	case cv::EVENT_LBUTTONUP:
@@ -83,6 +86,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 
 	case cv::EVENT_MBUTTONUP:
 		IsClicked = 0;
+		//cv::polylines(Img, li, false, { 255,255,255 }, 20);
+		//cv::polylines(Mask_Constraint, li, false, 255, 20);
 		break;
 
 	case cv::EVENT_MOUSEMOVE:
@@ -95,8 +100,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::polylines(Mask_BP, ar, false, 255, 20);
 		}
 		else if (IsClicked == 3) {
-			cv::polylines(Img, ar, false, { 255,255,255}, 4);
-			cv::polylines(Mask_Constraint, ar, false, 255, 4);
+			cv::polylines(Img, ar, false, { 255,255,255 }, 20);
+			cv::polylines(Mask_Constraint, ar, false, 255, 20);
 		}
 		break;
 	}
@@ -137,7 +142,7 @@ void CVInterface::UseInterface() {
 	//MSProc.ShowLabelST(result);
 
 	PatchMatch pm;
-	//pm.image_complete(result, Mask_BP, Mask_Constraint);
+	pm.image_complete(result, Mask_BP, Mask_Constraint);
 
 }
 
