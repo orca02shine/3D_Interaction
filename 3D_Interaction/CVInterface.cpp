@@ -137,12 +137,12 @@ void CVInterface::UseInterface() {
 	cv::imshow(WinName, Img);
 	while(Loop()){}
 
-	//MSProc.SetMask(Mask_FP,Mask_BP);
-	//Clustering(src);
-	//MSProc.ShowLabelST(result);
+	MSProc.SetMask(Mask_FP,Mask_BP);
+	Clustering(src);
+	MSProc.ShowLabelST(result);
 
-	PatchMatch pm;
-	pm.image_complete(result, Mask_BP, Mask_Constraint);
+	//PatchMatch pm;
+	//pm.image_complete(result, Mask_BP, Mask_Constraint);
 
 }
 

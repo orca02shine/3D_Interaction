@@ -384,7 +384,9 @@ void MeanShift::MakeGraph() {
 					if (!seen[id0][id1] && !seen[id1][id0]) {
 						//Graph[id0].push_back({ id1, 1 / (D + 1) });
 
-						dinic.AddEdgeBoth(id0,id1,1/(D+1));
+						//dinic.AddEdgeBoth(id0,id1,1/(D+1));
+						dinic.AddEdge(id0, id1, 1 / (D + 1));
+						dinic.AddEdge(id1, id0, 1 / (D + 1));
 
 						seen[id0][id1] = true;
 						seen[id1][id0] = true;
