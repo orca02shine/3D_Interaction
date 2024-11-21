@@ -57,7 +57,7 @@ void Texture::SetActive()
 void Texture::ProtoTex() {
 	int w = 256;
 
-	std::vector<int> protodata(w * w * 4 * sizeof(int), 120);
+	std::vector<int> protodata(w * w * 4 * sizeof(int), 255);
 
 	SetShader(w, w, protodata.data());
 }

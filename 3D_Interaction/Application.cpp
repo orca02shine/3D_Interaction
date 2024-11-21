@@ -72,5 +72,4 @@ void Application::RunLoop()
 
 void Application::Test() 
 {
-	CVInterface::UseInterface();
 }

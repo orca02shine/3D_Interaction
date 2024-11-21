@@ -239,8 +239,14 @@ void SimulationWindow::Revolution(float prex, float prey) {
 }
 
 void SimulationWindow::test() {
+
+	CVInterface::UseInterface();
+
 	Texture* t = new Texture(_Shader->GetShaderID());
 	Mesh* m = new Mesh(this);
+	m->ProtoMesh();
+	m->MakeVertices();
+
 	m->LinkShader(_Shader,_WireShader);
 	m->LinkTexture(t);
 

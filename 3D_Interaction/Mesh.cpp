@@ -4,7 +4,6 @@
 Mesh::Mesh(class SimulationWindow* window)
 	:_Texture(nullptr),_VertexObject(nullptr), _Parent(window)
 {
-	MakeVertices();
 
 }
 
@@ -14,7 +13,7 @@ Mesh::~Mesh()
 }
 
 void Mesh::ProtoMesh() {
-	_Vertices = { {-0.5,-0.5,0.0},{0.5,-0.5,0.0},{0.5,0.5,0.0},{-0.5,0.5,0.0} };
+	_Vertices = { {-1.0,-1.0,0.0},{1.0,-1.0,0.0},{1.0,1.0,0.0},{-1.0,1.0,0.0} };
 
 	_UV = { 0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0 };
 
@@ -66,7 +65,6 @@ void Mesh::UpdateMesh() {
 
 void Mesh::MakeVertices() {
 
-	ProtoMesh2();
 
 	_VertexObject = new VertexObject
 	(3, _Vertices.size(), _Vertices.data(),

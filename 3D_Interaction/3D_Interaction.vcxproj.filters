@@ -94,6 +94,8 @@
     <None Include="shader.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="shader_wire.frag" />
+    <None Include="shader_wire.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

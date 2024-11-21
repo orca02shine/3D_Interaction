@@ -12,6 +12,7 @@
 #include"Shader.h"
 #include"Mesh.h"
 #include"Texture.h"
+#include "CVInterface.h"
 
 class Window {
 
@@ -48,6 +49,7 @@ public:
 	GLFWwindow* getGLFW();
 
 	float GetAspect();
+
 };
 
 //-------------------------------------------------
