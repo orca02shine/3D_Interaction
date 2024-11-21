@@ -8,7 +8,7 @@ Texture::Texture(GLuint shaderProgram)
 	_ShaderProgram(shaderProgram)
 {
 	//test
-	ProtoTex();
+	//ProtoTex();
 }
 
 Texture::~Texture() {
@@ -21,7 +21,7 @@ bool Texture::Load() {
 	return true;
 }
 
-void Texture::SetShader(int width,int height,int* data){
+void Texture::SetShader(int width,int height,void* data){
 	_Width = width;
 	_Height = height;
 

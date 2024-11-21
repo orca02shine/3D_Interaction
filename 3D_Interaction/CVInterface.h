@@ -29,6 +29,9 @@ public:
 	static cv::Mat Mask_BP;
 	static cv::Mat Mask_Constraint;
 
+	static cv::Mat Result_Back;
+	static cv::Mat Result_Fore;
+
 	static MeanShift MSProc;
 
 	static bool Loop();
@@ -41,6 +44,10 @@ public:
 
 	static cv::Mat LoadImg();
 	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
+
+	static cv::Mat Roi(cv::Mat img);
+
+	static cv::Mat GetTexture(int i);
 
 
 

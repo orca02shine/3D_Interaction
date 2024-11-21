@@ -241,8 +241,12 @@ void SimulationWindow::Revolution(float prex, float prey) {
 void SimulationWindow::test() {
 
 	CVInterface::UseInterface();
+	cv::Mat back = CVInterface::GetTexture(0);
 
 	Texture* t = new Texture(_Shader->GetShaderID());
+	t->SetShader(back.rows,back.cols,back.data);
+
+
 	Mesh* m = new Mesh(this);
 	m->ProtoMesh();
 	m->MakeVertices();

@@ -11,6 +11,8 @@ cv::Mat CVInterface::Img;
 cv::Mat CVInterface::Mask_FP;
 cv::Mat CVInterface::Mask_BP;
 cv::Mat CVInterface::Mask_Constraint;
+cv::Mat CVInterface::Result_Back;
+cv::Mat CVInterface::Result_Fore;
 
 MeanShift CVInterface::MSProc(8, 16);
 
@@ -174,6 +176,9 @@ void CVInterface::UseInterface() {
 	//PatchMatch pm;
 	//pm.image_complete(result, Mask_BP, Mask_Constraint);
 
+	Result_Back = Roi(Img);
+	Result_Fore = Roi(Img);
+
 }
 
 void CVInterface::Clustering(cv::Mat img) {
@@ -197,5 +202,52 @@ void CVInterface::Clustering(cv::Mat img) {
 	// Show the result image
 	namedWindow("MS Picture");
 	imshow("MS Picture", img);
+
+}
+
+cv::Mat CVInterface::Roi(cv::Mat img) {
+	int targetSize = 512;
+
+
+	cv:Mat loadMat = img.clone();
+	cv::Mat workMat= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+
+	if (loadMat.channels() < 4) {
+		cv::cvtColor(loadMat, loadMat, cv::COLOR_BGR2RGBA);
+	}
+
+
+	float w = loadMat.rows;
+	float h = loadMat.cols;
+
+	float asp = std::max(w, h);
+	float ratio = (double)targetSize / asp;
+
+	cv::resize(loadMat, loadMat, cv::Size(), ratio, ratio, cv::INTER_NEAREST);
+
+	cv::Mat Roi1(workMat, cv::Rect((targetSize - loadMat.cols) / 2, (targetSize - loadMat.rows) / 2,
+		loadMat.cols, loadMat.rows));
+
+	loadMat.copyTo(Roi1);
+
+	cv::Mat ret = workMat.clone();
+
+	cv::flip(ret, ret, 0);
+
+	return ret;
+
+}
+
+cv::Mat CVInterface::GetTexture(int i) {
+	if (i == 0) {
+		return Result_Back;
+	}
+	else if (i==1) {
+		return Result_Fore;
+	}
+	else {
+		int targetSize = 512;
+		return cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+	}
 
 }

@@ -16,7 +16,7 @@ public:
 	bool Load();
 	void Unload();
 
-	void SetShader(int width, int height,int* data);
+	void SetShader(int width, int height,void* data);
 	void LinkShader();
 	void SetActive();
 
