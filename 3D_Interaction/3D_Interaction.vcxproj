@@ -136,6 +136,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MeanShift.cpp" />
     <ClCompile Include="Mesh.cpp" />
+    <ClCompile Include="MeshCreator.cpp" />
     <ClCompile Include="PatchMatch.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="GraphCut.h" />
     <ClInclude Include="MeanShift.h" />
     <ClInclude Include="Mesh.h" />
+    <ClInclude Include="MeshCreator.h" />
     <ClInclude Include="PatchMatch.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />

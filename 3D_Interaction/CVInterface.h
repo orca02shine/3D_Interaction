@@ -54,6 +54,8 @@ public:
 
 	static cv::Mat GetTexture(int i);
 
+	static std::vector<cv::Point> GetBoundary();
+	static std::vector<cv::Point> GetCorner();
 
 
 };

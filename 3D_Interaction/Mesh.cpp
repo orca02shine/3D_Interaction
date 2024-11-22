@@ -53,17 +53,17 @@ void Mesh::ProtoMesh2() {
 	MakeVertices();
 }
 
-void Mesh::InsertMeshData(std::vector<int> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx) {
+void Mesh::InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx) {
 
 	_Vertices.clear();
 	_UV.clear();
 	_Indices.clear();
 	_WireIdx.clear();
 
-	for (int i = 0; i < vert.size(); i += 3) {
-		int x = vert[i];
-		int y = vert[i + 1];
-		int z = vert[i + 2];
+	for (int i = 0; i < vert.size(); ++i) {
+		int x = vert[i].x;
+		int y = vert[i].y;
+		int z = vert[i].z;
 		_Vertices.push_back({ x,y,z });
 	}
 	for (int i = 0; i < uv.size(); ++i) {

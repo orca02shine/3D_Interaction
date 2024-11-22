@@ -308,3 +308,11 @@ cv::Mat CVInterface::GetTexture(int i) {
 	}
 
 }
+
+std::vector<cv::Point> CVInterface::GetBoundary(){
+	return BoundaryPoint;
+}
+
+std::vector<cv::Point> CVInterface::GetCorner() {
+	return Corners;
+}

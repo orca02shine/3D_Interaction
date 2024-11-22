@@ -57,6 +57,9 @@
     <ClCompile Include="PatchMatch.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="MeshCreator.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -84,6 +87,9 @@
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
     <ClInclude Include="PatchMatch.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshCreator.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
   </ItemGroup>

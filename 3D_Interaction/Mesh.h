@@ -40,7 +40,7 @@ public:
 	void ProtoMesh();
 	void ProtoMesh2();
 
-	void InsertMeshData(std::vector<int> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx);
+	void InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx);
 	void UpdateMesh();
 	void MakeVertices();
 	void LinkTexture(Texture* tex);
