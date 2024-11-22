@@ -29,8 +29,8 @@ private:
 	std::vector<GLuint> _Indices;
 	std::vector<GLuint> _WireIdx;
 
-	bool _EnableMat = true;
-	bool _EnableWire = false;
+	bool _EnableMat = false;
+	bool _EnableWire = true;
 
 
 public:

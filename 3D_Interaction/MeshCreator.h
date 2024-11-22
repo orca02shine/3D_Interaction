@@ -21,6 +21,6 @@ public:
 
 	void Delauney();
 
-	void CalcCord(int& x, int& y, int& z);
+	void CalcCord(float& x, float& y, float& z);
 
 };

@@ -61,9 +61,9 @@ void Mesh::InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::ve
 	_WireIdx.clear();
 
 	for (int i = 0; i < vert.size(); ++i) {
-		int x = vert[i].x;
-		int y = vert[i].y;
-		int z = vert[i].z;
+		float x = vert[i].x;
+		float y = vert[i].y;
+		float z = vert[i].z;
 		_Vertices.push_back({ x,y,z });
 	}
 	for (int i = 0; i < uv.size(); ++i) {

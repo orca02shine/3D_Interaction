@@ -257,9 +257,28 @@ void SimulationWindow::test() {
 	std::vector<int> wireIdx;
 	MeshCreator MC;
 
+	//*debug
+	for (int i = 0; i < 4; ++i) {
+		cout << "corner " << corner[i].x << " " << corner[i].y << endl;
+	}
+	for (auto& p : boundary) {
+		cout << "Boudary " << p.x << " " << p.y << endl;
+	}
+	//*/
+
 	MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
 
-	//m->InsertMeshData(vert, uv, idx, wireIdx);
+	/*
+	for (auto& e : uv) {
+	std:cout << "uv " << e << " ";
+	}
+	*/
+	
+	for (auto& e : idx) {
+		std::cout << e << " ";
+	}
+
+	m->InsertMeshData(vert, uv, idx, wireIdx);
 	//m->ProtoMesh();
 	m->LinkShader(_Shader,_WireShader);
 	m->LinkTexture(t);
