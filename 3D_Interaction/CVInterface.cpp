@@ -159,13 +159,13 @@ void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
 	Roi(loadImg,Img_Roi);
-	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
-	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
-	Mask_Constraint= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
+	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
+	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
+	Mask_Constraint= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 
 
 	cv::Mat src = Img_Roi.clone();
-	//cv::Mat result = Img.clone();
+	cv::Mat result = Img_Roi.clone();
 	MSProc.SetupLabelST(src);
 
 
@@ -174,15 +174,20 @@ void CVInterface::UseInterface() {
 	cv::imshow(WinName, Img_Roi);
 	while(Loop()){}
 
+	cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);
+
+	/*
+	MSProc.SetMask(Mask_FP,Mask_BP);
+	Clustering(src);
+	MSProc.ShowLabelST(result);
+	*/
 
 
+	/*
+	PatchMatch pm;
+	pm.image_complete(result, Mask_BP, Mask_Constraint);
+	*/
 
-	//MSProc.SetMask(Mask_FP,Mask_BP);
-	//Clustering(src);
-	//MSProc.ShowLabelST(result);
-
-	//PatchMatch pm;
-	//pm.image_complete(result, Mask_BP, Mask_Constraint);
 
 	cv::Mat Back = Img.clone();
 
@@ -260,7 +265,7 @@ cv::Mat CVInterface::GetTexture(int i) {
 		return Result_Fore;
 	}
 	else {
-		int targetSize = 512;
+		int targetSize = 1024;
 		return cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
 	}
 
