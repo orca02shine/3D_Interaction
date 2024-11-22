@@ -8,10 +8,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui.hpp>
+
 
 #include"Shader.h"
 #include"Mesh.h"
 #include"Texture.h"
+#include"MeshCreator.h"
 #include "CVInterface.h"
 
 class Window {

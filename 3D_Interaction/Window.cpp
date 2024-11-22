@@ -248,8 +248,19 @@ void SimulationWindow::test() {
 
 
 	Mesh* m = new Mesh(this);
-	m->ProtoMesh();
 
+	std::vector<cv::Point> corner = CVInterface::GetCorner();
+	std::vector<cv::Point> boundary = CVInterface::GetBoundary();
+	std::vector<glm::vec3> vert;
+	std::vector<float> uv;
+	std::vector<int> idx;
+	std::vector<int> wireIdx;
+	MeshCreator MC;
+
+	MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
+
+	//m->InsertMeshData(vert, uv, idx, wireIdx);
+	//m->ProtoMesh();
 	m->LinkShader(_Shader,_WireShader);
 	m->LinkTexture(t);
 
