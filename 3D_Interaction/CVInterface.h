@@ -22,9 +22,11 @@ public:
 	static std::string WinName;
 
 	static int IsClicked;
+	static int TargetSize;
 	static cv::Point PrePos;
 	static cv::Point ClickedPos;
 	static cv::Mat Img;
+	static cv::Mat Img_Roi;
 	static cv::Mat Mask_FP;
 	static cv::Mat Mask_BP;
 	static cv::Mat Mask_Constraint;
@@ -45,7 +47,7 @@ public:
 	static cv::Mat LoadImg();
 	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
-	static cv::Mat Roi(cv::Mat img);
+	static void Roi(cv::Mat img,cv::Mat &roi);
 
 	static cv::Mat GetTexture(int i);
 

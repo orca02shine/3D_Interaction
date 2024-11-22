@@ -4,10 +4,12 @@ std::string CVInterface::_FilePath;
 std::string CVInterface::_FileName;
 
 std::string CVInterface::WinName = "Input Image";
-int CVInterface::IsClicked = false;
+int CVInterface::IsClicked = 0;
+int CVInterface::TargetSize = 512;
 cv::Point CVInterface::PrePos = cv::Point(0, 0);
 cv::Point CVInterface::ClickedPos = cv::Point(0, 0);
 cv::Mat CVInterface::Img;
+cv::Mat CVInterface::Img_Roi;
 cv::Mat CVInterface::Mask_FP;
 cv::Mat CVInterface::Mask_BP;
 cv::Mat CVInterface::Mask_Constraint;
@@ -44,10 +46,10 @@ cv::Mat CVInterface::LoadImg() {
 
 	FileOpen(_FileName, _FilePath);
 
-	cv::Mat Img = cv::imread(_FilePath, cv::IMREAD_UNCHANGED);
+	cv::Mat img = cv::imread(_FilePath, cv::IMREAD_UNCHANGED);
 
 
-	return Img;
+	return img;
 
 
 }
@@ -60,13 +62,13 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	int brushSize_S = 2;
 	int brushSize_L = 10;
 
-	cv::Mat buffer = Img.clone();;
+	cv::Mat buffer = Img_Roi.clone();;
 
 	switch (event) {
 	case cv::EVENT_LBUTTONDOWN:
 		if(IsClicked==0){
 			IsClicked = 1;
-			cv::circle(Img, { x,y }, brushSize_S, { 0,0,255 }, -1);
+			cv::circle(Img_Roi, { x,y }, brushSize_S, { 0,0,255 }, -1);
 			cv::circle(Mask_FP, { x,y }, brushSize_S, 255, -1);
 			//buffer = Img.clone();
 		}
@@ -78,7 +80,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	case cv::EVENT_RBUTTONDOWN:
 		if (IsClicked == 0) {
 			IsClicked = 2;
-			cv::circle(Img, { x,y }, brushSize_L, { 255,0,0 }, -1);
+			cv::circle(Img_Roi, { x,y }, brushSize_L, { 255,0,0 }, -1);
 			cv::circle(Mask_BP, { x,y }, brushSize_L, 255, -1);
 			//buffer = Img.clone();
 		}
@@ -90,24 +92,26 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	case cv::EVENT_MBUTTONDOWN:
 		if (IsClicked == 0) {
 			IsClicked = 3;
-			cv::circle(Img, { x,y }, brushSize_S, { 255,255,255 }, -1);
+			cv::circle(Img_Roi, { x,y }, brushSize_S, { 255,255,255 }, -1);
 			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
 			ClickedPos = cv::Point(x, y);
 
-			buffer = Img.clone();
+			buffer = Img_Roi.clone();
 		}
 		else if (IsClicked==3) {
-			cv::circle(Img, { x,y }, brushSize_S, { 255,255,255 }, -1);
+			cv::circle(Img_Roi, { x,y }, brushSize_S, { 255,255,255 }, -1);
 			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
-			cv::polylines(Img, li, false, { 255,255,255 }, brushSize_S*2);
+			cv::polylines(Img_Roi, li, false, { 255,255,255 }, brushSize_S*2);
 			cv::polylines(Mask_Constraint, li, false, 255, brushSize_S*2);
 			ClickedPos = cv::Point(x, y);
 
-			buffer = Img.clone();
+			buffer = Img_Roi.clone();
 		}
 		else {
 			IsClicked = 0;
 		}
+		cout <<"x,y " << x << " " << y << endl;
+
 		break;
 
 	case cv::EVENT_LBUTTONUP:
@@ -124,15 +128,15 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 
 	case cv::EVENT_MOUSEMOVE:
 		if (IsClicked==1) {
-			cv::polylines(Img,ar,false, { 0,0,255 },brushSize_S*2);
+			cv::polylines(Img_Roi,ar,false, { 0,0,255 },brushSize_S*2);
 			cv::polylines(Mask_FP, ar, false, 255, brushSize_S*2);
 		}
 		else if (IsClicked==2) {
-			cv::polylines(Img, ar, false, { 255,0,0 }, brushSize_L*2);
+			cv::polylines(Img_Roi, ar, false, { 255,0,0 }, brushSize_L*2);
 			cv::polylines(Mask_BP, ar, false, 255, brushSize_L*2);
 		}
 		else if (IsClicked == 3) {
-			buffer = Img.clone();
+			buffer = Img_Roi.clone();
 			cv::polylines(buffer, li, false, { 255,255,255 }, brushSize_S*2);
 		}
 		break;
@@ -153,21 +157,25 @@ bool CVInterface::Loop() {
 
 void CVInterface::UseInterface() {
 
-	Img =LoadImg();
-	Mask_FP= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
-	Mask_BP= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
-	Mask_Constraint= cv::Mat::zeros(Img.rows, Img.cols, CV_8UC1);
+	cv::Mat loadImg =LoadImg();
+	Roi(loadImg,Img_Roi);
+	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
+	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
+	Mask_Constraint= cv::Mat::zeros(Img_Roi.rows, Img.cols, CV_8UC1);
 
 
-	cv::Mat src = Img.clone();
-	cv::Mat result = Img.clone();
+	cv::Mat src = Img_Roi.clone();
+	//cv::Mat result = Img.clone();
 	MSProc.SetupLabelST(src);
 
 
 	cv::namedWindow(WinName, cv::WINDOW_AUTOSIZE);
 	cv::setMouseCallback(WinName, OnMouse, 0);
-	cv::imshow(WinName, Img);
+	cv::imshow(WinName, Img_Roi);
 	while(Loop()){}
+
+
+
 
 	//MSProc.SetMask(Mask_FP,Mask_BP);
 	//Clustering(src);
@@ -176,8 +184,12 @@ void CVInterface::UseInterface() {
 	//PatchMatch pm;
 	//pm.image_complete(result, Mask_BP, Mask_Constraint);
 
-	Result_Back = Roi(Img);
-	Result_Fore = Roi(Img);
+	cv::Mat Back = Img.clone();
+
+	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
+	cv::flip(Back, Back, 0);
+	Result_Back = Back;
+	//Result_Fore = Roi(Img);
 
 }
 
@@ -205,17 +217,17 @@ void CVInterface::Clustering(cv::Mat img) {
 
 }
 
-cv::Mat CVInterface::Roi(cv::Mat img) {
-	int targetSize = 512;
+void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
+	int targetSize = TargetSize;
 
 
 	cv:Mat loadMat = img.clone();
-	cv::Mat workMat= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
-
+	Img= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+	
 	if (loadMat.channels() < 4) {
-		cv::cvtColor(loadMat, loadMat, cv::COLOR_BGR2RGBA);
+		cv::cvtColor(loadMat, loadMat, cv::COLOR_BGR2BGRA);
 	}
-
+	
 
 	float w = loadMat.rows;
 	float h = loadMat.cols;
@@ -225,16 +237,18 @@ cv::Mat CVInterface::Roi(cv::Mat img) {
 
 	cv::resize(loadMat, loadMat, cv::Size(), ratio, ratio, cv::INTER_NEAREST);
 
-	cv::Mat Roi1(workMat, cv::Rect((targetSize - loadMat.cols) / 2, (targetSize - loadMat.rows) / 2,
+	/*
+	roi=cv::Mat(Img, cv::Rect((targetSize - loadMat.cols) / 2, (targetSize - loadMat.rows) / 2,
+		loadMat.cols, loadMat.rows));
+	*/
+
+	roi = cv::Mat(Img, cv::Rect(0, 0,
 		loadMat.cols, loadMat.rows));
 
-	loadMat.copyTo(Roi1);
+	loadMat.copyTo(roi);
 
-	cv::Mat ret = workMat.clone();
 
-	cv::flip(ret, ret, 0);
 
-	return ret;
 
 }
 
