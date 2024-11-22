@@ -9,6 +9,7 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 
+#include<vector>
 #include <iostream>
 
 
@@ -25,6 +26,8 @@ public:
 	static int TargetSize;
 	static cv::Point PrePos;
 	static cv::Point ClickedPos;
+	static std::vector<cv::Point> BoundaryPoint;
+	static std::vector<cv::Point> Corners;//0,leftup,1,rightup,2,leftbottom,3,rightbottom
 	static cv::Mat Img;
 	static cv::Mat Img_Roi;
 	static cv::Mat Mask_FP;

@@ -8,6 +8,8 @@ int CVInterface::IsClicked = 0;
 int CVInterface::TargetSize = 512;
 cv::Point CVInterface::PrePos = cv::Point(0, 0);
 cv::Point CVInterface::ClickedPos = cv::Point(0, 0);
+std::vector<cv::Point> CVInterface:: BoundaryPoint;
+std::vector<cv::Point> CVInterface::Corners(4);
 cv::Mat CVInterface::Img;
 cv::Mat CVInterface::Img_Roi;
 cv::Mat CVInterface::Mask_FP;
@@ -96,6 +98,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
 			ClickedPos = cv::Point(x, y);
 
+			BoundaryPoint.push_back(cv::Point(x, y));
+
 			buffer = Img_Roi.clone();
 		}
 		else if (IsClicked==3) {
@@ -104,6 +108,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::polylines(Img_Roi, li, false, { 255,255,255 }, brushSize_S*2);
 			cv::polylines(Mask_Constraint, li, false, 255, brushSize_S*2);
 			ClickedPos = cv::Point(x, y);
+
+			BoundaryPoint.push_back(cv::Point(x, y));
 
 			buffer = Img_Roi.clone();
 		}
@@ -173,6 +179,15 @@ void CVInterface::UseInterface() {
 	cv::setMouseCallback(WinName, OnMouse, 0);
 	cv::imshow(WinName, Img_Roi);
 	while(Loop()){}
+
+	/*debug
+	for (int i = 0; i < 4; ++i) {
+		cout << "corner " << Corners[i].x << " " << Corners[i].y << endl;
+	}
+	for (auto& p : BoundaryPoint) {
+		cout << "Boudary " << p.x << " " << p.y << endl;
+	}
+	*/
 
 	cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);
 
@@ -251,6 +266,29 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
 		loadMat.cols, loadMat.rows));
 
 	loadMat.copyTo(roi);
+
+	int x = Img.rows;
+	int y = Img.cols;
+	int alpha = 3;
+
+	for (int i = 0; i < Img.rows; ++i) {
+		int val = Img.data[0 * Img.step + i * Img.elemSize() + alpha];
+		if (val == 0) {
+			x = i;
+			break;
+		}
+	}
+	for (int i = 0; i < Img.cols; ++i) {
+		int val = Img.data[i * Img.step + 0 * Img.elemSize() + alpha];
+		if (val == 0) {
+			y = i;
+			break;
+		}
+	}
+	Corners[0] = cv::Point(0, 0);
+	Corners[1] = cv::Point(x, 0);
+	Corners[2] = cv::Point(0, y);
+	Corners[3] = cv::Point(x, y);
 
 
 
