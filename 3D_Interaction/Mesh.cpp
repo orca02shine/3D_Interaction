@@ -13,6 +13,12 @@ Mesh::~Mesh()
 }
 
 void Mesh::ProtoMesh() {
+	_Vertices.clear();
+	_UV.clear();
+	_Indices.clear();
+	_WireIdx.clear();
+
+
 	_Vertices = { {-1.0,-1.0,0.0},{1.0,-1.0,0.0},{1.0,1.0,0.0},{-1.0,1.0,0.0} };
 
 	_UV = { 0.0,0.0, 1.0,0.0, 1.0,1.0, 0.0,1.0 };
@@ -21,8 +27,15 @@ void Mesh::ProtoMesh() {
 
 	_WireIdx = { 0,1,1,2,2,0,0,2,2,3,3,0 };
 
+	MakeVertices();
 }
 void Mesh::ProtoMesh2() {
+	_Vertices.clear();
+	_UV.clear();
+	_Indices.clear();
+	_WireIdx.clear();
+
+
 	_Vertices = { {-1.0,-1.0,-1.0},{1.0,-1.0,-1.0},{1.0,1.0,-1.0},{-1.0,1.0,-1.0},
 					{-1.0,-1.0,1.0},{1.0,-1.0,1.0},{1.0,1.0,1.0},{-1.0,1.0,1.0} };
 
@@ -37,6 +50,33 @@ void Mesh::ProtoMesh2() {
 				 0,1,1,5,5,0, 5,4,4,0,0,5,  1,2,2,6,6,1, 6,5,5,1,1,6,
 				 2,3,3,7,7,2, 7,6,6,2,2,7,  3,0,0,4,4,3, 4,7,7,3,3,4};
 
+	MakeVertices();
+}
+
+void Mesh::InsertMeshData(std::vector<int> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx) {
+
+	_Vertices.clear();
+	_UV.clear();
+	_Indices.clear();
+	_WireIdx.clear();
+
+	for (int i = 0; i < vert.size(); i += 3) {
+		int x = vert[i];
+		int y = vert[i + 1];
+		int z = vert[i + 2];
+		_Vertices.push_back({ x,y,z });
+	}
+	for (int i = 0; i < uv.size(); ++i) {
+		_UV.push_back(uv[i]);
+	}
+	for (int i = 0; i < idx.size(); ++i) {
+		_Indices.push_back(idx[i]);
+	}
+	for (int i = 0; i < wireIdx.size(); ++i) {
+		_WireIdx.push_back(wireIdx[i]);
+	}
+
+	MakeVertices();
 }
 
 void Mesh::UpdateMesh() {
@@ -58,8 +98,6 @@ void Mesh::UpdateMesh() {
 		glDrawElements(GL_LINES, _WireObject->_NumIndices, GL_UNSIGNED_INT, 0);
 	}
 	
-
-
 
 }
 

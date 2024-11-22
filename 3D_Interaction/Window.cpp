@@ -249,7 +249,6 @@ void SimulationWindow::test() {
 
 	Mesh* m = new Mesh(this);
 	m->ProtoMesh();
-	m->MakeVertices();
 
 	m->LinkShader(_Shader,_WireShader);
 	m->LinkTexture(t);
