@@ -43,7 +43,7 @@ VertexObject::VertexObject(GLint size, GLsizei numVerts, const vec3* vert,
 	//
 
 
-	std::cout << "vertex object is made" << std::endl;
+	//std::cout << "vertex object is made" << std::endl;
 }
 
 VertexObject::~VertexObject()

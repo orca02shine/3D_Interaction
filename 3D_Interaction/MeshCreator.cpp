@@ -74,6 +74,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
+	//rightdown
 	{
 		float uvx = float(cor[3].x) / targetSize;
 		float uvy = float(cor[3].y) / targetSize;
@@ -101,6 +102,36 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		wireIdx.push_back(leftdown); wireIdx.push_back(rightup);
 
 	}
+
+	//Delauney-----------------------------------------------------
+	//DelId =id*2+1;
+
+	std::vector<cv::Point> contour;
+	contour.push_back(cor[2]);
+	for (int i = 0; i < boundary.size(); ++i) {
+		contour.push_back(boundary[i]);
+	}
+	contour.push_back(cor[3]);
+
+	if (contour.size() > 2) {
+		class Delauney delauney(contour, targetSize);
+
+		std::vector<int> tempIdx = delauney.GetIndices();
+		std::vector<int> tempWire = delauney.GetWireFrame();
+
+		for (int i = 0; i < tempIdx.size(); ++i) {
+			int id = tempIdx[i];
+			idx.push_back(id * 2 + 1);
+		}
+
+		for (int i = 0; i < tempWire.size(); ++i) {
+			int id = tempWire[i];
+			wireIdx.push_back(id * 2 + 1);
+		}
+	}
+
+
+
 }
 
 void MeshCreator::CalcCord(float& x, float& y, float& z) {
