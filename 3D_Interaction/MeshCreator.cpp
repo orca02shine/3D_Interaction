@@ -17,18 +17,25 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 	idx.clear();
 	wireIdx.clear();
 
-	//0,leftup
+	//0,leftup to leftdown
 	{
 		float uvx = float(cor[0].x) / targetSize;
 		float uvy = float(cor[0].y) / targetSize;
-		vert.push_back({uvx, uvy, 0 });
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({vx, vy, 0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
+	//2 leftdown to left up
 	{
 		float uvx = float(cor[2].x) / targetSize;
 		float uvy = float(cor[2].y) / targetSize;
-		vert.push_back({ uvx, uvy, 0 });
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({ vx, vy, 0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
@@ -37,14 +44,20 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		{
 			float uvx = float(boundary[i].x )/ targetSize;
 			float uvy = 0.0;
-			vert.push_back({ uvx, uvy, 0 });
+			float vx = uvx * 2 - 1.0;
+			float vy = uvy * 2 - 1.0;
+			vy *= -1.0;
+			vert.push_back({ vx, vy, 0 });
 			uv.push_back(uvx);
 			uv.push_back(uvy);
 		}
 		{
 			float uvx = float(boundary[i].x) / targetSize;
 			float uvy = float(boundary[i].y) / targetSize;
-			vert.push_back({ uvx, uvy, 0 });
+			float vx = uvx * 2 - 1.0;
+			float vy = uvy * 2 - 1.0;
+			vy *= -1.0;
+			vert.push_back({ vx, vy, 0 });
 			uv.push_back(uvx);
 			uv.push_back(uvy);
 		}
@@ -54,14 +67,20 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 	{
 		float uvx = float(cor[1].x) / targetSize;
 		float uvy = float(cor[1].y )/ targetSize;
-		vert.push_back({ uvx, uvy, 0 });
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({ vx, vy, 0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
 	{
 		float uvx = float(cor[3].x) / targetSize;
 		float uvy = float(cor[3].y) / targetSize;
-		vert.push_back({ uvx, uvy, 0 });
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({ vx, vy, 0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}

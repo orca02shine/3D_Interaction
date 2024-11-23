@@ -207,7 +207,7 @@ void CVInterface::UseInterface() {
 	cv::Mat Back = Img.clone();
 
 	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
-	cv::flip(Back, Back, 0);
+	//cv::flip(Back, Back, 0);
 	Result_Back = Back;
 	//Result_Fore = Roi(Img);
 
@@ -310,6 +310,11 @@ cv::Mat CVInterface::GetTexture(int i) {
 }
 
 std::vector<cv::Point> CVInterface::GetBoundary(){
+
+	if (BoundaryPoint[0].x > BoundaryPoint[BoundaryPoint.size() - 1].x) {
+		std::reverse(BoundaryPoint.begin(), BoundaryPoint.end());
+	}
+
 	return BoundaryPoint;
 }
 
