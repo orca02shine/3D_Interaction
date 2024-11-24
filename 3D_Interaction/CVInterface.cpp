@@ -174,6 +174,9 @@ void CVInterface::UseInterface() {
 	cv::Mat result = Img_Roi.clone();
 	MSProc.SetupLabelST(src);
 
+	cv::Mat Back = Img.clone();
+	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
+
 
 	cv::namedWindow(WinName, cv::WINDOW_AUTOSIZE);
 	cv::setMouseCallback(WinName, OnMouse, 0);
@@ -204,9 +207,6 @@ void CVInterface::UseInterface() {
 	*/
 
 
-	cv::Mat Back = Img.clone();
-
-	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
 	//cv::flip(Back, Back, 0);
 	Result_Back = Back;
 	//Result_Fore = Roi(Img);
