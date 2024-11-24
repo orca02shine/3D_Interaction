@@ -16,6 +16,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 	uv.clear();
 	idx.clear();
 	wireIdx.clear();
+	
 
 	//0,leftup to leftdown
 	{
@@ -128,6 +129,54 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 			int id = tempWire[i];
 			wireIdx.push_back(id * 2 + 1);
 		}
+	}
+
+	//coordinate xy-----------
+	if (contour.size() > 2) {
+
+		float f = 0.01f;
+		float wm = 0.1;//wM=1.0;
+		float y0 = vert[1].y;
+		float yM = -1.0;
+
+		
+		glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1.0f);
+		glm::mat4 view=glm::lookAt(
+			glm::vec3(0, 0.0, -0.4),
+			glm::vec3(0, 0, 0),
+			glm::vec3(0, 1, 0)  // ƒJƒƒ‰‚Ì“ª‚Ì•ûŒü
+		);
+
+		glm::mat4 test = glm::mat4(1.0);
+			
+		for (int i = 0; i < contour.size(); ++i) {
+			yM = std::max(yM, vert[i * 2 + 1].y);
+		}
+
+		for (int i = 0; i < contour.size(); ++i) {
+			float xi = vert[i * 2 + 1].x;
+			float yi = vert[i * 2 + 1].y;
+			
+			float wi = ((yi - y0) / (yM - y0)) * wm + 1 - ((yi - y0) / (yM - y0));
+
+			glm::vec4 scr = { xi,yi,f,wi };
+
+			glm::mat4 inv = glm::inverse(view) * glm::inverse(proj);
+
+			glm::vec4 world = inv*scr;
+
+			
+			std::cout << "world" << world.x << " " << world.y << " " << world.z <<" " <<world.w <<std::endl;
+			vert[i * 2 + 1] = { world.x,world.y,world.z };
+			vert[i * 2].x = world.x;
+			vert[i * 2].z = world.z;
+			vert[i * 2].y = 1.0f;
+			
+
+		}
+
+
+
 	}
 
 

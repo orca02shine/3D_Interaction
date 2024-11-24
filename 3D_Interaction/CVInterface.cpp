@@ -311,6 +311,10 @@ cv::Mat CVInterface::GetTexture(int i) {
 
 std::vector<cv::Point> CVInterface::GetBoundary(){
 
+	if (BoundaryPoint.size() == 0) {
+		return BoundaryPoint;
+	}
+
 	if (BoundaryPoint[0].x > BoundaryPoint[BoundaryPoint.size() - 1].x) {
 		std::reverse(BoundaryPoint.begin(), BoundaryPoint.end());
 	}
