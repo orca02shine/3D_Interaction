@@ -138,7 +138,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	_MatrixID = glGetUniformLocation(_Shader->GetShaderID(), "MVP");
 
 
-	_CameraPos = glm::vec3(0, 0, -2.0);
+	_CameraPos = glm::vec3(0, 0, -1.0);
 	_CameraCenter = glm::vec3(0, 0, 0);
 
 	_Model = glm::mat4(1.0f);
