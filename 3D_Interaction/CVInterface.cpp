@@ -18,6 +18,9 @@ cv::Mat CVInterface::Mask_Constraint;
 cv::Mat CVInterface::Result_Back;
 cv::Mat CVInterface::Result_Fore;
 
+std::vector< std::vector<cv::Point>> CVInterface::Contours;
+std::vector<cv::Vec4i>CVInterface::Hierarchy;
+
 MeanShift CVInterface::MSProc(8, 16);
 
 bool CVInterface::FileOpen(std::string& sSelectedFile, std::string& sFilePath)
@@ -164,6 +167,7 @@ bool CVInterface::Loop() {
 void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
+
 	Roi(loadImg,Img_Roi);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
@@ -292,6 +296,47 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
 
 
 
+
+}
+
+void CVInterface::MakeContour(cv::Mat &img) {
+	if (img.channels() < 4) {
+		cv::cvtColor(img, img, cv::COLOR_RGBA2BGRA);
+	}
+	int alpha = 3;
+	cv::Mat gray = img.clone();
+	cv::cvtColor(gray, gray, cv::COLOR_BGRA2GRAY);
+
+	for (int y = 0; y < img.cols; y++) {
+		for (int x = 0; x < img.rows; x++) {
+			int val = img.data[y * img.step + x * img.elemSize() + alpha];
+			if (val != 0) {
+				gray.data[y * gray.step + x * gray.elemSize()] = 255;
+			}
+			else {
+				for (int c = 0; c < 3; c++) {
+					//img.data[y * img.step + x * img.elemSize() + c]=0;
+				}
+			}
+		}
+	}
+
+	cv::threshold(gray, gray, 0, 255, cv::THRESH_BINARY);
+	cv::blur(gray, gray, cv::Size(3, 3));
+
+	cv::findContours(gray, Contours, Hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_TC89_L1);
+
+	double approxDist = 10.0;//‹ßŽ—¸“x
+	for (auto& con : Contours) {
+		cv::approxPolyDP(con, con, approxDist, true);
+	}
+
+	cv::Mat showImg = img.clone();
+	cv::drawContours(showImg, Contours, -1, cv::Scalar(255, 100, 200), 2);
+
+	//cv::flip(showImg, showImg, 0);
+	cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
+	cv::imshow("aaa", showImg);
 
 }
 

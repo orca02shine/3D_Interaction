@@ -37,6 +37,9 @@ public:
 	static cv::Mat Result_Back;
 	static cv::Mat Result_Fore;
 
+	static std::vector< std::vector<cv::Point>> Contours;
+	static std::vector<cv::Vec4i> Hierarchy;
+
 	static MeanShift MSProc;
 
 	static bool Loop();
@@ -51,6 +54,7 @@ public:
 	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
 	static void Roi(cv::Mat img,cv::Mat &roi);
+	static void MakeContour(cv::Mat &img);
 
 	static cv::Mat GetTexture(int i);
 
