@@ -168,6 +168,7 @@ void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
 
+
 	Roi(loadImg,Img_Roi);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
@@ -177,6 +178,9 @@ void CVInterface::UseInterface() {
 	cv::Mat src = Img_Roi.clone();
 	cv::Mat result = Img_Roi.clone();
 	MSProc.SetupLabelST(src);
+
+	cv::Mat con = Img_Roi.clone();
+	MakeContour(con);
 
 	cv::Mat Back = Img.clone();
 	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
@@ -300,8 +304,10 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
 }
 
 void CVInterface::MakeContour(cv::Mat &img) {
+	Contours.clear();
+
 	if (img.channels() < 4) {
-		cv::cvtColor(img, img, cv::COLOR_RGBA2BGRA);
+		cv::cvtColor(img, img, cv::COLOR_BGR2BGRA);
 	}
 	int alpha = 3;
 	cv::Mat gray = img.clone();
@@ -335,8 +341,8 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	cv::drawContours(showImg, Contours, -1, cv::Scalar(255, 100, 200), 2);
 
 	//cv::flip(showImg, showImg, 0);
-	cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
-	cv::imshow("aaa", showImg);
+	//cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
+	//cv::imshow("aaa", showImg);
 
 }
 
@@ -369,4 +375,8 @@ std::vector<cv::Point> CVInterface::GetBoundary(){
 
 std::vector<cv::Point> CVInterface::GetCorner() {
 	return Corners;
+}
+
+std::vector<cv::Point> CVInterface::GetContour() {
+	return Contours[0];
 }
