@@ -86,6 +86,11 @@ class Delauney
 	std::vector<Triangle> _Triangles;
 	std::stack<DeEdge> _EdgeStack;
 
+
+	std::vector<glm::vec2> _TeddyTempVerts;
+	std::vector<std::vector<int>> _TeddyTempAdj;
+
+
 	bool _EdgeC[200][200];
 	std::vector<int> _VertexBound;
 	std::stack<std::pair<int, int>> _ContourIdx;
@@ -141,6 +146,9 @@ public:
 	void DeleteTris();
 	void DeleteOuterTris();
 	void DeleteInnerTris();
+
+	void MakeTeddyTempVerts();
+
 
 	void SetData();
 

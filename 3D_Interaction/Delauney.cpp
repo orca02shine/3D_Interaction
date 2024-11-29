@@ -563,3 +563,46 @@ void Delauney::SetData() {
 
 
 }
+
+void Delauney::MakeTeddyTempVerts() {
+
+	int numVerts = _Vertices.size()-3;
+
+	std::vector<std::vector<bool>> chk(numVerts, std::vector<bool>(numVerts, false));
+
+	for (int i = 0; i < _Triangles.size(); i++) {
+		int k0 = _Triangles[i].id[0];
+		int k1 = _Triangles[i].id[1];
+		int k2 = _Triangles[i].id[2];
+
+		if (k0 < 3 || k1 < 3 || k2 < 3)continue;
+
+		//³‚µ‚¢’¸“_‚Ìî•ñ
+		k0 -= 3;
+		k1 -= 3;
+		k2 -= 3;
+		
+		std::vector<int>  vertid(3, -1);
+
+		if ((k2 + 1) % numVerts != k1) {
+
+			chk[k2][k1] = true;
+			chk[k1][k2] = true;
+		}
+		if ((k1 + 1) % numVerts != k0) {
+
+			chk[k1][k0] = true;
+			chk[k0][k1] = true;
+		}
+		if ((k0 + 1) % numVerts != k2) {
+
+			chk[k0][k2] = true;
+			chk[k2][k0] = true;
+		}
+	
+
+	}
+
+
+
+}
