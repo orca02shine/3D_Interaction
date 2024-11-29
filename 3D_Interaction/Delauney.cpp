@@ -191,6 +191,8 @@ void Delauney::MakePolygonData() {
 
 	//-----
 
+	MakeTeddyTempVerts();
+
 	SetData();
 
 }
@@ -568,7 +570,9 @@ void Delauney::MakeTeddyTempVerts() {
 
 	int numVerts = _Vertices.size()-3;
 
-	std::vector<std::vector<bool>> chk(numVerts, std::vector<bool>(numVerts, false));
+	std::vector<std::vector<AdjTriangles>> Graph(_Triangles.size());
+	std::vector<std::vector<int>> edgeChk(numVerts, std::vector<int>(numVerts, -1));
+
 
 	for (int i = 0; i < _Triangles.size(); i++) {
 		int k0 = _Triangles[i].id[0];
@@ -582,25 +586,47 @@ void Delauney::MakeTeddyTempVerts() {
 		k1 -= 3;
 		k2 -= 3;
 		
-		std::vector<int>  vertid(3, -1);
-
+		
 		if ((k2 + 1) % numVerts != k1) {
-
-			chk[k2][k1] = true;
-			chk[k1][k2] = true;
+			if (edgeChk[k1][k2]==-1 && edgeChk[k2][k1]==-1) {
+				edgeChk[k2][k1] = i;
+				edgeChk[k1][k2] = i;
+			}
+			else {
+				Graph[i].push_back({edgeChk[k1][k2],k1,k2});
+				Graph[edgeChk[k1][k2]].push_back({ i, k1, k2 });
+			}
 		}
-		if ((k1 + 1) % numVerts != k0) {
 
-			chk[k1][k0] = true;
-			chk[k0][k1] = true;
+		if ((k1 + 1) % numVerts != k0) {
+			if (edgeChk[k1][k0] == -1 && edgeChk[k0][k1] == -1) {
+				edgeChk[k0][k1] = i;
+				edgeChk[k1][k0] = i;
+			}
+			else {
+				Graph[i].push_back({ edgeChk[k0][k1],k0,k1 });
+				Graph[edgeChk[k0][k1]].push_back({ i, k0, k1 });
+			}
+
 		}
 		if ((k0 + 1) % numVerts != k2) {
-
-			chk[k0][k2] = true;
-			chk[k2][k0] = true;
+			if (edgeChk[k0][k2] == -1 && edgeChk[k2][k0] == -1) {
+				edgeChk[k0][k2] = i;
+				edgeChk[k2][k0] = i;
+			}
+			else {
+				Graph[i].push_back({ edgeChk[k0][k2],k0,k2 });
+				Graph[edgeChk[k0][k2]].push_back({ i, k0, k2 });
+			}
 		}
-	
+		
 
+	}
+
+	for (int triid = 0; triid<Graph.size(); ++triid) {
+		for (auto adj : Graph[triid]) {
+			std::cout << "triid  " << triid << " is adjcent " << adj.adjtri << " edge vert is " << adj.e1 << " " << adj.e2 << std::endl;
+		}
 	}
 
 

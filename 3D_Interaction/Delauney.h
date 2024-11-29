@@ -70,6 +70,13 @@ struct Triangle {
 	}
 };
 
+struct AdjTriangles {
+	int adjtri;
+
+	int e1;
+	int e2;
+
+};
 
 class Delauney
 {
