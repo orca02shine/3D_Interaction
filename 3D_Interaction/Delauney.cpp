@@ -567,11 +567,17 @@ void Delauney::SetData() {
 }
 
 bool Delauney::TeddyInCircle(DeEdge e, std::vector<int> vertices) {
-	glm::vec2 v = glm::vec2((_Vertices[e.first].x + _Vertices[e.second].x)/2, (_Vertices[e.first].y + _Vertices[e.second].y) / 2);
-	double rad = (_Vertices[e.first] - _Vertices[e.second]).length();
+	glm::vec2 v = _Vertices[e.first] + _Vertices[e.second];
+	v /= 2;
+	glm::vec2 l = _Vertices[e.first] - _Vertices[e.second];
+	double rad = glm::length(l);
+	rad /= 2;
 
 	for (int i = 0; i < vertices.size(); ++i) {
-		if ((_Vertices[vertices[i]] - v).length() > rad) {
+		glm::vec2 lo = _Vertices[vertices[i]] - v;
+		double d = glm::length(lo);
+		std::cout << d << " "<<rad << std::endl;
+		if (d> rad) {
 			return false;
 		}
 	}
@@ -685,8 +691,8 @@ void Delauney::MakeTeddyTempVerts() {
 		int e2 = Graph[i][0].e2;
 
 		int terVert = _Triangles[i].opposite({ e1+3,e2+3 })-3;
-		std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
-		std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
+		//std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
+		//std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
 		vertOfFanTris.push_back(terVert);
 		vertOfFanTris.push_back(e1);
 		vertOfFanTris.push_back(e2);
@@ -699,10 +705,9 @@ void Delauney::MakeTeddyTempVerts() {
 		int mididx = -1;
 		
 		
-		if (TeddyInCircle({ e1,e2}, vertOfFanTris )&&0) {
+		if (TeddyInCircle({ e1,e2}, vertOfFanTris )) {
 			triQ.push(Graph[i][0].adjtri);
 			seen[i] = true;
-			std::cout<<"aaaa" << std::endl;
 		}
 
 		else {
@@ -715,7 +720,7 @@ void Delauney::MakeTeddyTempVerts() {
 		
 		
 
-		/*
+		
 		while (!triQ.empty()) {
 			int now = triQ.front();
 			triQ.pop();
@@ -739,7 +744,7 @@ void Delauney::MakeTeddyTempVerts() {
 					triQ.push(e.adjtri);
 				}
 				else {
-					glm::vec2 midvert = (_Vertices[e.e1-3] + _Vertices[e.e2-3]);
+					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
 					midvert /= 2;
 					_Vertices.push_back(midvert);
 					mididx = _Vertices.size() - 1;
@@ -749,7 +754,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 
 		}
-		*/
+		
 		/*
 		std::cout << "terminal id is " << i << std::endl;;
 		for (int p = 0; p < vertOfFanTris.size(); ++p) {
@@ -787,9 +792,9 @@ void Delauney::MakeTeddyTempVerts() {
 			DeEdge we1 = { vertOfFanTris[t],mididx};
 			DeEdge we2 = { vertOfFanTris[t-1],mididx};
 
-			std::cout << "we0  " << we0.first << " "<<we0.second << std::endl;
-			std::cout << "we1  " << we1.first << " " << we1.second << std::endl;
-			std::cout << "we2  " << we2.first << " " << we2.second << std::endl;
+			//std::cout << "we0  " << we0.first << " "<<we0.second << std::endl;
+			//std::cout << "we1  " << we1.first << " " << we1.second << std::endl;
+			//std::cout << "we2  " << we2.first << " " << we2.second << std::endl;
 			wireFrame.insert({we0});
 			wireFrame.insert({ we1 });
 			wireFrame.insert({ we2 });
