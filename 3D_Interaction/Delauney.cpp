@@ -193,7 +193,7 @@ void Delauney::MakePolygonData() {
 
 	MakeTeddyTempVerts();
 
-	SetData();
+	//SetData();
 
 }
 
@@ -566,36 +566,62 @@ void Delauney::SetData() {
 
 }
 
+bool Delauney::TeddyInCircle(DeEdge e, std::vector<int> vertices) {
+	glm::vec2 v = glm::vec2((_Vertices[e.first].x + _Vertices[e.second].x)/2, (_Vertices[e.first].y + _Vertices[e.second].y) / 2);
+	double rad = (_Vertices[e.first] - _Vertices[e.second]).length();
+
+	for (int i = 0; i < vertices.size(); ++i) {
+		if ((_Vertices[vertices[i]] - v).length() > rad) {
+			return false;
+		}
+	}
+
+	return true;
+}
+void Delauney::TestSetData() {
+
+}
+
 void Delauney::MakeTeddyTempVerts() {
 
-	int numVerts = _Vertices.size()-3;
+	_Vertices.erase(_Vertices.begin() + 2);
+	_Vertices.erase(_Vertices.begin() + 1);
+	_Vertices.erase(_Vertices.begin());
 
-	std::vector<std::vector<AdjTriangles>> Graph(_Triangles.size());
+	int numVerts = _Vertices.size();
+
+
+
+	int Tsize = _Triangles.size();
+
+	std::vector<std::vector<AdjTriangles>> Graph(Tsize);
 	std::vector<std::vector<int>> edgeChk(numVerts, std::vector<int>(numVerts, -1));
 
+	std::vector<int> IsTerminal(Tsize,0);//terminal =1 sleeve =2 juction=3
 
-	for (int i = 0; i < _Triangles.size(); i++) {
+	for (int i = 0; i < Tsize; i++) {
 		int k0 = _Triangles[i].id[0];
 		int k1 = _Triangles[i].id[1];
 		int k2 = _Triangles[i].id[2];
 
 		if (k0 < 3 || k1 < 3 || k2 < 3)continue;
-
-		//³‚µ‚¢’¸“_‚Ìî•ñ
+		
 		k0 -= 3;
 		k1 -= 3;
 		k2 -= 3;
 		
-		
+		int ct = 0;
+
 		if ((k2 + 1) % numVerts != k1) {
 			if (edgeChk[k1][k2]==-1 && edgeChk[k2][k1]==-1) {
 				edgeChk[k2][k1] = i;
 				edgeChk[k1][k2] = i;
 			}
 			else {
-				Graph[i].push_back({edgeChk[k1][k2],k1,k2});
-				Graph[edgeChk[k1][k2]].push_back({ i, k1, k2 });
+				Graph[i].push_back({edgeChk[k1][k2],k2+3,k1+3});
+				Graph[edgeChk[k1][k2]].push_back({ i, k2+3, k1+3 });
 			}
+			ct++;
 		}
 
 		if ((k1 + 1) % numVerts != k0) {
@@ -604,10 +630,10 @@ void Delauney::MakeTeddyTempVerts() {
 				edgeChk[k1][k0] = i;
 			}
 			else {
-				Graph[i].push_back({ edgeChk[k0][k1],k0,k1 });
-				Graph[edgeChk[k0][k1]].push_back({ i, k0, k1 });
+				Graph[i].push_back({ edgeChk[k0][k1],k1+3,k0+3 });
+				Graph[edgeChk[k0][k1]].push_back({ i, k1+3, k0+3 });
 			}
-
+			ct++;
 		}
 		if ((k0 + 1) % numVerts != k2) {
 			if (edgeChk[k0][k2] == -1 && edgeChk[k2][k0] == -1) {
@@ -615,20 +641,171 @@ void Delauney::MakeTeddyTempVerts() {
 				edgeChk[k2][k0] = i;
 			}
 			else {
-				Graph[i].push_back({ edgeChk[k0][k2],k0,k2 });
-				Graph[edgeChk[k0][k2]].push_back({ i, k0, k2 });
+				Graph[i].push_back({ edgeChk[k0][k2],k0+3,k2+3 });
+				Graph[edgeChk[k0][k2]].push_back({ i, k0+3, k2+3 });
 			}
+			ct++;
 		}
 		
-
+		IsTerminal[i] = ct;
 	}
-
+	/*
 	for (int triid = 0; triid<Graph.size(); ++triid) {
 		for (auto adj : Graph[triid]) {
 			std::cout << "triid  " << triid << " is adjcent " << adj.adjtri << " edge vert is " << adj.e1 << " " << adj.e2 << std::endl;
 		}
 	}
+	*/
+	std::set<DeEdge> wireFrame;
 
+	for (int i = 0; i < Tsize; ++i) {
+		if (IsTerminal[i] != 1)continue;
+
+		std::vector<int> vertOfFanTris;
+		std::vector<bool> seen(Tsize);
+
+		std::queue<int> triQ;
+
+		
+		int kari0 = _Triangles[i].id[0];
+		int kari1 = _Triangles[i].id[1];
+		int kari2 = _Triangles[i].id[2];
+		
+		/*
+		wireFrame.insert({kari0-3,kari1-3});
+		wireFrame.insert({ kari1-3,kari2-3 });
+		wireFrame.insert({ kari2-3,kari0 -3});
+		*/
+
+		
+		int e1 = Graph[i][0].e1;
+		int e2 = Graph[i][0].e2;
+
+		int terVert = _Triangles[i].opposite({ e1,e2 });
+		std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
+		std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
+		vertOfFanTris.push_back(terVert);
+		vertOfFanTris.push_back(e1);
+		vertOfFanTris.push_back(e2);
+
+		
+		//wireFrame.insert({ e1-3 ,e2-3  });
+		//wireFrame.insert({ e2-3 ,terVert-3  });
+		//wireFrame.insert({ terVert-3 ,e1-3 });
+		
+		int mididx = -1;
+		
+		
+		if (TeddyInCircle({ e1,e2}, vertOfFanTris)&&0) {
+			triQ.push(Graph[i][0].adjtri);
+			seen[i] = true;
+			std::cout<<"aaaa" << std::endl;
+		}
+
+		else {
+			glm::vec2 midvert = _Vertices[e1 - 3] + _Vertices[e2 - 3];
+			midvert /= 2;
+			_Vertices.emplace_back(midvert);
+			mididx = _Vertices.size() - 1;
+
+		}
+		
+		
+
+		/*
+		while (!triQ.empty()) {
+			int now = triQ.front();
+			triQ.pop();
+
+			if (IsTerminal[now] == 3) {
+				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]] + _Vertices[_Triangles[now].id[1]] + _Vertices[_Triangles[now].id[2]]);
+				midvert /= 3;
+				_Vertices.push_back(midvert);
+				mididx = _Vertices.size() - 1;
+				break;
+			}
+
+			seen[now] = true;
+			for (auto& e : Graph[now]) {
+				if (seen[e.adjtri])continue;
+
+				if (IsTerminal[e.adjtri] == 3) {
+					glm::vec2 midvert = (_Vertices[ _Triangles[e.adjtri].id[0] ]  + _Vertices[_Triangles[e.adjtri].id[1]]  + _Vertices[_Triangles[e.adjtri].id[2]]);
+					midvert /= 3;
+					_Vertices.push_back(midvert);
+					mididx = _Vertices.size() - 1;
+					break;
+				}
+
+				if (TeddyInCircle({ e.e1,e.e2}, vertOfFanTris)) {
+					vertOfFanTris.push_back(e.e1);
+					vertOfFanTris.push_back(e.e2);
+					triQ.push(e.adjtri);
+				}
+				else {
+					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
+					midvert /= 2;
+					_Vertices.push_back(midvert);
+					mididx = _Vertices.size() - 1;
+					break;
+				}
+			}
+
+
+		}
+		*/
+		/*
+		std::cout << "terminal id is " << i << std::endl;;
+		for (int p = 0; p < vertOfFanTris.size(); ++p) {
+			std::cout << vertOfFanTris[p] << " ";
+		}
+		std::cout << std::endl;
+
+		
+
+		for (int chk = 1; chk < vertOfFanTris.size(); ++chk) {
+
+		}
+		*/
+		
+		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
+		int swapid = -1;
+		for (int c = 0; c < vertOfFanTris.size()-1; ++c) {
+			if (vertOfFanTris[c] + 1 != vertOfFanTris[c + 1]) {
+				swapid = c;
+			}
+		}
+		std::vector<int> tempSwap;
+		if (swapid != -1) {
+			for (int c = 0; c <= swapid; ++c) {
+				tempSwap.push_back(vertOfFanTris[c]);
+			}
+			vertOfFanTris.erase(vertOfFanTris.begin(), vertOfFanTris.begin() + swapid);
+			for (int c = 0; c < tempSwap.size(); ++c) {
+				vertOfFanTris.push_back(tempSwap[c]);
+			}
+		}
+
+		for (int t = 1; t < vertOfFanTris.size(); ++t) {
+			DeEdge we0= { vertOfFanTris[t]-3,vertOfFanTris[t - 1]-3 };
+			DeEdge we1 = { vertOfFanTris[t]-3,mididx};
+			DeEdge we2 = { vertOfFanTris[t-1]-3,mididx};
+
+			std::cout << "we0  " << we0.first << " "<<we0.second << std::endl;
+			std::cout << "we1  " << we1.first << " " << we1.second << std::endl;
+			std::cout << "we2  " << we2.first << " " << we2.second << std::endl;
+			wireFrame.insert({we0});
+			wireFrame.insert({ we1 });
+			wireFrame.insert({ we2 });
+
+		}
+		
+	}
+
+	for (auto& e : wireFrame) {
+		_WireIdx.emplace_back(e.first);
+		_WireIdx.emplace_back(e.second);
+	}
 
 
 }

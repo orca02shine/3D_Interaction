@@ -155,7 +155,8 @@ public:
 	void DeleteInnerTris();
 
 	void MakeTeddyTempVerts();
-
+	bool TeddyInCircle(DeEdge e,std::vector<int> vertices);
+	void TestSetData();
 
 	void SetData();
 
