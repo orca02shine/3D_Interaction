@@ -748,6 +748,11 @@ void Delauney::MakeTeddyTempVerts() {
 					midvert /= 2;
 					_Vertices.push_back(midvert);
 					mididx = _Vertices.size() - 1;
+
+					vertOfFanTris.push_back(e.e1);
+					vertOfFanTris.push_back(e.e2);
+					std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
+					vertOfFanTris.erase(std::unique(vertOfFanTris.begin(), vertOfFanTris.end()), vertOfFanTris.end());
 					break;
 				}
 			}
