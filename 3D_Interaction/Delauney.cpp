@@ -604,6 +604,7 @@ void Delauney::MakeTeddyTempVerts() {
 	std::vector<std::vector<int>> edgeChk(numVerts, std::vector<int>(numVerts, -1));
 
 	std::vector<int> IsTerminal(Tsize,0);//terminal =1 sleeve =2 juction=3
+	std::vector<std::pair<int, int>> OuterEdge(Tsize,{-1,-1});
 
 	for (int i = 0; i < Tsize; i++) {
 		int k0 = _Triangles[i].id[0];
@@ -629,6 +630,9 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 			ct++;
 		}
+		else {
+			OuterEdge[i] = { k2,k1 };
+		}
 
 		if ((k1 + 1) % numVerts != k0) {
 			if (edgeChk[k1][k0] == -1 && edgeChk[k0][k1] == -1) {
@@ -641,6 +645,10 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 			ct++;
 		}
+		else {
+			OuterEdge[i] = { k1,k0 };
+		}
+
 		if ((k0 + 1) % numVerts != k2) {
 			if (edgeChk[k0][k2] == -1 && edgeChk[k2][k0] == -1) {
 				edgeChk[k0][k2] = i;
@@ -651,6 +659,9 @@ void Delauney::MakeTeddyTempVerts() {
 				Graph[edgeChk[k0][k2]].push_back({ i, k0, k2 });
 			}
 			ct++;
+		}
+		else {
+			OuterEdge[i] = { k2,k0 };
 		}
 		
 		IsTerminal[i] = ct;
@@ -664,11 +675,14 @@ void Delauney::MakeTeddyTempVerts() {
 	*/
 	std::set<DeEdge> wireFrame;
 
+	std::vector<bool> seen(Tsize);
+	std::vector<std::vector<bool>> invalidEdge(numVerts, std::vector<bool>(numVerts,false));//juction
+	std::vector<int> junctionMidPoint(Tsize, -1);
+
 	for (int i = 0; i < Tsize; ++i) {
 		if (IsTerminal[i] != 1)continue;
 
 		std::vector<int> vertOfFanTris;
-		std::vector<bool> seen(Tsize);
 
 		std::queue<int> triQ;
 
@@ -719,7 +733,8 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 		
 		
-
+		int prev1 = e1;
+		int prev2 = e2;
 		
 		while (!triQ.empty()) {
 			int now = triQ.front();
@@ -730,6 +745,10 @@ void Delauney::MakeTeddyTempVerts() {
 				midvert /= 3;
 				_Vertices.push_back(midvert);
 				mididx = _Vertices.size() - 1;
+				junctionMidPoint[now] = mididx;
+
+				invalidEdge[prev1][prev2] = true;
+				invalidEdge[prev2][prev1] = true;
 				break;
 			}
 
@@ -738,10 +757,14 @@ void Delauney::MakeTeddyTempVerts() {
 				if (seen[e.adjtri])continue;
 
 
+
 				if (TeddyInCircle({ e.e1,e.e2}, vertOfFanTris)) {
 					vertOfFanTris.push_back(e.e1);
 					vertOfFanTris.push_back(e.e2);
 					triQ.push(e.adjtri);
+					seen[now] = true;
+					prev1 = e.e1;
+					prev2 = e.e2;
 				}
 				else {
 					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
@@ -807,6 +830,76 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 		
 	}
+
+	for (int i = 0; i < Tsize; ++i) {
+		if (seen[i])continue;
+
+		/*
+		int v0 = _Triangles[i].id[0]-3;
+		int v1 = _Triangles[i].id[1]-3;
+		int v2 = _Triangles[i].id[2]-3;
+
+		if (invalidEdge[v0][v1] != true) {
+			wireFrame.insert({ v0,v1 });
+		}
+		if (invalidEdge[v1][v2] != true) {
+			wireFrame.insert({ v1,v2 });
+		}
+		if (invalidEdge[v2][v0] != true) {
+			wireFrame.insert({ v2,v0 });
+		}
+		*/
+		
+		
+		if (IsTerminal[i] == 3) {
+			int v0 = _Triangles[i].id[0] - 3;
+			int v1 = _Triangles[i].id[1] - 3;
+			int v2 = _Triangles[i].id[2] - 3;
+
+			int vmid = junctionMidPoint[i];
+			if (vmid == -1) {
+				glm::vec2 newV = _Vertices[v0] + _Vertices[v1] + _Vertices[v2];
+				newV /= 3;
+				_Vertices.push_back(newV);
+				vmid = _Vertices.size()-1;
+			}
+
+			if (invalidEdge[v0][v1] != true) {
+				wireFrame.insert({ v0,v1 });
+				wireFrame.insert({ v0,vmid });
+				wireFrame.insert({ v1,vmid });
+			}
+			if (invalidEdge[v1][v2] != true) {
+				wireFrame.insert({ v1,v2 });
+				wireFrame.insert({ v1,vmid });
+				wireFrame.insert({ v2,vmid });
+			}
+			if (invalidEdge[v2][v0] != true) {
+				wireFrame.insert({ v2,v0 });
+				wireFrame.insert({ v0,vmid });
+				wireFrame.insert({ v2,vmid });
+			}
+
+
+		}
+		else if (IsTerminal[i]==2) {
+			int v0 = _Triangles[i].id[0] - 3;
+			int v1 = _Triangles[i].id[1] - 3;
+			int v2 = _Triangles[i].id[2] - 3;
+
+			if (invalidEdge[v0][v1] != true) {
+				wireFrame.insert({ v0,v1 });
+			}
+			if (invalidEdge[v1][v2] != true) {
+				wireFrame.insert({ v1,v2 });
+			}
+			if (invalidEdge[v2][v0] != true) {
+				wireFrame.insert({ v2,v0 });
+			}
+		}
+		
+	}
+
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);
