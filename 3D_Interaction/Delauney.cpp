@@ -618,8 +618,8 @@ void Delauney::MakeTeddyTempVerts() {
 				edgeChk[k1][k2] = i;
 			}
 			else {
-				Graph[i].push_back({edgeChk[k1][k2],k2+3,k1+3});
-				Graph[edgeChk[k1][k2]].push_back({ i, k2+3, k1+3 });
+				Graph[i].push_back({edgeChk[k1][k2],k2,k1});
+				Graph[edgeChk[k1][k2]].push_back({ i, k2, k1 });
 			}
 			ct++;
 		}
@@ -630,8 +630,8 @@ void Delauney::MakeTeddyTempVerts() {
 				edgeChk[k1][k0] = i;
 			}
 			else {
-				Graph[i].push_back({ edgeChk[k0][k1],k1+3,k0+3 });
-				Graph[edgeChk[k0][k1]].push_back({ i, k1+3, k0+3 });
+				Graph[i].push_back({ edgeChk[k0][k1],k1,k0 });
+				Graph[edgeChk[k0][k1]].push_back({ i, k1, k0 });
 			}
 			ct++;
 		}
@@ -641,8 +641,8 @@ void Delauney::MakeTeddyTempVerts() {
 				edgeChk[k2][k0] = i;
 			}
 			else {
-				Graph[i].push_back({ edgeChk[k0][k2],k0+3,k2+3 });
-				Graph[edgeChk[k0][k2]].push_back({ i, k0+3, k2+3 });
+				Graph[i].push_back({ edgeChk[k0][k2],k0,k2 });
+				Graph[edgeChk[k0][k2]].push_back({ i, k0, k2 });
 			}
 			ct++;
 		}
@@ -670,6 +670,9 @@ void Delauney::MakeTeddyTempVerts() {
 		int kari0 = _Triangles[i].id[0];
 		int kari1 = _Triangles[i].id[1];
 		int kari2 = _Triangles[i].id[2];
+		kari0 -= 3;
+		kari1 -= 3;
+		kari2 -= 3;
 		
 		/*
 		wireFrame.insert({kari0-3,kari1-3});
@@ -681,7 +684,7 @@ void Delauney::MakeTeddyTempVerts() {
 		int e1 = Graph[i][0].e1;
 		int e2 = Graph[i][0].e2;
 
-		int terVert = _Triangles[i].opposite({ e1,e2 });
+		int terVert = _Triangles[i].opposite({ e1+3,e2+3 })-3;
 		std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
 		std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
 		vertOfFanTris.push_back(terVert);
@@ -696,14 +699,14 @@ void Delauney::MakeTeddyTempVerts() {
 		int mididx = -1;
 		
 		
-		if (TeddyInCircle({ e1,e2}, vertOfFanTris)&&0) {
+		if (TeddyInCircle({ e1,e2}, vertOfFanTris )&&0) {
 			triQ.push(Graph[i][0].adjtri);
 			seen[i] = true;
 			std::cout<<"aaaa" << std::endl;
 		}
 
 		else {
-			glm::vec2 midvert = _Vertices[e1 - 3] + _Vertices[e2 - 3];
+			glm::vec2 midvert = _Vertices[e1] + _Vertices[e2];
 			midvert /= 2;
 			_Vertices.emplace_back(midvert);
 			mididx = _Vertices.size() - 1;
@@ -718,7 +721,7 @@ void Delauney::MakeTeddyTempVerts() {
 			triQ.pop();
 
 			if (IsTerminal[now] == 3) {
-				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]] + _Vertices[_Triangles[now].id[1]] + _Vertices[_Triangles[now].id[2]]);
+				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]-3] + _Vertices[_Triangles[now].id[1]-3] + _Vertices[_Triangles[now].id[2]-3]);
 				midvert /= 3;
 				_Vertices.push_back(midvert);
 				mididx = _Vertices.size() - 1;
@@ -729,13 +732,6 @@ void Delauney::MakeTeddyTempVerts() {
 			for (auto& e : Graph[now]) {
 				if (seen[e.adjtri])continue;
 
-				if (IsTerminal[e.adjtri] == 3) {
-					glm::vec2 midvert = (_Vertices[ _Triangles[e.adjtri].id[0] ]  + _Vertices[_Triangles[e.adjtri].id[1]]  + _Vertices[_Triangles[e.adjtri].id[2]]);
-					midvert /= 3;
-					_Vertices.push_back(midvert);
-					mididx = _Vertices.size() - 1;
-					break;
-				}
 
 				if (TeddyInCircle({ e.e1,e.e2}, vertOfFanTris)) {
 					vertOfFanTris.push_back(e.e1);
@@ -743,7 +739,7 @@ void Delauney::MakeTeddyTempVerts() {
 					triQ.push(e.adjtri);
 				}
 				else {
-					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
+					glm::vec2 midvert = (_Vertices[e.e1-3] + _Vertices[e.e2-3]);
 					midvert /= 2;
 					_Vertices.push_back(midvert);
 					mididx = _Vertices.size() - 1;
@@ -787,9 +783,9 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 
 		for (int t = 1; t < vertOfFanTris.size(); ++t) {
-			DeEdge we0= { vertOfFanTris[t]-3,vertOfFanTris[t - 1]-3 };
-			DeEdge we1 = { vertOfFanTris[t]-3,mididx};
-			DeEdge we2 = { vertOfFanTris[t-1]-3,mididx};
+			DeEdge we0= { vertOfFanTris[t],vertOfFanTris[t - 1] };
+			DeEdge we1 = { vertOfFanTris[t],mididx};
+			DeEdge we2 = { vertOfFanTris[t-1],mididx};
 
 			std::cout << "we0  " << we0.first << " "<<we0.second << std::endl;
 			std::cout << "we1  " << we1.first << " " << we1.second << std::endl;
