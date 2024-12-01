@@ -594,6 +594,12 @@ void Delauney::MakeTeddyTempVerts() {
 	_Vertices.erase(_Vertices.begin() + 1);
 	_Vertices.erase(_Vertices.begin());
 
+	for (int i = 0; i < _Triangles.size(); ++i) {
+		_Triangles[i].id[0] -= 3;
+		_Triangles[i].id[1] -= 3;
+		_Triangles[i].id[2] -= 3;
+	}
+
 	int numVerts = _Vertices.size();
 
 
@@ -610,12 +616,7 @@ void Delauney::MakeTeddyTempVerts() {
 		int k0 = _Triangles[i].id[0];
 		int k1 = _Triangles[i].id[1];
 		int k2 = _Triangles[i].id[2];
-
-		if (k0 < 3 || k1 < 3 || k2 < 3)continue;
 		
-		k0 -= 3;
-		k1 -= 3;
-		k2 -= 3;
 		
 		int ct = 0;
 
@@ -678,6 +679,7 @@ void Delauney::MakeTeddyTempVerts() {
 	std::vector<bool> seen(Tsize);
 	std::vector<std::vector<bool>> invalidEdge(numVerts, std::vector<bool>(numVerts,false));//juction
 	std::vector<int> junctionMidPoint(Tsize, -1);
+	std::vector<std::vector<int>> edgeMidPoint(numVerts, std::vector<int>(numVerts, -1));// midpoint id
 
 	for (int i = 0; i < Tsize; ++i) {
 		if (IsTerminal[i] != 1)continue;
@@ -690,9 +692,6 @@ void Delauney::MakeTeddyTempVerts() {
 		int kari0 = _Triangles[i].id[0];
 		int kari1 = _Triangles[i].id[1];
 		int kari2 = _Triangles[i].id[2];
-		kari0 -= 3;
-		kari1 -= 3;
-		kari2 -= 3;
 		
 		/*
 		wireFrame.insert({kari0-3,kari1-3});
@@ -704,7 +703,7 @@ void Delauney::MakeTeddyTempVerts() {
 		int e1 = Graph[i][0].e1;
 		int e2 = Graph[i][0].e2;
 
-		int terVert = _Triangles[i].opposite({ e1+3,e2+3 })-3;
+		int terVert = _Triangles[i].opposite({ e1,e2 });
 		//std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
 		//std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
 		vertOfFanTris.push_back(terVert);
@@ -729,6 +728,8 @@ void Delauney::MakeTeddyTempVerts() {
 			midvert /= 2;
 			_Vertices.emplace_back(midvert);
 			mididx = _Vertices.size() - 1;
+			edgeMidPoint[e1][e2] = mididx;
+			edgeMidPoint[e2][e1] = mididx;
 
 		}
 		
@@ -741,7 +742,7 @@ void Delauney::MakeTeddyTempVerts() {
 			triQ.pop();
 
 			if (IsTerminal[now] == 3) {
-				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]-3] + _Vertices[_Triangles[now].id[1]-3] + _Vertices[_Triangles[now].id[2]-3]);
+				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]] + _Vertices[_Triangles[now].id[1]] + _Vertices[_Triangles[now].id[2]]);
 				midvert /= 3;
 				_Vertices.push_back(midvert);
 				mididx = _Vertices.size() - 1;
@@ -771,6 +772,8 @@ void Delauney::MakeTeddyTempVerts() {
 					midvert /= 2;
 					_Vertices.push_back(midvert);
 					mididx = _Vertices.size() - 1;
+					edgeMidPoint[e.e1][e.e2] = mididx;
+					edgeMidPoint[e.e2][e.e1] = mididx;
 
 					vertOfFanTris.push_back(e.e1);
 					vertOfFanTris.push_back(e.e2);
@@ -835,9 +838,9 @@ void Delauney::MakeTeddyTempVerts() {
 		if (seen[i])continue;
 
 		/*
-		int v0 = _Triangles[i].id[0]-3;
-		int v1 = _Triangles[i].id[1]-3;
-		int v2 = _Triangles[i].id[2]-3;
+		int v0 = _Triangles[i].id[0];
+		int v1 = _Triangles[i].id[1];
+		int v2 = _Triangles[i].id[2];
 
 		if (invalidEdge[v0][v1] != true) {
 			wireFrame.insert({ v0,v1 });
@@ -852,9 +855,10 @@ void Delauney::MakeTeddyTempVerts() {
 		
 		
 		if (IsTerminal[i] == 3) {
-			int v0 = _Triangles[i].id[0] - 3;
-			int v1 = _Triangles[i].id[1] - 3;
-			int v2 = _Triangles[i].id[2] - 3;
+			
+			int v0 = _Triangles[i].id[0];
+			int v1 = _Triangles[i].id[1];
+			int v2 = _Triangles[i].id[2];
 
 			int vmid = junctionMidPoint[i];
 			if (vmid == -1) {
@@ -862,30 +866,68 @@ void Delauney::MakeTeddyTempVerts() {
 				newV /= 3;
 				_Vertices.push_back(newV);
 				vmid = _Vertices.size()-1;
+				junctionMidPoint[i] = vmid;
 			}
 
 			if (invalidEdge[v0][v1] != true) {
-				wireFrame.insert({ v0,v1 });
+				int mp = edgeMidPoint[v0][v1];
+				if (mp == -1) {
+					glm::vec2 newv = _Vertices[v0] + _Vertices[v1];
+					newv /= 2;
+					_Vertices.push_back(newv);
+					int idm = _Vertices.size() - 1;
+					edgeMidPoint[v0][v1] = idm;
+					edgeMidPoint[v1][v0] = idm;
+				}
+				int emid = edgeMidPoint[v0][v1];
+				wireFrame.insert({ v0,emid});
 				wireFrame.insert({ v0,vmid });
+				wireFrame.insert({ vmid,emid});
+				wireFrame.insert({ v1,emid });
 				wireFrame.insert({ v1,vmid });
 			}
 			if (invalidEdge[v1][v2] != true) {
-				wireFrame.insert({ v1,v2 });
+				int mp = edgeMidPoint[v1][v2];
+				if (mp == -1) {
+					glm::vec2 newv = _Vertices[v1] + _Vertices[v2];
+					newv /= 2;
+					_Vertices.push_back(newv);
+					int idm = _Vertices.size() - 1;
+					edgeMidPoint[v1][v2] = idm;
+					edgeMidPoint[v2][v1] = idm;
+				}
+				int emid = edgeMidPoint[v1][v2];
+				wireFrame.insert({ v1,emid });
 				wireFrame.insert({ v1,vmid });
+				wireFrame.insert({ vmid,emid });
+				wireFrame.insert({ v2,emid });
 				wireFrame.insert({ v2,vmid });
 			}
 			if (invalidEdge[v2][v0] != true) {
-				wireFrame.insert({ v2,v0 });
+				int mp = edgeMidPoint[v2][v0];
+				if (mp == -1) {
+					glm::vec2 newv = _Vertices[v0] + _Vertices[v2];
+					newv /= 2;
+					_Vertices.push_back(newv);
+					int idm = _Vertices.size() - 1;
+					edgeMidPoint[v0][v2] = idm;
+					edgeMidPoint[v2][v0] = idm;
+				}
+				int emid = edgeMidPoint[v0][v2];
+				wireFrame.insert({ v0,emid });
 				wireFrame.insert({ v0,vmid });
+				wireFrame.insert({ vmid,emid });
+				wireFrame.insert({ v2,emid });
 				wireFrame.insert({ v2,vmid });
 			}
 
 
 		}
 		else if (IsTerminal[i]==2) {
-			int v0 = _Triangles[i].id[0] - 3;
-			int v1 = _Triangles[i].id[1] - 3;
-			int v2 = _Triangles[i].id[2] - 3;
+			/*
+			int v0 = _Triangles[i].id[0];
+			int v1 = _Triangles[i].id[1];
+			int v2 = _Triangles[i].id[2];
 
 			if (invalidEdge[v0][v1] != true) {
 				wireFrame.insert({ v0,v1 });
@@ -896,6 +938,49 @@ void Delauney::MakeTeddyTempVerts() {
 			if (invalidEdge[v2][v0] != true) {
 				wireFrame.insert({ v2,v0 });
 			}
+			*/
+			
+			std::pair<int, int> ot = OuterEdge[i];
+			int v = _Triangles[i].opposite({ ot.first,ot.second });
+
+			int midp1 = -1;
+			if (invalidEdge[v][ot.first] != true) {
+				midp1 = edgeMidPoint[v][ot.first];
+				if (midp1 ==-1) {
+					glm::vec2 newv = _Vertices[v] + _Vertices[ot.first];
+					newv /= 2;
+					_Vertices.push_back(newv);
+					midp1 = _Vertices.size() - 1;
+				}
+				wireFrame.insert({ v,midp1 });
+				wireFrame.insert({ midp1,ot.first });
+			}
+
+			int midp2 = -1;
+			if (invalidEdge[v][ot.second] != true) {
+				midp2 = edgeMidPoint[v][ot.second];
+				if (midp2 == -1) {
+					glm::vec2 newv = _Vertices[v] + _Vertices[ot.second];
+					newv /= 2;
+					_Vertices.push_back(newv);
+					midp2 = _Vertices.size() - 1;
+				}
+				wireFrame.insert({ v,midp2 });
+				wireFrame.insert({ midp2,ot.second });
+			}
+
+			if (midp1 != -1 && midp2 != -1) {
+				wireFrame.insert({ midp1,midp2 });
+			}
+
+
+
+			if (invalidEdge[ot.first][ot.second] != true) {
+				wireFrame.insert({ ot.first,ot.second });
+				wireFrame.insert({ ot.first,midp1 });
+				wireFrame.insert({ ot.second,midp1 });
+			}
+			
 		}
 		
 	}
