@@ -590,6 +590,11 @@ void Delauney::TestSetData() {
 
 void Delauney::MakeTeddyTempVerts() {
 
+	std::vector<bool> _IsChodralAxis;
+	_IsChodralAxis.resize(3000, false);
+	std::vector<std::vector<float>> _SumLengthFromAxis(3000);
+
+
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
 	_Vertices.erase(_Vertices.begin());
@@ -597,6 +602,13 @@ void Delauney::MakeTeddyTempVerts() {
 	for (int i = 0; i < _Vertices.size(); ++i) {
 		glm::vec2 v = _Vertices[i];
 		_TeddyVertices.push_back({ v.x,v.y,0 });
+	}
+
+	for (int i = 0; i < _Vertices.size(); ++i) {
+		float x = _TeddyVertices[i].x;
+		float y = 1.0 - _TeddyVertices[i].y;
+		_TeddyUV.emplace_back(x);
+		_TeddyUV.emplace_back(y);
 	}
 
 	for (int i = 0; i < _Triangles.size(); ++i) {
@@ -790,7 +802,8 @@ void Delauney::MakeTeddyTempVerts() {
 
 
 		}
-		
+		//‹L˜^
+		_IsChodralAxis[mididx] = true;
 		/*
 		std::cout << "terminal id is " << i << std::endl;;
 		for (int p = 0; p < vertOfFanTris.size(); ++p) {
@@ -804,7 +817,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 		}
 		*/
-		
+		//-----------‡”Ô‚É
 		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
 		int swapid = -1;
 		for (int c = 0; c < vertOfFanTris.size()-1; ++c) {
