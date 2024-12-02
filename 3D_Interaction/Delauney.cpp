@@ -745,7 +745,7 @@ void Delauney::MakeTeddyTempVerts() {
 			mididx = _Vertices.size() - 1;
 			edgeMidPoint[e1][e2] = mididx;
 			edgeMidPoint[e2][e1] = mididx;
-
+			_IsChodralAxis[mididx] = true;
 		}
 
 
@@ -762,7 +762,7 @@ void Delauney::MakeTeddyTempVerts() {
 				_Vertices.push_back(midvert);
 				mididx = _Vertices.size() - 1;
 				junctionMidPoint[now] = mididx;
-
+				_IsChodralAxis[mididx] = true;
 				invalidEdge[prev1][prev2] = true;
 				invalidEdge[prev2][prev1] = true;
 				break;
@@ -787,6 +787,7 @@ void Delauney::MakeTeddyTempVerts() {
 					midvert /= 2;
 					_Vertices.push_back(midvert);
 					mididx = _Vertices.size() - 1;
+					_IsChodralAxis[mididx] = true;
 					edgeMidPoint[e.e1][e.e2] = mididx;
 					edgeMidPoint[e.e2][e.e1] = mididx;
 
@@ -1065,7 +1066,7 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 
 	}
-	//3Dlize,
+	//3Dlize---------------------------------------------------------
 	int divNum = 2;
 	float coef = 1.0f;
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(_Vertices.size(), -1);//+z
@@ -1102,7 +1103,7 @@ void Delauney::MakeTeddyTempVerts() {
 			float uvy = 1.0 - _Vertices[axisPoint].y;
 
 			if (vertPozi == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
 				_TeddyVertices.push_back(newv);
 				_TeddyUV.emplace_back(uvx);
 				_TeddyUV.emplace_back(uvy);
@@ -1110,7 +1111,7 @@ void Delauney::MakeTeddyTempVerts() {
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 			}
 			if (vertNega == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
 				_TeddyVertices.push_back(newv);
 				_TeddyUV.emplace_back(uvx);
 				_TeddyUV.emplace_back(uvy);
@@ -1164,13 +1165,13 @@ void Delauney::MakeTeddyTempVerts() {
 		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
 		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 		if (vertPozi == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
 			_TeddyVertices.push_back(newv);
 			vertPozi = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 		}
 		if (vertNega == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
 			_TeddyVertices.push_back(newv);
 			vertNega = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;

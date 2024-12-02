@@ -224,33 +224,27 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		for (int i = 0; i < tempVert.size(); ++i) {
 			vert.push_back({ tempVert[i].x,tempVert[i].y,0 });
 		}
-		*/
-
-		for (int i = 0; i < tempVert3D.size(); ++i) {
-			vert.push_back(tempVert3D[i]);
-		}
-		/*
 		for (int i = 0; i < tempIdx.size(); ++i) {
 			int id = tempIdx[i];
 			idx.push_back(id);
 		}
+		for (int i = 0; i < tempWire.size(); ++i) {
+			wireIdx.push_back(tempWire[i]);
+		}
 		*/
+		
+		for (int i = 0; i < tempVert3D.size(); ++i) {
+			vert.push_back(tempVert3D[i]);
+		}
 
 		for (int i = 0; i < tempIdx3D.size(); ++i) {
 			int id = tempIdx3D[i];
 			idx.push_back(id);
 		}
-
-		/*
-		for (int i = 0; i < tempWire.size(); ++i) {
-			wireIdx.push_back(tempWire[i]);
-		}
-		*/
-
 		for (int i = 0; i < tempWire3D.size(); ++i) {
 			wireIdx.push_back(tempWire3D[i]);
 		}
-
+		
 	}
 
 
