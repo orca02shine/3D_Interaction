@@ -8,7 +8,7 @@ MeshCreator::~MeshCreator() {
 }
 
 void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::Point> boundary,
-	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<int>& idx, std::vector<int>& wireIdx) 
+	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<int>& idx, std::vector<int>& wireIdx)
 {
 	float targetSize = 512.0;
 
@@ -16,7 +16,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 	uv.clear();
 	idx.clear();
 	wireIdx.clear();
-	
+
 
 	//0,leftup to leftdown
 	{
@@ -25,7 +25,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		float vx = uvx * 2 - 1.0;
 		float vy = uvy * 2 - 1.0;
 		vy *= -1.0;
-		vert.push_back({vx, vy, 0 });
+		vert.push_back({ vx, vy, 0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
@@ -43,7 +43,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 
 	for (int i = 0; i < boundary.size(); ++i) {
 		{
-			float uvx = float(boundary[i].x )/ targetSize;
+			float uvx = float(boundary[i].x) / targetSize;
 			float uvy = 0.0;
 			float vx = uvx * 2 - 1.0;
 			float vy = uvy * 2 - 1.0;
@@ -67,7 +67,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 	//rightup
 	{
 		float uvx = float(cor[1].x) / targetSize;
-		float uvy = float(cor[1].y )/ targetSize;
+		float uvy = float(cor[1].y) / targetSize;
 		float vx = uvx * 2 - 1.0;
 		float vy = uvy * 2 - 1.0;
 		vy *= -1.0;
@@ -87,7 +87,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		uv.push_back(uvy);
 	}
 
-	for (int i = 3; i < vert.size(); i+=2) {
+	for (int i = 3; i < vert.size(); i += 2) {
 		int leftup = i - 3;
 		int leftdown = i - 2;
 		int rightup = i - 1;
@@ -139,16 +139,16 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		float y0 = vert[1].y;
 		float yM = -1.0;
 
-		
+
 		glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1.0f);
-		glm::mat4 view=glm::lookAt(
+		glm::mat4 view = glm::lookAt(
 			glm::vec3(0, 0.0, -0.4),
 			glm::vec3(0, 0, 0),
 			glm::vec3(0, 1, 0)  // ƒJƒƒ‰‚Ì“ª‚Ì•ûŒü
 		);
 
 		glm::mat4 test = glm::mat4(1.0);
-			
+
 		for (int i = 0; i < contour.size(); ++i) {
 			yM = std::max(yM, vert[i * 2 + 1].y);
 		}
@@ -156,22 +156,22 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		for (int i = 0; i < contour.size(); ++i) {
 			float xi = vert[i * 2 + 1].x;
 			float yi = vert[i * 2 + 1].y;
-			
+
 			float wi = ((yi - y0) / (yM - y0)) * wm + 1 - ((yi - y0) / (yM - y0));
 
 			glm::vec4 scr = { xi,yi,f,wi };
 
 			glm::mat4 inv = glm::inverse(view) * glm::inverse(proj);
 
-			glm::vec4 world = inv*scr;
+			glm::vec4 world = inv * scr;
 
-			
-			std::cout << "world" << world.x << " " << world.y << " " << world.z <<" " <<world.w <<std::endl;
+
+			std::cout << "world" << world.x << " " << world.y << " " << world.z << " " << world.w << std::endl;
 			vert[i * 2 + 1] = { world.x,world.y,world.z };
 			vert[i * 2].x = world.x;
 			vert[i * 2].z = world.z;
 			vert[i * 2].y = 1.0f;
-			
+
 
 		}
 
@@ -198,7 +198,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 
 	std::reverse(revcont.begin(), revcont.end());
 
-	for (int i = 0; i <revcont.size(); ++i) {
+	for (int i = 0; i < revcont.size(); ++i) {
 
 		float uvx = float(revcont[i].x) / targetSize;
 		float uvy = float(revcont[i].y) / targetSize;
@@ -217,23 +217,40 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		std::vector<int> tempIdx = delauney.GetIndices();
 		std::vector<int> tempWire = delauney.GetWireFrame();
 
+		std::vector<glm::vec3> tempVert3D = delauney.GetVertices3D();
+		std::vector<int> tempIdx3D = delauney.GetIndices3D();
+		std::vector<int> tempWire3D = delauney.GetWireFrame3D();
+		/*
 		for (int i = 0; i < tempVert.size(); ++i) {
 			vert.push_back({ tempVert[i].x,tempVert[i].y,0 });
 		}
+		*/
 
+		for (int i = 0; i < tempVert3D.size(); ++i) {
+			vert.push_back(tempVert3D[i]);
+		}
+		/*
 		for (int i = 0; i < tempIdx.size(); ++i) {
 			int id = tempIdx[i];
 			idx.push_back(id);
 		}
+		*/
 
+		for (int i = 0; i < tempIdx3D.size(); ++i) {
+			int id = tempIdx3D[i];
+			idx.push_back(id);
+		}
+
+		/*
 		for (int i = 0; i < tempWire.size(); ++i) {
 			wireIdx.push_back(tempWire[i]);
 		}
 		*/
-		
+
 		for (int i = 0; i < tempWire3D.size(); ++i) {
 			wireIdx.push_back(tempWire3D[i]);
 		}
+
 	}
 
 

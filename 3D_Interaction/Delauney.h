@@ -93,11 +93,12 @@ class Delauney
 	std::stack<DeEdge> _EdgeStack;
 
 
-	std::vector<glm::vec2> _TeddyTempVerts;
-	std::vector<std::vector<int>> _TeddyTempAdj;
 	std::vector<Triangle> _TeddyTriangles_Outer;//äOë§Ç…ï”Ç™Ç†ÇÈéOäpå`ÇÃî‘çÜ
 	std::vector<Triangle> _TeddyTriangles_Inner;//
 	std::vector<glm::vec3> _TeddyVertices;
+	std::vector<float> _TeddyUV;
+	std::vector<int> _TeddyIndices;
+	std::vector<int> _TeddyWireIdx;
 
 
 
@@ -112,7 +113,7 @@ public:
 	DeEdge MakeEdge(size_t a, size_t b);
 	Triangle MakeTriangle(size_t a, size_t b, size_t c);
 
-	Delauney(Contour contour,int texSize);
+	Delauney(Contour contour, int texSize);
 	~Delauney();
 
 	void Init();
@@ -158,7 +159,7 @@ public:
 	void DeleteInnerTris();
 
 	void MakeTeddyTempVerts();
-	bool TeddyInCircle(DeEdge e,std::vector<int> vertices);
+	bool TeddyInCircle(DeEdge e, std::vector<int> vertices);
 	void TestSetData();
 
 	void SetData();
