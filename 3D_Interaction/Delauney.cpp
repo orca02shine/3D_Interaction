@@ -835,6 +835,13 @@ void Delauney::MakeTeddyTempVerts() {
 				vertOfFanTris.push_back(tempSwap[c]);
 			}
 		}
+		//-----------------
+
+		for (int t = 0; t < vertOfFanTris.size(); ++t) {
+			float leng = glm::length(_Vertices[vertOfFanTris[t]] - _Vertices[mididx]);
+			_SumLengthFromAxis[mididx].push_back(leng);
+		}
+
 
 		for (int t = 1; t < vertOfFanTris.size(); ++t) {
 			DeEdge we0= { vertOfFanTris[t],vertOfFanTris[t - 1] };
@@ -847,6 +854,9 @@ void Delauney::MakeTeddyTempVerts() {
 			wireFrame.insert({we0});
 			wireFrame.insert({ we1 });
 			wireFrame.insert({ we2 });
+
+			Triangle fantri = MakeTriangle(mididx, vertOfFanTris[t], vertOfFanTris[t - 1]);
+			_TeddyTriangles_Outer.push_back(fantri);
 
 		}
 		
@@ -885,7 +895,22 @@ void Delauney::MakeTeddyTempVerts() {
 				_Vertices.push_back(newV);
 				vmid = _Vertices.size()-1;
 				junctionMidPoint[i] = vmid;
+				_IsChodralAxis[vmid] = true;
 			}
+			//length clc
+			if (invalidEdge[v0][v1] == !true && invalidEdge[v1][v2] != true) {
+				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+			}
+			if (invalidEdge[v1][v2] == !true && invalidEdge[v2][v0] != true) {
+				float leng = glm::length(_Vertices[v2] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+			}
+			if (invalidEdge[v2][v0] == !true && invalidEdge[v0][v1] != true) {
+				float leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+			}
+			//------
 
 			if (invalidEdge[v0][v1] != true) {
 				int mp = edgeMidPoint[v0][v1];
@@ -896,6 +921,12 @@ void Delauney::MakeTeddyTempVerts() {
 					int idm = _Vertices.size() - 1;
 					edgeMidPoint[v0][v1] = idm;
 					edgeMidPoint[v1][v0] = idm;
+					_IsChodralAxis[idm] = true;
+
+					float leng1 = glm::length(_Vertices[v0] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng1);
+					float leng2 = glm::length(_Vertices[v1] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v0][v1];
 				wireFrame.insert({ v0,emid});
@@ -903,6 +934,11 @@ void Delauney::MakeTeddyTempVerts() {
 				wireFrame.insert({ vmid,emid});
 				wireFrame.insert({ v1,emid });
 				wireFrame.insert({ v1,vmid });
+
+				Triangle tri1 = MakeTriangle(vmid, v0, emid);
+				Triangle tri2 = MakeTriangle(vmid, v1, emid);
+				_TeddyTriangles_Inner.push_back(tri1);
+				_TeddyTriangles_Inner.push_back(tri2);
 			}
 			if (invalidEdge[v1][v2] != true) {
 				int mp = edgeMidPoint[v1][v2];
@@ -913,6 +949,12 @@ void Delauney::MakeTeddyTempVerts() {
 					int idm = _Vertices.size() - 1;
 					edgeMidPoint[v1][v2] = idm;
 					edgeMidPoint[v2][v1] = idm;
+					_IsChodralAxis[idm] = true;
+
+					float leng1 = glm::length(_Vertices[v1] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng1);
+					float leng2 = glm::length(_Vertices[v2] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v1][v2];
 				wireFrame.insert({ v1,emid });
@@ -920,6 +962,11 @@ void Delauney::MakeTeddyTempVerts() {
 				wireFrame.insert({ vmid,emid });
 				wireFrame.insert({ v2,emid });
 				wireFrame.insert({ v2,vmid });
+
+				Triangle tri1 = MakeTriangle(vmid, v1, emid);
+				Triangle tri2 = MakeTriangle(vmid, v2, emid);
+				_TeddyTriangles_Inner.push_back(tri1);
+				_TeddyTriangles_Inner.push_back(tri2);
 			}
 			if (invalidEdge[v2][v0] != true) {
 				int mp = edgeMidPoint[v2][v0];
@@ -930,6 +977,12 @@ void Delauney::MakeTeddyTempVerts() {
 					int idm = _Vertices.size() - 1;
 					edgeMidPoint[v0][v2] = idm;
 					edgeMidPoint[v2][v0] = idm;
+					_IsChodralAxis[idm] = true;
+
+					float leng1 = glm::length(_Vertices[v2] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng1);
+					float leng2 = glm::length(_Vertices[v0] - _Vertices[idm]);
+					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v0][v2];
 				wireFrame.insert({ v0,emid });
@@ -937,6 +990,11 @@ void Delauney::MakeTeddyTempVerts() {
 				wireFrame.insert({ vmid,emid });
 				wireFrame.insert({ v2,emid });
 				wireFrame.insert({ v2,vmid });
+
+				Triangle tri1 = MakeTriangle(vmid, v2, emid);
+				Triangle tri2 = MakeTriangle(vmid, v0, emid);
+				_TeddyTriangles_Inner.push_back(tri1);
+				_TeddyTriangles_Inner.push_back(tri2);
 			}
 
 
@@ -972,6 +1030,7 @@ void Delauney::MakeTeddyTempVerts() {
 				}
 				wireFrame.insert({ v,midp1 });
 				wireFrame.insert({ midp1,ot.first });
+				_IsChodralAxis[midp1] = true;
 			}
 
 			int midp2 = -1;
@@ -985,6 +1044,7 @@ void Delauney::MakeTeddyTempVerts() {
 				}
 				wireFrame.insert({ v,midp2 });
 				wireFrame.insert({ midp2,ot.second });
+				_IsChodralAxis[midp2] = true;
 			}
 
 			if (midp1 != -1 && midp2 != -1) {
@@ -997,6 +1057,15 @@ void Delauney::MakeTeddyTempVerts() {
 				wireFrame.insert({ ot.first,ot.second });
 				wireFrame.insert({ ot.first,midp1 });
 				wireFrame.insert({ ot.second,midp1 });
+			}
+
+			if (invalidEdge[v][ot.first] != true && invalidEdge[v][ot.second] != true) {
+				Triangle tri1 = MakeTriangle(v, midp1, midp2);
+				_TeddyTriangles_Inner.push_back(tri1);
+				Triangle tri2 = MakeTriangle(midp1, midp2, ot.first);
+				_TeddyTriangles_Inner.push_back(tri2);
+				Triangle tri3 = MakeTriangle(midp2, ot.first, ot.second);
+				_TeddyTriangles_Outer.push_back(tri3);
 			}
 			
 		}
