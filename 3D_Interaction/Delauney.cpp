@@ -1130,7 +1130,7 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ v2_Pozi,notAxisPoint });
 		wf3D.insert({ v1_Nega,notAxisPoint });
 		wf3D.insert({ v2_Nega,notAxisPoint });
-		/*
+		
 		_TeddyIndices.push_back(v1_Pozi);
 		_TeddyIndices.push_back(v2_Pozi);
 		_TeddyIndices.push_back(notAxisPoint);
@@ -1138,7 +1138,7 @@ void Delauney::MakeTeddyTempVerts() {
 		_TeddyIndices.push_back(v1_Nega);
 		_TeddyIndices.push_back(v2_Nega);
 		_TeddyIndices.push_back(notAxisPoint);
-		*/
+		
 	}
 	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Outer[i];
@@ -1180,6 +1180,13 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1] });
 		wf3D.insert({ vertNega,outerEdgePoint[0] });
 		wf3D.insert({ vertNega,outerEdgePoint[1] });
+
+		_TeddyIndices.push_back(vertPozi);
+		_TeddyIndices.push_back(outerEdgePoint[0]);
+		_TeddyIndices.push_back(outerEdgePoint[1]);
+		_TeddyIndices.push_back(vertNega);
+		_TeddyIndices.push_back(outerEdgePoint[0]);
+		_TeddyIndices.push_back(outerEdgePoint[1]);
 
 	}
 
