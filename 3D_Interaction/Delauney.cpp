@@ -1074,7 +1074,118 @@ void Delauney::MakeTeddyTempVerts() {
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(_Vertices.size(), -1);//-z
 	std::set<DeEdge> wf3D;
 
+	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
+		Triangle tri = _TeddyTriangles_Inner[i];
+		int notAxisPoint = -1;
+		std::vector<int> AxisPoints;
+		for (int c = 0; c < 3; ++c) {
+			if (!_IsChodralAxis[tri.id[c]]) {
+				notAxisPoint = tri.id[c];
+			}
+			else {
+				AxisPoints.push_back(tri.id[c]);
+			}
+		}
+	
+		for (int c = 0; c < 2; ++c) {
+			float thick = 0;
+			int axisPoint = AxisPoints[c];
 
+			if (_SumLengthFromAxis[axisPoint].size() != 0) {
+				for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
+					thick += _SumLengthFromAxis[axisPoint][s];
+				}
+				thick /= _SumLengthFromAxis[axisPoint].size();
+				thick *= coef;
+			}
+
+			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
+			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
+			float uvx = _Vertices[axisPoint].x;
+			float uvy = 1.0 - _Vertices[axisPoint].y;
+
+			if (vertPozi == -1) {
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
+				_TeddyVertices.push_back(newv);
+				_TeddyUV.emplace_back(uvx);
+				_TeddyUV.emplace_back(uvy);
+				vertPozi = _TeddyVertices.size() - 1;
+				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
+			}
+
+			if (vertNega == -1) {
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
+				_TeddyVertices.push_back(newv);
+				_TeddyUV.emplace_back(uvx);
+				_TeddyUV.emplace_back(uvy);
+				vertNega = _TeddyVertices.size() - 1;
+				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
+			}	
+		}
+	
+		int v1_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[0]];
+		int v1_Nega = indexOfAxisToIndexOf3D_Nega[AxisPoints[0]];
+		int v2_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
+		int v2_Nega = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
+
+		wf3D.insert({ v1_Pozi,v2_Pozi });
+		wf3D.insert({ v1_Nega,v2_Nega });
+		wf3D.insert({ v1_Pozi,notAxisPoint });
+		wf3D.insert({ v2_Pozi,notAxisPoint });
+		wf3D.insert({ v1_Nega,notAxisPoint });
+		wf3D.insert({ v2_Nega,notAxisPoint });
+		
+		_TeddyIndices.push_back(v1_Pozi);
+		_TeddyIndices.push_back(v2_Pozi);
+		_TeddyIndices.push_back(notAxisPoint);
+
+		_TeddyIndices.push_back(v1_Nega);
+		_TeddyIndices.push_back(v2_Nega);
+		_TeddyIndices.push_back(notAxisPoint);
+	}
+
+	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
+		Triangle tri = _TeddyTriangles_Outer[i];
+		int axisPoint = -1;
+		std::vector<int> outerEdgePoint;
+		for (int c = 0; c < 3; ++c) {
+			if (_IsChodralAxis[tri.id[c]]) {
+				axisPoint = tri.id[c];
+			}
+			else {
+				outerEdgePoint.push_back(tri.id[c]);
+			}
+		}
+		float thick = 0;
+		if (_SumLengthFromAxis[axisPoint].size() != 0) {
+			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
+				thick += _SumLengthFromAxis[axisPoint][s];
+			}
+			thick /= _SumLengthFromAxis[axisPoint].size();
+			thick *= coef;
+		}
+
+		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
+		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
+		if (vertPozi == -1) {
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
+			_TeddyVertices.push_back(newv);
+			vertPozi = _TeddyVertices.size() - 1;
+			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
+		}
+		if (vertNega == -1) {
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
+			_TeddyVertices.push_back(newv);
+			vertNega = _TeddyVertices.size() - 1;
+			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
+		}
+		wf3D.insert({ vertPozi,outerEdgePoint[0] });
+		wf3D.insert({ vertPozi,outerEdgePoint[1] });
+		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1] });
+		wf3D.insert({ vertNega,outerEdgePoint[0] });
+		wf3D.insert({ vertNega,outerEdgePoint[1] });
+
+	}
 
 
 	for (auto& e : wireFrame) {
