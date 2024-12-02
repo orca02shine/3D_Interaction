@@ -1067,10 +1067,24 @@ void Delauney::MakeTeddyTempVerts() {
 		
 	}
 
+	//3Dlize,
+	int divNum = 2;
+	float coef = 1.0f;
+	std::vector<int> indexOfAxisToIndexOf3D_Pozi(_Vertices.size(), -1);//+z
+	std::vector<int> indexOfAxisToIndexOf3D_Nega(_Vertices.size(), -1);//-z
+	std::set<DeEdge> wf3D;
+
+
+
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);
 		_WireIdx.emplace_back(e.second);
+	}
+
+	for (auto& e : wf3D) {
+		_TeddyWireIdx.emplace_back(e.first);
+		_TeddyWireIdx.emplace_back(e.second);
 	}
 
 
