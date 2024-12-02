@@ -217,21 +217,39 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		std::vector<int> tempIdx = delauney.GetIndices();
 		std::vector<int> tempWire = delauney.GetWireFrame();
 
+		std::vector<glm::vec3> tempVert3D = delauney.GetVertices3D();
+		std::vector<int> tempIdx3D = delauney.GetIndices3D();
+		std::vector<int> tempWire3D = delauney.GetWireFrame3D();
+
 		for (int i = 0; i < tempVert.size(); ++i) {
 			float x = tempVert[i].x;
 			float y = tempVert[i].y;
 			vert.push_back({ x,y,0 });
 		}
-
+		/*
+		for (int i = 0; i < tempVert3D.size(); ++i) {
+			vert.push_back(tempVert3D[i]);
+		}
+		*/
 		for (int i = 0; i < tempIdx.size(); ++i) {
 			int id = tempIdx[i];
 			idx.push_back(id);
 		}
-
+		/*
+		for (int i = 0; i < tempIdx3D.size(); ++i) {
+			int id = tempIdx3D[i];
+			idx.push_back(id);
+		}
+		*/
 		for (int i = 0; i < tempWire.size(); ++i) {
 			int id = tempWire[i];
 			wireIdx.push_back(id);
 		}
+		/*
+		for (int i = 0; i < tempWire3D.size(); ++i) {
+			wireIdx.push_back(tempWire3D[i]);
+		}
+		*/
 	}
 
 
