@@ -1046,19 +1046,14 @@ void Delauney::MakeTeddyTempVerts() {
 				wireFrame.insert({ midp2,ot.second });
 				_IsChodralAxis[midp2] = true;
 			}
-
 			if (midp1 != -1 && midp2 != -1) {
 				wireFrame.insert({ midp1,midp2 });
 			}
-
-
-
 			if (invalidEdge[ot.first][ot.second] != true) {
 				wireFrame.insert({ ot.first,ot.second });
 				wireFrame.insert({ ot.first,midp1 });
 				wireFrame.insert({ ot.second,midp1 });
 			}
-
 			if (invalidEdge[v][ot.first] != true && invalidEdge[v][ot.second] != true) {
 				Triangle tri1 = MakeTriangle(v, midp1, midp2);
 				_TeddyTriangles_Inner.push_back(tri1);
