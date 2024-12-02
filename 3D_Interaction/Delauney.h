@@ -99,6 +99,8 @@ class Delauney
 	std::vector<Triangle> _TeddyTriangles_Outer;//外側に辺がある三角形の番号
 	std::vector<Triangle> _TeddyTriangles_Inner;//
 	std::vector<bool> _IsChodralAxis; //内側の軸頂点かどうか
+	std::vector<glm::vec3> _TeddyVertices;
+
 
 
 	bool _EdgeC[200][200];

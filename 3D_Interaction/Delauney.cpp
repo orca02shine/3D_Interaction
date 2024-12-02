@@ -576,7 +576,7 @@ bool Delauney::TeddyInCircle(DeEdge e, std::vector<int> vertices) {
 	for (int i = 0; i < vertices.size(); ++i) {
 		glm::vec2 lo = _Vertices[vertices[i]] - v;
 		double d = glm::length(lo);
-		std::cout << d << " "<<rad << std::endl;
+		//std::cout << d << " "<<rad << std::endl;
 		if (d> rad) {
 			return false;
 		}
@@ -593,6 +593,11 @@ void Delauney::MakeTeddyTempVerts() {
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
 	_Vertices.erase(_Vertices.begin());
+
+	for (int i = 0; i < _Vertices.size(); ++i) {
+		glm::vec2 v = _Vertices[i];
+		_TeddyVertices.push_back({ v.x,v.y,0 });
+	}
 
 	for (int i = 0; i < _Triangles.size(); ++i) {
 		_Triangles[i].id[0] -= 3;
