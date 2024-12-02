@@ -85,7 +85,6 @@ class Delauney
 
 
 	std::vector<glm::vec2> _Vertices;
-
 	std::vector<float> _UV;
 	std::vector<int> _Indices;
 	std::vector<int> _WireIdx;
@@ -93,14 +92,13 @@ class Delauney
 	std::vector<Triangle> _Triangles;
 	std::stack<DeEdge> _EdgeStack;
 
-
-	std::vector<glm::vec2> _TeddyTempVerts;
-	std::vector<std::vector<int>> _TeddyTempAdj;
 	std::vector<Triangle> _TeddyTriangles_Outer;//外側に辺がある三角形の番号
 	std::vector<Triangle> _TeddyTriangles_Inner;//
 	std::vector<bool> _IsChodralAxis; //内側の軸頂点かどうか
 	std::vector<glm::vec3> _TeddyVertices;
-
+	std::vector<float> _TeddyUV;
+	std::vector<int> _TeddyIndices;
+	std::vector<int> _TeddyWireIdx;
 
 
 	bool _EdgeC[200][200];
@@ -170,4 +168,8 @@ public:
 	std::vector<int> GetIndices() { return _Indices; }
 	std::vector<glm::vec2> GetVertices() { return  _Vertices; }
 	std::vector<int> GetWireFrame() { return _WireIdx; }
+	std::vector<glm::vec3> GetVertices3D() { return  _TeddyVertices; }
+	std::vector<int> GetIndices3D() { return _TeddyIndices; }
+	std::vector<int> GetWireFrame3D() { return _TeddyWireIdx; }
+	std::vector<float> GetUV3D() { return _TeddyUV; }
 };
