@@ -198,6 +198,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 
 	std::reverse(revcont.begin(), revcont.end());
 
+	/*
 	for (int i = 0; i < revcont.size(); ++i) {
 
 		float uvx = float(revcont[i].x) / targetSize;
@@ -208,7 +209,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 
 
 	}
-
+	*/
 	if (cont.size() > 2) {
 		class Delauney delauney(revcont, targetSize);
 
@@ -220,6 +221,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		std::vector<glm::vec3> tempVert3D = delauney.GetVertices3D();
 		std::vector<int> tempIdx3D = delauney.GetIndices3D();
 		std::vector<int> tempWire3D = delauney.GetWireFrame3D();
+		std::vector<float> tempUV3D = delauney.GetUV3D();
 		/*
 		for (int i = 0; i < tempVert.size(); ++i) {
 			vert.push_back({ tempVert[i].x,tempVert[i].y,0 });
@@ -243,6 +245,9 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		}
 		for (int i = 0; i < tempWire3D.size(); ++i) {
 			wireIdx.push_back(tempWire3D[i]);
+		}
+		for (int i = 0; i < tempUV3D.size(); ++i) {
+			uv.push_back(tempUV3D[i]);
 		}
 		
 	}

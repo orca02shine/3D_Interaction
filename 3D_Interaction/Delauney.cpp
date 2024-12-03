@@ -617,12 +617,8 @@ void Delauney::MakeTeddyTempVerts() {
 		glm::vec2 v = _Vertices[i];
 		_TeddyVertices.push_back({ v.x,v.y,0 });
 	}
-	for (int i = 0; i < _Vertices.size(); ++i) {
-		float x = _TeddyVertices[i].x;
-		float y = 1.0 - _TeddyVertices[i].y;
-		_TeddyUV.emplace_back(x);
-		_TeddyUV.emplace_back(y);
-	}
+
+
 
 	for (int i = 0; i < _Triangles.size(); ++i) {
 		_Triangles[i].id[0] -= 3;
@@ -1112,24 +1108,18 @@ void Delauney::MakeTeddyTempVerts() {
 				thick *= coef;
 			}
 
-			float uvx = _Vertices[axisPoint].x;
-			float uvy = 1.0 - _Vertices[axisPoint].y;
-
 			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
+			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
+
 			if (vertPozi == -1) {
 				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
 				_TeddyVertices.push_back(newv);
-				_TeddyUV.emplace_back(uvx);
-				_TeddyUV.emplace_back(uvy);
 				vertPozi = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 			}
-			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 			if (vertNega == -1) {
 				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
 				_TeddyVertices.push_back(newv);
-				_TeddyUV.emplace_back(uvx);
-				_TeddyUV.emplace_back(uvy);
 				vertNega = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
 			}
@@ -1183,6 +1173,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
 		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
+
 		if (vertPozi == -1) {
 			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
 			_TeddyVertices.push_back(newv);
@@ -1223,6 +1214,14 @@ void Delauney::MakeTeddyTempVerts() {
 	for (auto& e : wf3D) {
 		_TeddyWireIdx.emplace_back(e.first);
 		_TeddyWireIdx.emplace_back(e.second);
+	}
+
+	for (int i = 0; i < _TeddyVertices.size(); ++i) {
+		float uvx = (_TeddyVertices[i].x * 0.5) + 0.5;
+		float uvy = 1.0 - ((_TeddyVertices[i].y * 0.5) + 0.5);
+
+		_TeddyUV.push_back(uvx);
+		_TeddyUV.push_back(uvy);
 	}
 
 }
