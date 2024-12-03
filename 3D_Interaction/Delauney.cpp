@@ -1069,8 +1069,8 @@ void Delauney::MakeTeddyTempVerts() {
 	//3Dlize---------------------------------------------------------
 	int divNum = 2;
 	float coef = 1.0f;
-	std::vector<int> indexOfAxisToIndexOf3D_Pozi(_Vertices.size(), -1);//+z
-	std::vector<int> indexOfAxisToIndexOf3D_Nega(_Vertices.size(), -1);//-z
+	std::vector<int> indexOfAxisToIndexOf3D_Pozi(3000, -1);//+z
+	std::vector<int> indexOfAxisToIndexOf3D_Nega(3000, -1);//-z
 	std::set<DeEdge> wf3D;
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
@@ -1097,11 +1097,10 @@ void Delauney::MakeTeddyTempVerts() {
 				thick *= coef;
 			}
 
-			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
-			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 			float uvx = _Vertices[axisPoint].x;
 			float uvy = 1.0 - _Vertices[axisPoint].y;
 
+			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
 			if (vertPozi == -1) {
 				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
 				_TeddyVertices.push_back(newv);
@@ -1110,6 +1109,7 @@ void Delauney::MakeTeddyTempVerts() {
 				vertPozi = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 			}
+			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 			if (vertNega == -1) {
 				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
 				_TeddyVertices.push_back(newv);
@@ -1123,12 +1123,12 @@ void Delauney::MakeTeddyTempVerts() {
 		int v1_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[0]];
 		int v1_Nega = indexOfAxisToIndexOf3D_Nega[AxisPoints[0]];
 		int v2_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
-		int v2_Nega = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
+		int v2_Nega = indexOfAxisToIndexOf3D_Nega[AxisPoints[1]];
 
 		wf3D.insert({ v1_Pozi,v2_Pozi });
-		wf3D.insert({ v1_Nega,v2_Nega });
 		wf3D.insert({ v1_Pozi,notAxisPoint });
 		wf3D.insert({ v2_Pozi,notAxisPoint });
+		wf3D.insert({ v1_Nega,v2_Nega });
 		wf3D.insert({ v1_Nega,notAxisPoint });
 		wf3D.insert({ v2_Nega,notAxisPoint });
 		
@@ -1141,6 +1141,7 @@ void Delauney::MakeTeddyTempVerts() {
 		_TeddyIndices.push_back(notAxisPoint);
 		
 	}
+	
 	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Outer[i];
 		int axisPoint = -1;
@@ -1191,7 +1192,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 
-
+	
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);
