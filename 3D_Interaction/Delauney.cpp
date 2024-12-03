@@ -1080,6 +1080,8 @@ void Delauney::MakeTeddyTempVerts() {
 	//3Dlize---------------------------------------------------------
 	int divNum = 2;
 	float coef = 1.0f;
+	float thickSize = 0.2;
+
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(3000, -1);//+z
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(3000, -1);//-z
 	std::set<DeEdge> wf3D;
@@ -1112,13 +1114,13 @@ void Delauney::MakeTeddyTempVerts() {
 			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 
 			if (vertPozi == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
 				_TeddyVertices.push_back(newv);
 				vertPozi = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 			}
 			if (vertNega == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
 				_TeddyVertices.push_back(newv);
 				vertNega = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
@@ -1175,13 +1177,13 @@ void Delauney::MakeTeddyTempVerts() {
 		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 
 		if (vertPozi == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,0.1 };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
 			_TeddyVertices.push_back(newv);
 			vertPozi = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 		}
 		if (vertNega == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-0.1 };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
 			_TeddyVertices.push_back(newv);
 			vertNega = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
