@@ -584,7 +584,22 @@ bool Delauney::TeddyInCircle(DeEdge e, std::vector<int> vertices) {
 
 	return true;
 }
-void Delauney::TestSetData() {
+Triangle Delauney::MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode) {
+	glm::vec2 v0 = { _TeddyVertices[a].x,_TeddyVertices[a].y };
+	glm::vec2 v1 = { _TeddyVertices[b].x,_TeddyVertices[b].y };
+	glm::vec2 v2 = { _TeddyVertices[c].x,_TeddyVertices[c].y };
+
+	float val = glm::cross(v1 - v0, v2 - v0);
+
+	if (negaMode) {
+		val *= -1;
+	}
+
+	if (!(val > 0.0)) {
+		std::swap(b, c);
+	}
+
+	return Triangle{ a,b,c };
 
 }
 
@@ -1132,13 +1147,16 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ v1_Nega,notAxisPoint });
 		wf3D.insert({ v2_Nega,notAxisPoint });
 		
-		_TeddyIndices.push_back(v1_Pozi);
-		_TeddyIndices.push_back(v2_Pozi);
-		_TeddyIndices.push_back(notAxisPoint);
+		Triangle tri1 = MakeTeddyTriangle(v1_Pozi, v2_Pozi,notAxisPoint,false);
+		Triangle tri2 = MakeTeddyTriangle(v1_Nega, v2_Nega, notAxisPoint,true);
 
-		_TeddyIndices.push_back(v1_Nega);
-		_TeddyIndices.push_back(v2_Nega);
-		_TeddyIndices.push_back(notAxisPoint);
+		_TeddyIndices.push_back(tri1.id[0]);
+		_TeddyIndices.push_back(tri1.id[1]);
+		_TeddyIndices.push_back(tri1.id[2]);
+		_TeddyIndices.push_back(tri2.id[0]);
+		_TeddyIndices.push_back(tri2.id[1]);
+		_TeddyIndices.push_back(tri2.id[2]);
+
 		
 	}
 	
@@ -1183,12 +1201,15 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ vertNega,outerEdgePoint[0] });
 		wf3D.insert({ vertNega,outerEdgePoint[1] });
 
-		_TeddyIndices.push_back(vertPozi);
-		_TeddyIndices.push_back(outerEdgePoint[0]);
-		_TeddyIndices.push_back(outerEdgePoint[1]);
-		_TeddyIndices.push_back(vertNega);
-		_TeddyIndices.push_back(outerEdgePoint[0]);
-		_TeddyIndices.push_back(outerEdgePoint[1]);
+		Triangle tri1 = MakeTeddyTriangle(vertPozi, outerEdgePoint[0], outerEdgePoint[1],false);
+		Triangle tri2 = MakeTeddyTriangle(vertNega, outerEdgePoint[0], outerEdgePoint[1],true);
+
+		_TeddyIndices.push_back(tri1.id[0]);
+		_TeddyIndices.push_back(tri1.id[1]);
+		_TeddyIndices.push_back(tri1.id[2]);
+		_TeddyIndices.push_back(tri2.id[0]);
+		_TeddyIndices.push_back(tri2.id[1]);
+		_TeddyIndices.push_back(tri2.id[2]);
 
 	}
 
