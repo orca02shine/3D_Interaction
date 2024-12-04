@@ -1325,11 +1325,20 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ vertPozi,chkEdge[vertPozi][outerEdgePoint[1]][0] });
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][0],chkEdge[vertPozi][outerEdgePoint[1]][0] });
 
+		wf3D.insert({ vertPozi,chkEdge[vertNega][outerEdgePoint[0]][0] });
+		wf3D.insert({ vertPozi,chkEdge[vertNega][outerEdgePoint[1]][0] });
+		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][0],chkEdge[vertNega][outerEdgePoint[1]][0] });
+
 		for (int itr = 0; itr < divNum - 1; ++itr) {
 			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][itr],chkEdge[vertPozi][outerEdgePoint[0]][itr + 1] });
 			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][itr],chkEdge[vertPozi][outerEdgePoint[1]][itr + 1] });
 			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][itr],chkEdge[vertPozi][outerEdgePoint[0]][itr + 1] });
 			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][itr+1],chkEdge[vertPozi][outerEdgePoint[1]][itr+1] });
+
+			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][itr],chkEdge[vertNega][outerEdgePoint[0]][itr + 1] });
+			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][itr],chkEdge[vertNega][outerEdgePoint[1]][itr + 1] });
+			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][itr],chkEdge[vertNega][outerEdgePoint[0]][itr + 1] });
+			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][itr + 1],chkEdge[vertNega][outerEdgePoint[1]][itr + 1] });
 		}
 
 		int endid = divNum - 1;
@@ -1339,6 +1348,9 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][endid],outerEdgePoint[0] });
 		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1]});
 
+		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][endid],outerEdgePoint[0] });
+		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][endid],outerEdgePoint[1] });
+		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][endid],outerEdgePoint[0] });
 
 		/*
 		wf3D.insert({ vertPozi,outerEdgePoint[0] });
