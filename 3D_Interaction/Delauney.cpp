@@ -1130,6 +1130,46 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 		}
 	}
+
+	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
+		Triangle tri = _TeddyTriangles_Outer[i];
+		int axisPoint = -1;
+		std::vector<int> outerEdgePoint;
+		for (int c = 0; c < 3; ++c) {
+			if (_IsChodralAxis[tri.id[c]]) {
+				axisPoint = tri.id[c];
+			}
+			else {
+				outerEdgePoint.push_back(tri.id[c]);
+			}
+		}
+		float thick = 0;
+		if (_SumLengthFromAxis[axisPoint].size() != 0) {
+			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
+				thick += _SumLengthFromAxis[axisPoint][s];
+			}
+			thick /= _SumLengthFromAxis[axisPoint].size();
+			thick *= coef;
+		}
+
+		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
+		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
+
+		if (vertPozi == -1) {
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
+			_TeddyVertices.push_back(newv);
+			vertPozi = _TeddyVertices.size() - 1;
+			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
+		}
+		if (vertNega == -1) {
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
+			_TeddyVertices.push_back(newv);
+			vertNega = _TeddyVertices.size() - 1;
+			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
+		}
+	}
+
+
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
 		int notAxisPoint = -1;
@@ -1247,43 +1287,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 	
-	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
-		Triangle tri = _TeddyTriangles_Outer[i];
-		int axisPoint = -1;
-		std::vector<int> outerEdgePoint;
-		for (int c = 0; c < 3; ++c) {
-			if (_IsChodralAxis[tri.id[c]]) {
-				axisPoint = tri.id[c];
-			}
-			else {
-				outerEdgePoint.push_back(tri.id[c]);
-			}
-		}
-		float thick = 0;
-		if (_SumLengthFromAxis[axisPoint].size() != 0) {
-			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
-				thick += _SumLengthFromAxis[axisPoint][s];
-			}
-			thick /= _SumLengthFromAxis[axisPoint].size();
-			thick *= coef;
-		}
-
-		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
-		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
-
-		if (vertPozi == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
-			_TeddyVertices.push_back(newv);
-			vertPozi = _TeddyVertices.size() - 1;
-			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
-		}
-		if (vertNega == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
-			_TeddyVertices.push_back(newv);
-			vertNega = _TeddyVertices.size() - 1;
-			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
-		}
-	}
+	
 	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i){
 		Triangle tri = _TeddyTriangles_Outer[i];
 		int axisPoint = -1;
