@@ -1129,7 +1129,19 @@ void Delauney::MakeTeddyTempVerts() {
 				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
 			}
 		}
-
+	}
+	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
+		Triangle tri = _TeddyTriangles_Inner[i];
+		int notAxisPoint = -1;
+		std::vector<int> AxisPoints;
+		for (int c = 0; c < 3; ++c) {
+			if (!_IsChodralAxis[tri.id[c]]) {
+				notAxisPoint = tri.id[c];
+			}
+			else {
+				AxisPoints.push_back(tri.id[c]);
+			}
+		}
 		int v1_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[0]];
 		int v1_Nega = indexOfAxisToIndexOf3D_Nega[AxisPoints[0]];
 		int v2_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
@@ -1271,6 +1283,22 @@ void Delauney::MakeTeddyTempVerts() {
 			vertNega = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
 		}
+	}
+	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i){
+		Triangle tri = _TeddyTriangles_Outer[i];
+		int axisPoint = -1;
+		std::vector<int> outerEdgePoint;
+		for (int c = 0; c < 3; ++c) {
+			if (_IsChodralAxis[tri.id[c]]) {
+				axisPoint = tri.id[c];
+			}
+			else {
+				outerEdgePoint.push_back(tri.id[c]);
+			}
+		}
+
+		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
+		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 
 		for (int edg = 0; edg < divNum; edg++) {
 			int v1div = chkEdge[vertPozi][outerEdgePoint[0]][edg];
