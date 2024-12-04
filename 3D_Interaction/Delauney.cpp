@@ -1158,6 +1158,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
 			}
+			/*
 			int v3div = chkEdge[v1_Nega][notAxisPoint][edg];
 			if (v3div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
@@ -1168,14 +1169,15 @@ void Delauney::MakeTeddyTempVerts() {
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
-			}	
+			}
+			*/
 			int v4div = chkEdge[v2_Nega][notAxisPoint][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v2_Nega] + tem;
-				//_TeddyVertices.push_back({newv.x,newv.y,newv.z});
+				_TeddyVertices.push_back({newv.x,newv.y,newv.z});
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Nega][edg] = id;
