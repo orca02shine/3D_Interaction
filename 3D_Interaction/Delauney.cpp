@@ -1176,8 +1176,7 @@ void Delauney::MakeTeddyTempVerts() {
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v2_Nega] + tem;
-				//_TeddyVertices.emplace_back(newv);
-				/*
+				_TeddyVertices.push_back(newv);
 				int id = _TeddyVertices.size()-1;
 
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
