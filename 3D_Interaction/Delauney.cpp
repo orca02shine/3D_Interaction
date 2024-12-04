@@ -609,6 +609,8 @@ void Delauney::MakeTeddyTempVerts() {
 	_IsChodralAxis.resize(500, false);
 	std::vector<std::vector<float>> _SumLengthFromAxis(500);
 
+	_TeddyVertices.reserve(100000);
+
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
 	_Vertices.erase(_Vertices.begin());
@@ -1156,37 +1158,32 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
 			}
-		}
-		/*
-		for (int edg = 0; edg < divNum; edg++) {
-			int v1div = chkEdge[v1_Nega][notAxisPoint][edg];
-			if (v1div == -1) {
+			int v3div = chkEdge[v1_Nega][notAxisPoint][edg];
+			if (v3div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v1_Nega] + tem;
 				_TeddyVertices.push_back(newv);
-				int id = _TeddyVertices.size()-1;
+				int id = _TeddyVertices.size() - 1;
+				chkEdge[v1_Nega][notAxisPoint][edg] = id;
+				chkEdge[notAxisPoint][v1_Nega][edg] = id;
+			}	
+			int v4div = chkEdge[v1_Nega][notAxisPoint][edg];
+			if (v4div == -1) {
+				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
+				float co = (edg + 1.0) / (divNum + 1.0);
+				tem *= co;
+				glm::vec3 newv = _TeddyVertices[v1_Nega] + tem;
+				_TeddyVertices.push_back(newv);
+				int id = _TeddyVertices.size() - 1;
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
 			}
-			int v2div = chkEdge[v2_Nega][notAxisPoint][edg];
-			if (v2div == -1) {
-				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
-				float co = (edg + 1.0) / (divNum + 1.0);
-				tem *= co;
-				glm::vec3 newv = _TeddyVertices[v2_Nega] + tem;
-				_TeddyVertices.push_back(newv);
-				int id = _TeddyVertices.size()-1;
-
-				chkEdge[v2_Nega][notAxisPoint][edg] = id;
-				chkEdge[notAxisPoint][v2_Nega][edg] = id;
-
-			}
-
-		}
-		*/
 		
+			
+		}
+
 		wf3D.insert({ v1_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
 		wf3D.insert({ v1_Pozi,v2_Pozi });
 		wf3D.insert({ v2_Pozi,chkEdge[v2_Pozi][notAxisPoint][0] });
@@ -1195,14 +1192,14 @@ void Delauney::MakeTeddyTempVerts() {
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
 			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr] });
-			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr+1] });
+			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
 			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr + 1] });
 			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
 		}
-
+		
 		int endid = divNum - 1;
 		wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][endid],chkEdge[v2_Pozi][notAxisPoint][endid] });
-		wf3D.insert({notAxisPoint,chkEdge[v1_Pozi][notAxisPoint][endid] });
+		wf3D.insert({ notAxisPoint,chkEdge[v1_Pozi][notAxisPoint][endid] });
 		wf3D.insert({ notAxisPoint,chkEdge[v2_Pozi][notAxisPoint][endid] });
 
 		/*
@@ -1221,9 +1218,9 @@ void Delauney::MakeTeddyTempVerts() {
 		_TeddyIndices.push_back(tri2.id[1]);
 		_TeddyIndices.push_back(tri2.id[2]);
 		*/
-		
+
 	}
-	
+
 	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Outer[i];
 		int axisPoint = -1;
@@ -1266,8 +1263,8 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ vertNega,outerEdgePoint[0] });
 		wf3D.insert({ vertNega,outerEdgePoint[1] });
 
-		Triangle tri1 = MakeTeddyTriangle(vertPozi, outerEdgePoint[0], outerEdgePoint[1],false);
-		Triangle tri2 = MakeTeddyTriangle(vertNega, outerEdgePoint[0], outerEdgePoint[1],true);
+		Triangle tri1 = MakeTeddyTriangle(vertPozi, outerEdgePoint[0], outerEdgePoint[1], false);
+		Triangle tri2 = MakeTeddyTriangle(vertNega, outerEdgePoint[0], outerEdgePoint[1], true);
 
 		_TeddyIndices.push_back(tri1.id[0]);
 		_TeddyIndices.push_back(tri1.id[1]);
@@ -1278,7 +1275,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 
-	
+
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);

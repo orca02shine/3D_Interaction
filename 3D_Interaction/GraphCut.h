@@ -28,7 +28,7 @@ private:
 	void bfs(int s);
 	double dfs(int v, int t, double f);
 
-	const double INF = 10000000000000000;
+	const double INF = 100000000000000;
 
 	int maxv;
 	std::vector<std::vector<Edge>> G;
