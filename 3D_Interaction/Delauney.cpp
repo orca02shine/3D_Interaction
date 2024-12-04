@@ -1133,23 +1133,95 @@ void Delauney::MakeTeddyTempVerts() {
 		int v2_Pozi = indexOfAxisToIndexOf3D_Pozi[AxisPoints[1]];
 		int v2_Nega = indexOfAxisToIndexOf3D_Nega[AxisPoints[1]];
 
+		for (int edg = 0; edg < divNum; edg++) {
+			int v1div = chkEdge[v1_Pozi][notAxisPoint][edg];
+			if (v1div == -1) {
+				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Pozi];
+				float co = (edg + 1.0) / (divNum + 1.0);
+				tem *= co;
+				glm::vec3 newv = _TeddyVertices[v1_Pozi] + tem;
+				_TeddyVertices.push_back(newv);
+				int id = _TeddyVertices.size() - 1;
+				chkEdge[v1_Pozi][notAxisPoint][edg] = id;
+				chkEdge[notAxisPoint][v1_Pozi][edg] = id;
+			}
+			int v2div = chkEdge[v2_Pozi][notAxisPoint][edg];
+			if (v2div == -1) {
+				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Pozi];
+				float co = (edg + 1.0) / (divNum + 1.0);
+				tem *= co;
+				glm::vec3 newv = _TeddyVertices[v2_Pozi] + tem;
+				_TeddyVertices.push_back(newv);
+				int id = _TeddyVertices.size() - 1;
+				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
+				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
+			}
+		}
+		/*
+		for (int edg = 0; edg < divNum; edg++) {
+			int v1div = chkEdge[v1_Nega][notAxisPoint][edg];
+			if (v1div == -1) {
+				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
+				float co = (edg + 1.0) / (divNum + 1.0);
+				tem *= co;
+				glm::vec3 newv = _TeddyVertices[v1_Nega] + tem;
+				_TeddyVertices.push_back(newv);
+				int id = _TeddyVertices.size()-1;
+				chkEdge[v1_Nega][notAxisPoint][edg] = id;
+				chkEdge[notAxisPoint][v1_Nega][edg] = id;
+			}
+			int v2div = chkEdge[v2_Nega][notAxisPoint][edg];
+			if (v2div == -1) {
+				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
+				float co = (edg + 1.0) / (divNum + 1.0);
+				tem *= co;
+				glm::vec3 newv = _TeddyVertices[v2_Nega] + tem;
+				//_TeddyVertices.emplace_back(newv);
+				/*
+				int id = _TeddyVertices.size()-1;
+
+				chkEdge[v2_Nega][notAxisPoint][edg] = id;
+				chkEdge[notAxisPoint][v2_Nega][edg] = id;
+
+			}
+
+		}
+		*/
+		
+		wf3D.insert({ v1_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
+		wf3D.insert({ v1_Pozi,v2_Pozi });
+		wf3D.insert({ v2_Pozi,chkEdge[v2_Pozi][notAxisPoint][0] });
+		//wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][0],chkEdge[v2_Pozi][notAxisPoint][0] });
+		wf3D.insert({ v2_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
+
+		for (int itr = 0; itr < divNum - 1; ++itr) {
+			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr] });
+			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr+1] });
+			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr + 1] });
+			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
+		}
+
+		int endid = divNum - 1;
+		wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][endid],chkEdge[v2_Pozi][notAxisPoint][endid] });
+		wf3D.insert({notAxisPoint,chkEdge[v1_Pozi][notAxisPoint][endid] });
+		wf3D.insert({ notAxisPoint,chkEdge[v2_Pozi][notAxisPoint][endid] });
+
+		/*
 		wf3D.insert({ v1_Pozi,v2_Pozi });
 		wf3D.insert({ v1_Pozi,notAxisPoint });
 		wf3D.insert({ v2_Pozi,notAxisPoint });
 		wf3D.insert({ v1_Nega,v2_Nega });
 		wf3D.insert({ v1_Nega,notAxisPoint });
 		wf3D.insert({ v2_Nega,notAxisPoint });
-		
 		Triangle tri1 = MakeTeddyTriangle(v1_Pozi, v2_Pozi,notAxisPoint,false);
 		Triangle tri2 = MakeTeddyTriangle(v1_Nega, v2_Nega, notAxisPoint,true);
-
 		_TeddyIndices.push_back(tri1.id[0]);
 		_TeddyIndices.push_back(tri1.id[1]);
 		_TeddyIndices.push_back(tri1.id[2]);
 		_TeddyIndices.push_back(tri2.id[0]);
 		_TeddyIndices.push_back(tri2.id[1]);
 		_TeddyIndices.push_back(tri2.id[2]);
-
+		*/
 		
 	}
 	
