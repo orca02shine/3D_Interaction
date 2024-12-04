@@ -1080,7 +1080,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 	//3Dlize---------------------------------------------------------
-	int divNum = 2;
+	int divNum = 1;
 	float coef = 1.0f;
 	float thickSize = 0.2;
 
@@ -1170,7 +1170,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
 			}
-			/*
+			
 			int v4div = chkEdge[v2_Nega][notAxisPoint][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
@@ -1182,27 +1182,39 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Nega][edg] = id;
 			}
-			*/
+			
 			
 		}
 
 		wf3D.insert({ v1_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
 		wf3D.insert({ v1_Pozi,v2_Pozi });
 		wf3D.insert({ v2_Pozi,chkEdge[v2_Pozi][notAxisPoint][0] });
-		//wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][0],chkEdge[v2_Pozi][notAxisPoint][0] });
 		wf3D.insert({ v2_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
+
+		wf3D.insert({ v1_Nega,chkEdge[v1_Nega][notAxisPoint][0] });
+		wf3D.insert({ v1_Nega,v2_Nega });
+		wf3D.insert({ v2_Nega,chkEdge[v2_Nega][notAxisPoint][0] });
+		wf3D.insert({ v2_Nega,chkEdge[v1_Nega][notAxisPoint][0] });
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
 			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr] });
 			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
 			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr + 1] });
 			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
+
+			wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][itr],chkEdge[v2_Nega][notAxisPoint][itr] });
+			wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][itr],chkEdge[v1_Nega][notAxisPoint][itr + 1] });
+			wf3D.insert({ chkEdge[v2_Nega][notAxisPoint][itr],chkEdge[v2_Nega][notAxisPoint][itr + 1] });
+			wf3D.insert({ chkEdge[v2_Nega][notAxisPoint][itr],chkEdge[v1_Nega][notAxisPoint][itr + 1] });
 		}
 		
 		int endid = divNum - 1;
 		wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][endid],chkEdge[v2_Pozi][notAxisPoint][endid] });
 		wf3D.insert({ notAxisPoint,chkEdge[v1_Pozi][notAxisPoint][endid] });
 		wf3D.insert({ notAxisPoint,chkEdge[v2_Pozi][notAxisPoint][endid] });
+		wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][endid],chkEdge[v2_Nega][notAxisPoint][endid] });
+		wf3D.insert({ notAxisPoint,chkEdge[v1_Nega][notAxisPoint][endid] });
+		wf3D.insert({ notAxisPoint,chkEdge[v2_Nega][notAxisPoint][endid] });
 
 		/*
 		wf3D.insert({ v1_Pozi,v2_Pozi });
