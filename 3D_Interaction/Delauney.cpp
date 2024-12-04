@@ -1158,7 +1158,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
 			}
-			/*
+			
 			int v3div = chkEdge[v1_Nega][notAxisPoint][edg];
 			if (v3div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
@@ -1170,7 +1170,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
 			}
-			*/
+			/*
 			int v4div = chkEdge[v2_Nega][notAxisPoint][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
@@ -1182,7 +1182,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Nega][edg] = id;
 			}
-			
+			*/
 			
 		}
 
@@ -1222,7 +1222,7 @@ void Delauney::MakeTeddyTempVerts() {
 		*/
 
 	}
-
+	
 	for (int i = 0; i < _TeddyTriangles_Outer.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Outer[i];
 		int axisPoint = -1;
@@ -1277,7 +1277,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 
-
+	
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);
