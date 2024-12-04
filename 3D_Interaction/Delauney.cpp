@@ -1339,7 +1339,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[vertNega][outerEdgePoint[0]][edg] = id;
 				chkEdge[outerEdgePoint[0]][vertNega][edg] = id;
 			}
-			int v4div = chkEdge[vertPozi][outerEdgePoint[1]][edg];
+			int v4div = chkEdge[vertNega][outerEdgePoint[1]][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[outerEdgePoint[1]] - _TeddyVertices[vertNega];
 				float co = (edg + 1.0) / (divNum + 1.0);
@@ -1357,8 +1357,8 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ vertPozi,chkEdge[vertPozi][outerEdgePoint[1]][0] });
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][0],chkEdge[vertPozi][outerEdgePoint[1]][0] });
 
-		wf3D.insert({ vertPozi,chkEdge[vertNega][outerEdgePoint[0]][0] });
-		wf3D.insert({ vertPozi,chkEdge[vertNega][outerEdgePoint[1]][0] });
+		wf3D.insert({ vertNega,chkEdge[vertNega][outerEdgePoint[0]][0] });
+		wf3D.insert({ vertNega,chkEdge[vertNega][outerEdgePoint[1]][0] });
 		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][0],chkEdge[vertNega][outerEdgePoint[1]][0] });
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
@@ -1378,6 +1378,7 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][endid],outerEdgePoint[0]});
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][endid],outerEdgePoint[1] });
 		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][endid],outerEdgePoint[0] });
+
 		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1]});
 
 		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][endid],outerEdgePoint[0] });
@@ -1404,7 +1405,6 @@ void Delauney::MakeTeddyTempVerts() {
 
 	}
 
-	
 
 	for (auto& e : wireFrame) {
 		_WireIdx.emplace_back(e.first);
