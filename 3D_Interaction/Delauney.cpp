@@ -606,8 +606,8 @@ Triangle Delauney::MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
-	_IsChodralAxis.resize(3000, false);
-	std::vector<std::vector<float>> _SumLengthFromAxis(3000);
+	_IsChodralAxis.resize(500, false);
+	std::vector<std::vector<float>> _SumLengthFromAxis(500);
 
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
@@ -1082,8 +1082,9 @@ void Delauney::MakeTeddyTempVerts() {
 	float coef = 1.0f;
 	float thickSize = 0.2;
 
-	std::vector<int> indexOfAxisToIndexOf3D_Pozi(3000, -1);//+z
-	std::vector<int> indexOfAxisToIndexOf3D_Nega(3000, -1);//-z
+	std::vector<int> indexOfAxisToIndexOf3D_Pozi(500, -1);//+z
+	std::vector<int> indexOfAxisToIndexOf3D_Nega(500, -1);//-z
+	std::vector<std::vector<std::vector<int>>> chkEdge(500, std::vector<std::vector<int>>(500, std::vector<int>(divNum, -1)));
 	std::set<DeEdge> wf3D;
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
