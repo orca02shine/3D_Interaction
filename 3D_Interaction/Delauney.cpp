@@ -1038,6 +1038,8 @@ void Delauney::MakeTeddyTempVerts() {
 					newv /= 2;
 					_Vertices.push_back(newv);
 					midp1 = _Vertices.size() - 1;
+					edgeMidPoint[v][ot.first] = midp1;
+					edgeMidPoint[ot.first][v] = midp1;
 				}
 				wireFrame.insert({ v,midp1 });
 				wireFrame.insert({ midp1,ot.first });
@@ -1052,6 +1054,8 @@ void Delauney::MakeTeddyTempVerts() {
 					newv /= 2;
 					_Vertices.push_back(newv);
 					midp2 = _Vertices.size() - 1;
+					edgeMidPoint[v][ot.second] = midp2;
+					edgeMidPoint[ot.second][v] = midp2;
 				}
 				wireFrame.insert({ v,midp2 });
 				wireFrame.insert({ midp2,ot.second });
@@ -1117,13 +1121,13 @@ void Delauney::MakeTeddyTempVerts() {
 			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 
 			if (vertPozi == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
 				_TeddyVertices.push_back(newv);
 				vertPozi = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 			}
 			if (vertNega == -1) {
-				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
+				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
 				_TeddyVertices.push_back(newv);
 				vertNega = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
@@ -1156,13 +1160,13 @@ void Delauney::MakeTeddyTempVerts() {
 		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
 
 		if (vertPozi == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thickSize };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,thick };
 			_TeddyVertices.push_back(newv);
 			vertPozi = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 		}
 		if (vertNega == -1) {
-			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thickSize };
+			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick };
 			_TeddyVertices.push_back(newv);
 			vertNega = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
