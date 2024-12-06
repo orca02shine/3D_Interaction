@@ -160,6 +160,7 @@ public:
 
 	void MakeTeddyTempVerts();
 	bool TeddyInCircle(DeEdge e, std::vector<int> vertices);
+	float CalcEllipse(float x, float lengx, float lengy);
 	Triangle MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode);
 
 	void SetData();

@@ -602,6 +602,12 @@ Triangle Delauney::MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode
 	return Triangle{ a,b,c };
 
 }
+float Delauney::CalcEllipse(float x, float lengx, float lengy) {
+	double temp = 1 - ((x * x) / (lengx * lengx));
+	double ypow = temp * lengy * lengy;
+	return std::sqrtf(ypow);
+
+}
 
 void Delauney::MakeTeddyTempVerts() {
 
@@ -1096,7 +1102,7 @@ void Delauney::MakeTeddyTempVerts() {
 	//3Dlize---------------------------------------------------------
 	int divNum = 1;
 	float coef = 1.0f;
-	float thickSize = 0.2;
+	float thickSize = 0.15;
 
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(500, -1);//+z
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(500, -1);//-z
@@ -1205,10 +1211,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v1div = chkEdge[v1_Pozi][notAxisPoint][edg];
 			if (v1div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Pozi];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v1_Pozi] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[v1_Pozi].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v1_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Pozi][edg] = id;
@@ -1216,10 +1230,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v2div = chkEdge[v2_Pozi][notAxisPoint][edg];
 			if (v2div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Pozi];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v2_Pozi] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[v2_Pozi].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,h});
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
@@ -1228,10 +1250,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v3div = chkEdge[v1_Nega][notAxisPoint][edg];
 			if (v3div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v1_Nega];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v1_Nega] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[v1_Nega].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,-h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
@@ -1240,10 +1270,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v4div = chkEdge[v2_Nega][notAxisPoint][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[notAxisPoint] - _TeddyVertices[v2_Nega];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[v2_Nega] + tem;
-				_TeddyVertices.push_back({newv.x,newv.y,newv.z});
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[v2_Nega].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({newv.x,newv.y,-h});
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Nega][edg] = id;
@@ -1376,10 +1414,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v1div = chkEdge[vertPozi][outerEdgePoint[0]][edg];
 			if (v1div == -1) {
 				glm::vec3 tem = _TeddyVertices[outerEdgePoint[0]] - _TeddyVertices[vertPozi];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[vertPozi] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[vertPozi].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[vertPozi][outerEdgePoint[0]][edg] = id;
 				chkEdge[outerEdgePoint[0]][vertPozi][edg] = id;
@@ -1387,10 +1433,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v2div = chkEdge[vertPozi][outerEdgePoint[1]][edg];
 			if (v2div == -1) {
 				glm::vec3 tem = _TeddyVertices[outerEdgePoint[1]] - _TeddyVertices[vertPozi];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[vertPozi] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[vertPozi].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[vertPozi][outerEdgePoint[1]][edg] = id;
 				chkEdge[outerEdgePoint[1]][vertPozi][edg] = id;
@@ -1399,10 +1453,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v3div = chkEdge[vertNega][outerEdgePoint[0]][edg];
 			if (v3div == -1) {
 				glm::vec3 tem = _TeddyVertices[outerEdgePoint[0]] - _TeddyVertices[vertNega];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[vertNega] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[vertNega].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,-h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[vertNega][outerEdgePoint[0]][edg] = id;
 				chkEdge[outerEdgePoint[0]][vertNega][edg] = id;
@@ -1410,10 +1472,18 @@ void Delauney::MakeTeddyTempVerts() {
 			int v4div = chkEdge[vertNega][outerEdgePoint[1]][edg];
 			if (v4div == -1) {
 				glm::vec3 tem = _TeddyVertices[outerEdgePoint[1]] - _TeddyVertices[vertNega];
+				glm::vec2 temleng = glm::vec2(tem.x, tem.y);
 				float co = (edg + 1.0) / (divNum + 1.0);
 				tem *= co;
 				glm::vec3 newv = _TeddyVertices[vertNega] + tem;
-				_TeddyVertices.push_back({ newv.x,newv.y,newv.z });
+				glm::vec2 temleng2 = glm::vec2(tem.x, tem.y);
+
+				float lengy = abs(_TeddyVertices[vertNega].z);
+				float lengx = glm::length(temleng);
+				float lenge = glm::length(temleng2);
+				float h = CalcEllipse(lenge, lengx, lengy);
+
+				_TeddyVertices.push_back({ newv.x,newv.y,-h });
 				int id = _TeddyVertices.size() - 1;
 				chkEdge[vertNega][outerEdgePoint[1]][edg] = id;
 				chkEdge[outerEdgePoint[1]][vertNega][edg] = id;
