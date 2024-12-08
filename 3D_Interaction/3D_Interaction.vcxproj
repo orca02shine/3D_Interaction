@@ -154,6 +154,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MeshCreator.h" />
     <ClInclude Include="PatchMatch.h" />
+    <ClInclude Include="PositionBasedDynamics.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Window.h" />

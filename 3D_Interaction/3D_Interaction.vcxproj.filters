@@ -98,6 +98,9 @@
     <ClInclude Include="Delauney.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
+    <ClInclude Include="PositionBasedDynamics.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader.frag">
