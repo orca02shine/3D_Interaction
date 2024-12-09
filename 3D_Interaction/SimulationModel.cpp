@@ -26,3 +26,28 @@ void SimulationModel::Update() {
 	*/
 	m_mesh->UpdateVertices(m_vert);
 }
+
+void SimulationModel::Simulate() {
+	if (pause) return;
+
+	float sdt = fps / numSubstep;
+
+	for (int step = 0; step < numSubstep; step++) {
+
+		PreSolve(sdt);
+
+		Solve(sdt);
+
+		PostSolve(sdt);
+	}
+}
+
+void SimulationModel::Solve(float dt) {
+
+}
+void SimulationModel::PreSolve(float dt) {
+
+}
+void SimulationModel::PostSolve(float dt) {
+
+}
