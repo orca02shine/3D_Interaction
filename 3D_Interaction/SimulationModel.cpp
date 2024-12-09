@@ -19,5 +19,10 @@ SimulationModel::~SimulationModel() {
 }
 
 void SimulationModel::Update() {
-	m_mesh->UpdateMesh();
+	/*
+	for (int i = 0; i < m_vert.size(); ++i) {
+		m_vert[i].z += 0.01f;
+	}
+	*/
+	m_mesh->UpdateVertices(m_vert);
 }

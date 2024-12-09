@@ -101,6 +101,14 @@ void Mesh::UpdateMesh() {
 
 }
 
+
+void Mesh::UpdateVertices(std::vector<vec3> vert) {
+	for (int i = 0; i < _Vertices.size(); ++i) {
+		_Vertices[i] = vert[i];
+	}
+	UpdateMesh();
+}
+
 void Mesh::MakeVertices() {
 
 

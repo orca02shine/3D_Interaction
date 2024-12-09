@@ -41,6 +41,7 @@ public:
 
 	void InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx);
 	void UpdateMesh();
+	void UpdateVertices(std::vector<vec3> vert);
 	void MakeVertices();
 	void LinkTexture(Texture* tex);
 	void LinkShader(Shader* mat, Shader* wire);
