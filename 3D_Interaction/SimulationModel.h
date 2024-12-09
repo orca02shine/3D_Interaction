@@ -19,6 +19,8 @@ private:
 	std::vector<int> m_idx;
 	std::vector<int> m_wireIdx;
 
+	std::vector<int> m_tetIdx;
+
 public:
 	int numSubstep = 10;
 	const float G = -6.0f;
