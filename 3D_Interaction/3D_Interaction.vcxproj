@@ -135,10 +135,13 @@
     <ClCompile Include="Delauney.cpp" />
     <ClCompile Include="GraphCut.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="MathFunctions.cpp" />
+    <ClCompile Include="MathFunctions.h" />
     <ClCompile Include="MeanShift.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MeshCreator.cpp" />
     <ClCompile Include="PatchMatch.cpp" />
+    <ClCompile Include="PositionBasedDynamics.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexObject.cpp" />

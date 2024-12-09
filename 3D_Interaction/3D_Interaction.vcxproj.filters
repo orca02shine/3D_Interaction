@@ -63,6 +63,15 @@
     <ClCompile Include="Delauney.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="PositionBasedDynamics.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="MathFunctions.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
+    <ClCompile Include="MathFunctions.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
