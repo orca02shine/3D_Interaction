@@ -22,7 +22,6 @@ private:
 	class Shader* _MatShader;
 	class Shader* _WireShader;
 
-	class SimulationWindow* _Parent;
 
 	std::vector<vec3> _Vertices; //íºê⁄Ç¢Ç∂ÇÈ
 	std::vector<GLfloat> _UV;
@@ -34,7 +33,7 @@ private:
 
 
 public:
-	Mesh(class SimulationWindow* window);
+	Mesh();
 	~Mesh();
 
 	void ProtoMesh();

@@ -1,8 +1,8 @@
 #pragma once
 #include "Mesh.h"
 
-Mesh::Mesh(class SimulationWindow* window)
-	:_Texture(nullptr),_VertexObject(nullptr), _Parent(window)
+Mesh::Mesh()
+	:_Texture(nullptr),_VertexObject(nullptr)
 {
 
 }

@@ -11,11 +11,11 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 
-
 #include"Shader.h"
 #include"Mesh.h"
 #include"Texture.h"
 #include"MeshCreator.h"
+#include"SimulationModel.h"
 #include "CVInterface.h"
 
 class Window {
@@ -64,6 +64,7 @@ class SimulationWindow :Window {
 public:
 	std::vector<class Mesh*> _Meshes;
 	std::vector<class Texture*> _Textures;
+	std::vector<class SimulationModel*> _Models;
 
 	Shader* _Shader;
 	Shader* _WireShader;

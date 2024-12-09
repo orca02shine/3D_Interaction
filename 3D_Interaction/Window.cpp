@@ -186,8 +186,8 @@ bool SimulationWindow::LoopEvents() {
 		//std::cout << "Mouse pos is  " << _CurrentLocation[0] << "  " << _CurrentLocation[1] << std::endl;
 	}
 
-	for (int i = 0; i < _Meshes.size(); ++i) {
-		_Meshes[i]->UpdateMesh();
+	for (int i = 0; i < _Models.size(); ++i) {
+		_Models[i]->Update();
 	}
 
 
@@ -247,16 +247,15 @@ void SimulationWindow::test() {
 	t->SetShader(back.rows,back.cols,back.data);
 
 
-	Mesh* m = new Mesh(this);
+
 
 	std::vector<cv::Point> contour = CVInterface::GetContour();
 	std::vector<cv::Point> corner = CVInterface::GetCorner();
 	std::vector<cv::Point> boundary = CVInterface::GetBoundary();
-	std::vector<glm::vec3> vert;
-	std::vector<float> uv;
-	std::vector<int> idx;
-	std::vector<int> wireIdx;
-	MeshCreator MC;
+	//std::vector<glm::vec3> vert;
+	//std::vector<float> uv;
+	//std::vector<int> idx;
+	//std::vector<int> wireIdx;
 
 	/*debug
 	for (int i = 0; i < 4; ++i) {
@@ -267,18 +266,12 @@ void SimulationWindow::test() {
 	}
 	*/
 
+	SimulationModel* sm = new SimulationModel(contour, _Shader, _WireShader, t);
+
 	//MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
-	MC.CreateForeGround(contour, vert, uv, idx, wireIdx);
-
-	m->InsertMeshData(vert, uv, idx, wireIdx);
-	//m->ProtoMesh();
-	m->LinkShader(_Shader,_WireShader);
-	m->LinkTexture(t);
 
 
-
-
-	_Meshes.push_back(m);
+	_Models.push_back(sm);
 	_Textures.push_back(t);
 
 }

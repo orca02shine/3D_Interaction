@@ -72,6 +72,9 @@
     <ClCompile Include="MathFunctions.cpp">
       <Filter>ソース ファイル\Applications</Filter>
     </ClCompile>
+    <ClCompile Include="SimulationModel.cpp">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -108,6 +111,9 @@
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
     <ClInclude Include="PositionBasedDynamics.h">
+      <Filter>ソース ファイル\Applications</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationModel.h">
       <Filter>ソース ファイル\Applications</Filter>
     </ClInclude>
   </ItemGroup>

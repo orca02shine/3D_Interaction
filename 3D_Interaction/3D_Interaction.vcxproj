@@ -143,6 +143,7 @@
     <ClCompile Include="PatchMatch.cpp" />
     <ClCompile Include="PositionBasedDynamics.cpp" />
     <ClCompile Include="Shader.cpp" />
+    <ClCompile Include="SimulationModel.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="VertexObject.cpp" />
     <ClCompile Include="VertexObject.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="PatchMatch.h" />
     <ClInclude Include="PositionBasedDynamics.h" />
     <ClInclude Include="Shader.h" />
+    <ClInclude Include="SimulationModel.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
