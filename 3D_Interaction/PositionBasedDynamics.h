@@ -247,6 +247,213 @@ namespace PBD
 			const glm::vec3& Q,
 			const float stiffness,
 			glm::vec3& corr0, glm::vec3& corr1, glm::vec3& corr2, glm::vec3& corr3);
+
+		// -------------- Shape Matching  -----------------------------------------------------
+
+		/** Initialize rest configuration infos for one shape matching cluster
+		 * which are required by the solver step. It must only be reinitialized
+		 * if the rest shape changes.
+		 *
+		 * @param  x0 rest configuration of all particles in the cluster
+		 * @param  invMasses inverse masses of all particles in the cluster
+		 * @param  numPoints number of particles in the cluster
+		 * @param  restCm returns the center of mass of the rest configuration
+		 */
+		static bool init_ShapeMatchingConstraint(
+			const glm::vec3 x0[], const float invMasses[], const int numPoints,
+			glm::vec3& restCm);
+
+
+		/** Determine the position corrections for a shape matching constraint.\n\n
+		 * More information can be found in: \cite BMM2015, \cite BMOT2013, \cite BMOTM2014,
+		 * \cite Muller2005, \cite Bender2013, \cite Diziol2011
+		 *
+		 * @param  x0			rest configuration of all particles in the cluster
+		 * @param  x			current configuration of all particles in the cluster
+		 * @param  invMasses	invMasses inverse masses of all particles in the cluster
+		 * @param  numPoints	number of particles in the cluster
+		 * @param  restCm		center of mass of the rest configuration
+		 * @param  stiffness	stiffness coefficient
+		 * @param  allowStretch allow stretching
+		 * @param  corr			position corrections for all particles in the cluster
+		 * @param  rot			returns determined rotation matrix
+		 */
+		static bool solve_ShapeMatchingConstraint(
+			const glm::vec3 x0[], const glm::vec3 x[], const float invMasses[], const int numPoints,
+			const glm::vec3& restCm,
+			const float stiffness,
+			const bool allowStretch,		// default false
+			glm::vec3 corr[], glm::mat3* rot = NULL);
+
+
+		// -------------- Strain Based Dynamics  -----------------------------------------------------
+
+		/** Initialize rest configuration infos which are required by the solver step.
+		 * Recomputation is only necessary when rest shape changes.\n\n
+		 * The triangle is defined in the xy plane.
+		 *
+		 * @param  p0 point 0 of triangle
+		 * @param  p1 point 1 of triangle
+		 * @param  p2 point 2 of triangle
+		 * @param  invRestMat returns a matrix required by the solver
+		 */
+		static bool init_StrainTriangleConstraint(
+			const glm::vec3& p0,
+			const glm::vec3& p1,
+			const glm::vec3& p2,
+			glm::mat2& invRestMat
+		);
+
+		/** Solve triangle constraint with strain based dynamics and return position corrections.\n\n
+		 * More information can be found in: \cite BMM2015, \cite Mueller2014
+		 *
+		 * @param p0 position of first particle
+		 * @param invMass0 inverse mass of first particle
+		 * @param p1 position of second particle
+		 * @param invMass1 inverse mass of second particle
+		 * @param p2 position of third particle
+		 * @param invMass2 inverse mass of third particle
+		 * @param  invRestMat precomputed matrix determined by init_StrainTriangleConstraint()
+		 * @param  xxStiffness stiffness coefficient for xx stretching
+		 * @param  yyStiffness stiffness coefficient for yy stretching
+		 * @param  xyStiffness stiffness coefficient for xy shearing
+		 * @param  normalizeStretch	should stretching be normalized
+		 * @param  normalizeShear should shearing be normalized
+		 * @param  corr0 position correction for point 0
+		 * @param  corr1 position correction for point 1
+		 * @param  corr2 position correction for point 2
+		 */
+		static bool solve_StrainTriangleConstraint(
+			const glm::vec3& p0, float invMass0,
+			const glm::vec3& p1, float invMass1,
+			const glm::vec3& p2, float invMass2,
+			const glm::mat4& invRestMat,
+			const float xxStiffness,
+			const float yyStiffness,
+			const float xyStiffness,
+			const bool normalizeStretch,	// use false as default
+			const bool normalizeShear,		// use false as default
+			glm::vec3& corr0, glm::vec3& corr1, glm::vec3& corr2);
+
+
+		/** Initialize rest configuration infos which are required by the solver step.
+		 * Recomputation is only necessary when rest shape changes.
+		 *
+		 * @param  p0 point 0 of tet
+		 * @param  p1 point 1 of tet
+		 * @param  p2 point 2 of tet
+		 * @param  p3 point 3 of tet
+		 * @param  invRestMat returns a matrix required by the solver
+		 */
+		static bool init_StrainTetraConstraint(
+			const glm::vec3& p0,
+			const glm::vec3& p1,
+			const glm::vec3& p2,
+			const glm::vec3& p3,
+			glm::mat3& invRestMat
+		);
+
+		// has no inversion handling. Possible simple solution: if the volume is negative, 
+		// scale corrections down and use the volume constraint to fix the volume sign
+		static bool solve_StrainTetraConstraint(
+			const glm::vec3& p0, float invMass0,
+			const glm::vec3& p1, float invMass1,
+			const glm::vec3& p2, float invMass2,
+			const glm::vec3& p3, float invMass3,
+			const glm::mat3& invRestMat,
+			const glm::vec3& stretchStiffness,			// xx, yy, zz
+			const glm::vec3& shearStiffness,			// xy, xz, yz
+			const bool normalizeStretch,		// use false as default
+			const bool normalizeShear,		// use false as default
+			glm::vec3& corr0, glm::vec3& corr1, glm::vec3& corr2, glm::vec3& corr3);
+
 	};
+
+	/** Initialize contact between a particle and a tetrahedron and return
+		* info which is required by the solver step.
+		*
+		* @param invMass0 inverse mass of particle which collides with tet
+		* @param x0 particle position
+		* @param v0 particle velocity
+		* @param invMass inverse masses of tet particles
+		* @param x positions of tet particles
+		* @param v velocities of tet particles
+		* @param bary barycentric coordinates of contact point in tet
+		* @param normal contact normal in body 1
+		* @param constraintInfo Stores the local and global position of the contact points and
+		* the contact normal. \n
+		* The joint info contains the following columns:\n
+		* 0:	contact normal in body 1 (global)\n
+		* 1:	contact tangent (global)\n
+		* 0,2:   1.0 / normal^T * K * normal\n
+		* 1,2:  maximal impulse in tangent direction\n
+		*/
+	static bool init_ParticleTetContactConstraint(
+		const float invMass0,							// inverse mass is zero if particle is static
+		const glm::vec3& x0,								// particle which collides with tet
+		const glm::vec3& v0,								// velocity of particle
+		const float invMass[],							// inverse masses of tet particles
+		const glm::vec3 x[],								// positions of tet particles
+		const glm::vec3 v[],								// velocities of tet particles
+		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+		const glm::vec3& normal,							// contact normal in body 1
+		glm::mat3& constraintInfo);
+
+
+	/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
+		* A contact constraint handles collisions and resting contacts between the bodies.
+		* The contact info must be generated in each time step.
+		*
+		* @param invMass0 inverse mass of particle which collides with tet
+		* @param x0 particle position
+		* @param invMass inverse masses of tet particles
+		* @param x positions of tet particles
+		* @param bary barycentric coordinates of contact point in tet
+		* @param constraintInfo information which is required by the solver. This
+		* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
+		* @param corr0 position correction of particle
+		* @param corr position corrections of tet particles
+		*/
+	static bool solve_ParticleTetContactConstraint(
+		const float invMass0,							// inverse mass is zero if particle is static
+		const glm::vec3& x0,								// particle which collides with tet
+		const float invMass[],							// inverse masses of tet particles
+		const glm::vec3 x[],								// positions of tet particles
+		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+		glm::mat3& constraintInfo,		// precomputed contact info
+		float& lambda,
+		glm::vec3& corr0,
+		glm::vec3 corr[]);
+
+	/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
+		* A contact constraint handles collisions and resting contacts between the bodies.
+		* The contact info must be generated in each time step.
+		*
+		* @param invMass0 inverse mass of particle which collides with tet
+		* @param x0 particle position
+		* @param v0 particle velocity
+		* @param invMass inverse masses of tet particles
+		* @param x positions of tet particles
+		* @param v velocities of tet particles
+		* @param bary barycentric coordinates of contact point in tet
+		* @param frictionCoeff friction coefficient
+		* @param constraintInfo information which is required by the solver. This
+		* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
+		* @param corr_v0 velocity correction of particle
+		* @param corr_v velocity corrections of tet particles
+		*/
+	static bool velocitySolve_ParticleTetContactConstraint(
+		const float invMass0,							// inverse mass is zero if particle is static
+		const glm::vec3& x0,								// particle which collides with tet
+		const glm::vec3& v0,								// velocity of particle
+		const float invMass[],							// inverse masses of tet particles
+		const glm::vec3 x[],								// positions of tet particles
+		const glm::vec3 v[],								// velocities of tet particles
+		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+		const float lambda,
+		const float frictionCoeff,						// friction coefficient
+		glm::mat3& constraintInfo,		// precomputed contact info
+		glm::vec3& corr_v0,
+		glm::vec3 corr_v[]);
 
 }
