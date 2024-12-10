@@ -620,15 +620,16 @@ void Delauney::MakeTet(int a, int b, int c, int d) {
 	_TetIdx.push_back(c);
 	_TetIdx.push_back(d);
 
+	/*
 	Triangle tri0 = MakeTeddyTriangle(a, b, c,false);
 	Triangle tri1 = MakeTeddyTriangle(a, b, d,false);
 	Triangle tri2 = MakeTeddyTriangle(a, c, d,false);
 	Triangle tri3 = MakeTeddyTriangle(b, c, d,false);
-
 	MakeTeddyTriWire(tri0);
 	MakeTeddyTriWire(tri1);
 	MakeTeddyTriWire(tri2);
 	MakeTeddyTriWire(tri3);
+	*/
 }
 
 void Delauney::MakeTriPrism(Triangle pozi, Triangle nega) {
@@ -1369,6 +1370,14 @@ void Delauney::MakeTeddyTempVerts() {
 				MakeTeddyTriWire(tri2);
 				MakeTeddyTriWire(tri3);
 				MakeTeddyTriWire(tri4);
+
+				Triangle tempTri1 = MakeTempTriangle(chkEdge[v1_Pozi][notAxisPoint][itr], chkEdge[v2_Pozi][notAxisPoint][itr], chkEdge[v1_Pozi][notAxisPoint][itr + 1]);
+				Triangle tempTri2 = MakeTempTriangle(chkEdge[v2_Pozi][notAxisPoint][itr], chkEdge[v1_Pozi][notAxisPoint][itr + 1], chkEdge[v2_Pozi][notAxisPoint][itr + 1]);
+				Triangle tempTri1_Nega = MakeTempTriangle(chkEdge[v1_Nega][notAxisPoint][itr], chkEdge[v2_Nega][notAxisPoint][itr], chkEdge[v1_Nega][notAxisPoint][itr + 1]);
+				Triangle tempTri2_Nega = MakeTempTriangle(chkEdge[v2_Nega][notAxisPoint][itr], chkEdge[v1_Nega][notAxisPoint][itr + 1], chkEdge[v2_Nega][notAxisPoint][itr + 1]);
+
+				MakeTriPrism(tempTri1, tempTri1_nega);
+				MakeTriPrism(tempTri2, tempTri2_nega);
 			}
 		}
 		
@@ -1383,6 +1392,9 @@ void Delauney::MakeTeddyTempVerts() {
 
 			MakeTeddyTriWire(tri1);
 			MakeTeddyTriWire(tri2);
+
+			MakeTet(chkEdge[v1_Pozi][notAxisPoint][endid], chkEdge[v2_Pozi][notAxisPoint][endid], notAxisPoint, chkEdge[v2_Nega][notAxisPoint][endid]);
+			MakeTet(chkEdge[v1_Nega][notAxisPoint][endid], chkEdge[v2_Nega][notAxisPoint][endid], notAxisPoint, chkEdge[v1_Pozi][notAxisPoint][endid]);
 
 		}
 
@@ -1497,6 +1509,12 @@ void Delauney::MakeTeddyTempVerts() {
 
 			MakeTeddyTriWire(tri1);
 			MakeTeddyTriWire(tri2);
+
+			Triangle tempTri1 = MakeTempTriangle(vertPozi, chkEdge[vertPozi][outerEdgePoint[0]][0], chkEdge[vertPozi][outerEdgePoint[1]][0]);
+			Triangle tempTri1_nega = MakeTempTriangle(vertNega, chkEdge[vertNega][outerEdgePoint[0]][0], chkEdge[vertNega][outerEdgePoint[1]][0]);
+
+			MakeTriPrism(tempTri1, tempTri1_nega);
+
 		}
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
@@ -1516,6 +1534,14 @@ void Delauney::MakeTeddyTempVerts() {
 				MakeTeddyTriWire(tri2);
 				MakeTeddyTriWire(tri3);
 				MakeTeddyTriWire(tri4);
+
+				Triangle tempTri1 = MakeTempTriangle(chkEdge[vertPozi][outerEdgePoint[0]][itr], chkEdge[vertPozi][outerEdgePoint[1]][itr], chkEdge[vertPozi][outerEdgePoint[0]][itr + 1]);
+				Triangle tempTri2 = MakeTempTriangle(chkEdge[vertPozi][outerEdgePoint[1]][itr], chkEdge[vertPozi][outerEdgePoint[0]][itr + 1], chkEdge[vertPozi][outerEdgePoint[1]][itr + 1]);
+				Triangle tempTri1_nega = MakeTempTriangle(chkEdge[vertNega][outerEdgePoint[0]][itr], chkEdge[vertNega][outerEdgePoint[1]][itr], chkEdge[vertNega][outerEdgePoint[0]][itr + 1]);
+				Triangle tempTri2_nega = MakeTempTriangle(chkEdge[vertNega][outerEdgePoint[1]][itr], chkEdge[vertNega][outerEdgePoint[0]][itr + 1], chkEdge[vertNega][outerEdgePoint[1]][itr + 1]);
+
+				MakeTriPrism(tempTri1, tempTri1_nega);
+				MakeTriPrism(tempTri2, tempTri2_nega);
 			}
 		}
 
@@ -1536,6 +1562,10 @@ void Delauney::MakeTeddyTempVerts() {
 			MakeTeddyTriWire(tri2);
 			MakeTeddyTriWire(tri3);
 			MakeTeddyTriWire(tri4);
+
+			MakeTet(chkEdge[vertPozi][outerEdgePoint[0]][endid], chkEdge[vertPozi][outerEdgePoint[1]][endid], outerEdgePoint[0], chkEdge[vertNega][outerEdgePoint[1]][endid]);
+			MakeTet(chkEdge[vertNega][outerEdgePoint[0]][endid], chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0], chkEdge[vertPozi][outerEdgePoint[0]][endid]);
+			MakeTet(outerEdgePoint[0], outerEdgePoint[1], chkEdge[vertPozi][outerEdgePoint[1]][endid], chkEdge[vertNega][outerEdgePoint[1]][endid]);
 		}
 
 
