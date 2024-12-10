@@ -10,7 +10,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 
 	MeshCreator MC;
 
-	MC.CreateForeGround(contour, m_vert, uv, m_idx, wireIdx);
+	MC.CreateForeGround(contour, m_vert, uv, m_idx, wireIdx,m_tetIdx);
 
 	m_mesh->InsertMeshData(m_vert, uv, m_idx, wireIdx);
 	m_mesh->LinkShader(shader, wireShader);
@@ -23,7 +23,9 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 		m_prevPos[i] = m_vert[i];
 	}
 	m_vel.resize(m_numParticles, { 0.0,0.0,0.0 });
+	m_invMass.resize(m_numParticles, 1.0);
 
+	Init();
 }
 SimulationModel::~SimulationModel() {
 	delete m_mesh;
@@ -36,12 +38,45 @@ void SimulationModel::Update() {
 	m_mesh->UpdateVertices(m_vert);
 }
 
-void SimulationModel::InitDistanceConstraint() {
+void SimulationModel::Init() {
+	int numTets = m_tetIdx.size() / 4;
+
+	for (int i = 0; i < numTets; ++i) {
+		int k = i * 4;
+		InitDistanceConstraint(k);
+	}
+}
+
+void SimulationModel::InitDistanceConstraint(int k) {
+
+	int a = m_tetIdx[k];
+	int b = m_tetIdx[k + 1];
+	int c = m_tetIdx[k + 2];
+	int d = m_tetIdx[k + 3];
+
+	distanceConstraint dc0(a, b, glm::distance(m_vert[a], m_vert[b]));
+	distanceConstraint dc1(b, c, glm::distance(m_vert[b], m_vert[c]));
+	distanceConstraint dc2(c, d, glm::distance(m_vert[c], m_vert[d]));
+	distanceConstraint dc3(d, a, glm::distance(m_vert[d], m_vert[a]));
+
+	m_distanceConstraint.push_back(dc0);
+	m_distanceConstraint.push_back(dc1);
+	m_distanceConstraint.push_back(dc2);
+	m_distanceConstraint.push_back(dc3);
 
 }
 
+void SimulationModel::InitVolumeConstraint(int k) {
+	int a = m_tetIdx[k];
+	int b = m_tetIdx[k + 1];
+	int c = m_tetIdx[k + 2];
+	int d = m_tetIdx[k + 3];
+
+}
+
+
 void SimulationModel::Simulate() {
-	if (pause) return;
+	//if (pause) return;
 
 	float sdt = fps / numSubstep;
 
@@ -56,7 +91,7 @@ void SimulationModel::Simulate() {
 }
 
 void SimulationModel::Solve(float dt) {
-
+	solveDistanceConstraint(dt);
 }
 void SimulationModel::PreSolve(float dt) {
 
@@ -81,5 +116,38 @@ void SimulationModel::PostSolve(float dt) {
 		m_vel[i] = (m_vert[i] - m_prevPos[i]);
 		m_vel[i] *= (1.0 / dt);
 	}
+
+}
+
+void SimulationModel::solveDistanceConstraint(float dt) {
+
+	float stif = 1.0;
+
+	for (auto& e : m_distanceConstraint) {
+		glm::vec3 p0 = m_vert[e.m_id[0]];
+		glm::vec3 p1 = m_vert[e.m_id[1]];
+		float invM0 = m_invMass[e.m_id[0]];
+		float invM1 = m_invMass[e.m_id[1]];
+
+		float restL = e.m_restLength;
+
+		glm::vec3 corr0 = { 0,0,0 };
+		glm::vec3 corr1 = { 0,0,0 };
+
+		bool res = PBD::PositionBasedDynamics::solve_DistanceConstraint(
+			p0, invM0, p1, invM1,
+			restL, stif, corr0, corr1);
+
+		if (res) {
+			if (invM0 != 0.0) {
+				m_vert[e.m_id[0]] += (corr0 * dt);
+			}
+			if (invM1 != 0.0) {
+				m_vert[e.m_id[1]] += (corr1 * dt);
+			}
+		}
+
+	}
+
 
 }

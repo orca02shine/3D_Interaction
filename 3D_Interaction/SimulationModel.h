@@ -8,6 +8,32 @@
 #include "Texture.h"
 #include "Window.h"
 #include "MeshCreator.h"
+#include "PositionBasedDynamics.h"
+
+struct distanceConstraint {
+	int m_id[2];
+	float m_restLength;
+
+	distanceConstraint(int a, int b, float l) {
+		m_id[0] = a;
+		m_id[1] = b;
+		m_restLength = l;
+	}
+};
+
+struct volumeConstraint {
+	int m_id[4];
+	float m_restVolume;
+
+	volumeConstraint(int a, int b, int c, int d, float v) {
+		m_id[0] = a;
+		m_id[1] = b;
+		m_id[2] = c;
+		m_id[3] = d;
+
+		m_restVolume = v;
+	}
+};
 
 class SimulationModel {
 private:
@@ -24,9 +50,13 @@ private:
 
 	std::vector<int> m_tetIdx;
 
+	std::vector<float> m_invMass;
+
+	std::vector<distanceConstraint> m_distanceConstraint;
+
 public:
 	int numSubstep = 10;
-	const float G = -0.1f;
+	const float G = -1.0f;
 
 	glm::vec3 gradient = { 0.0,0.0,0.0 };
 	glm::vec3 gravity = { 0.0,G,0.0 };
@@ -34,15 +64,12 @@ public:
 	float fps = 1.0f / 60.0f;
 	bool pause = true;
 
-
-	float Width = 2.0f;
-	float Height = 2.0f;
-
 public:
 	SimulationModel(std::vector<cv::Point> contour, Shader* shader, Shader* wireShader, Texture* t);
 	~SimulationModel();
-	void InitDistanceConstraint();
-	void InitVolumeConstraint();
+	void Init();
+	void InitDistanceConstraint(int k);
+	void InitVolumeConstraint(int k);
 	void Update();
 
 	void Simulate();
@@ -50,6 +77,8 @@ public:
 	void PreSolve(float dt);
 	void PostSolve(float dt);
 
+	void solveDistanceConstraint(float dt);
+	void solveVolumeConstaraint();
 
 
 };
