@@ -629,6 +629,21 @@ void Delauney::MakeTeddyTri(Triangle tri) {
 
 }
 
+void Delauney::MakeTeddyTriWire(Triangle tri) {
+	int a = tri.id[0];
+	int b = tri.id[1];
+	int c = tri.id[2];
+
+	DeEdge e1 = MakeEdge(a, b);
+	DeEdge e2 = MakeEdge(b, c);
+	DeEdge e3 = MakeEdge(c, a);
+
+	_TeddyWireTemp.insert(e1);
+	_TeddyWireTemp.insert(e2);
+	_TeddyWireTemp.insert(e3);
+
+}
+
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
@@ -1106,7 +1121,6 @@ void Delauney::MakeTeddyTempVerts() {
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(500, -1);//+z
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(500, -1);//-z
 	std::vector<std::vector<std::vector<int>>> chkEdge(500, std::vector<std::vector<int>>(500, std::vector<int>(divNum, -1)));
-	std::set<DeEdge> wf3D;
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
 		int notAxisPoint = -1;
@@ -1289,15 +1303,6 @@ void Delauney::MakeTeddyTempVerts() {
 			
 		}
 
-		wf3D.insert({ v1_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
-		wf3D.insert({ v1_Pozi,v2_Pozi });
-		wf3D.insert({ v2_Pozi,chkEdge[v2_Pozi][notAxisPoint][0] });
-		wf3D.insert({ v2_Pozi,chkEdge[v1_Pozi][notAxisPoint][0] });
-
-		wf3D.insert({ v1_Nega,chkEdge[v1_Nega][notAxisPoint][0] });
-		wf3D.insert({ v1_Nega,v2_Nega });
-		wf3D.insert({ v2_Nega,chkEdge[v2_Nega][notAxisPoint][0] });
-		wf3D.insert({ v2_Nega,chkEdge[v1_Nega][notAxisPoint][0] });
 
 		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], v1_Pozi, v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], v1_Nega);
 		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], chkEdge[v2_Pozi][notAxisPoint][0], v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], chkEdge[v2_Nega][notAxisPoint][0]);
@@ -1312,18 +1317,14 @@ void Delauney::MakeTeddyTempVerts() {
 			MakeTeddyTri(tri2);
 			MakeTeddyTri(tri3);
 			MakeTeddyTri(tri4);
+
+			MakeTeddyTriWire(tri1);
+			MakeTeddyTriWire(tri2);
+			MakeTeddyTriWire(tri3);
+			MakeTeddyTriWire(tri4);
 		}
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
-			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr] });
-			wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
-			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v2_Pozi][notAxisPoint][itr + 1] });
-			wf3D.insert({ chkEdge[v2_Pozi][notAxisPoint][itr],chkEdge[v1_Pozi][notAxisPoint][itr + 1] });
-
-			wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][itr],chkEdge[v2_Nega][notAxisPoint][itr] });
-			wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][itr],chkEdge[v1_Nega][notAxisPoint][itr + 1] });
-			wf3D.insert({ chkEdge[v2_Nega][notAxisPoint][itr],chkEdge[v2_Nega][notAxisPoint][itr + 1] });
-			wf3D.insert({ chkEdge[v2_Nega][notAxisPoint][itr],chkEdge[v1_Nega][notAxisPoint][itr + 1] });
 
 			{
 				Triangle tri1 = MakeTeddyTriangle(chkEdge[v1_Pozi][notAxisPoint][itr], chkEdge[v2_Pozi][notAxisPoint][itr], chkEdge[v1_Pozi][notAxisPoint][itr+1], false);
@@ -1335,16 +1336,15 @@ void Delauney::MakeTeddyTempVerts() {
 				MakeTeddyTri(tri2);
 				MakeTeddyTri(tri3);
 				MakeTeddyTri(tri4);
+
+				MakeTeddyTriWire(tri1);
+				MakeTeddyTriWire(tri2);
+				MakeTeddyTriWire(tri3);
+				MakeTeddyTriWire(tri4);
 			}
 		}
 		
 		int endid = divNum - 1;
-		wf3D.insert({ chkEdge[v1_Pozi][notAxisPoint][endid],chkEdge[v2_Pozi][notAxisPoint][endid] });
-		wf3D.insert({ notAxisPoint,chkEdge[v1_Pozi][notAxisPoint][endid] });
-		wf3D.insert({ notAxisPoint,chkEdge[v2_Pozi][notAxisPoint][endid] });
-		wf3D.insert({ chkEdge[v1_Nega][notAxisPoint][endid],chkEdge[v2_Nega][notAxisPoint][endid] });
-		wf3D.insert({ notAxisPoint,chkEdge[v1_Nega][notAxisPoint][endid] });
-		wf3D.insert({ notAxisPoint,chkEdge[v2_Nega][notAxisPoint][endid] });
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(chkEdge[v1_Pozi][notAxisPoint][endid], chkEdge[v2_Pozi][notAxisPoint][endid], notAxisPoint, false);
@@ -1353,24 +1353,11 @@ void Delauney::MakeTeddyTempVerts() {
 			MakeTeddyTri(tri1);
 			MakeTeddyTri(tri2);
 
+			MakeTeddyTriWire(tri1);
+			MakeTeddyTriWire(tri2);
+
 		}
 
-		/*
-		wf3D.insert({ v1_Pozi,v2_Pozi });
-		wf3D.insert({ v1_Pozi,notAxisPoint });
-		wf3D.insert({ v2_Pozi,notAxisPoint });
-		wf3D.insert({ v1_Nega,v2_Nega });
-		wf3D.insert({ v1_Nega,notAxisPoint });
-		wf3D.insert({ v2_Nega,notAxisPoint });
-		Triangle tri1 = MakeTeddyTriangle(v1_Pozi, v2_Pozi,notAxisPoint,false);
-		Triangle tri2 = MakeTeddyTriangle(v1_Nega, v2_Nega, notAxisPoint,true);
-		_TeddyIndices.push_back(tri1.id[0]);
-		_TeddyIndices.push_back(tri1.id[1]);
-		_TeddyIndices.push_back(tri1.id[2]);
-		_TeddyIndices.push_back(tri2.id[0]);
-		_TeddyIndices.push_back(tri2.id[1]);
-		_TeddyIndices.push_back(tri2.id[2]);
-		*/
 
 	}
 	
@@ -1472,13 +1459,6 @@ void Delauney::MakeTeddyTempVerts() {
 
 		}
 
-		wf3D.insert({ vertPozi,chkEdge[vertPozi][outerEdgePoint[0]][0] });
-		wf3D.insert({ vertPozi,chkEdge[vertPozi][outerEdgePoint[1]][0] });
-		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][0],chkEdge[vertPozi][outerEdgePoint[1]][0] });
-
-		wf3D.insert({ vertNega,chkEdge[vertNega][outerEdgePoint[0]][0] });
-		wf3D.insert({ vertNega,chkEdge[vertNega][outerEdgePoint[1]][0] });
-		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][0],chkEdge[vertNega][outerEdgePoint[1]][0] });
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(vertPozi, chkEdge[vertPozi][outerEdgePoint[0]][0], chkEdge[vertPozi][outerEdgePoint[1]][0],false);
@@ -1486,18 +1466,12 @@ void Delauney::MakeTeddyTempVerts() {
 
 			MakeTeddyTri(tri1);
 			MakeTeddyTri(tri2);
+
+			MakeTeddyTriWire(tri1);
+			MakeTeddyTriWire(tri2);
 		}
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
-			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][itr],chkEdge[vertPozi][outerEdgePoint[0]][itr + 1] });
-			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][itr],chkEdge[vertPozi][outerEdgePoint[1]][itr + 1] });
-			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][itr],chkEdge[vertPozi][outerEdgePoint[0]][itr + 1] });
-			wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][itr+1],chkEdge[vertPozi][outerEdgePoint[1]][itr+1] });
-
-			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][itr],chkEdge[vertNega][outerEdgePoint[0]][itr + 1] });
-			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][itr],chkEdge[vertNega][outerEdgePoint[1]][itr + 1] });
-			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][itr],chkEdge[vertNega][outerEdgePoint[0]][itr + 1] });
-			wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][itr + 1],chkEdge[vertNega][outerEdgePoint[1]][itr + 1] });
 
 			{
 				Triangle tri1 = MakeTeddyTriangle(chkEdge[vertPozi][outerEdgePoint[0]][itr], chkEdge[vertPozi][outerEdgePoint[1]][itr], chkEdge[vertPozi][outerEdgePoint[0]][itr+1], false);
@@ -1509,20 +1483,15 @@ void Delauney::MakeTeddyTempVerts() {
 				MakeTeddyTri(tri2);
 				MakeTeddyTri(tri3);
 				MakeTeddyTri(tri4);
+
+				MakeTeddyTriWire(tri1);
+				MakeTeddyTriWire(tri2);
+				MakeTeddyTriWire(tri3);
+				MakeTeddyTriWire(tri4);
 			}
 		}
 
 		int endid = divNum - 1;
-
-		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[0]][endid],outerEdgePoint[0]});
-		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][endid],outerEdgePoint[1] });
-		wf3D.insert({ chkEdge[vertPozi][outerEdgePoint[1]][endid],outerEdgePoint[0] });
-
-		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1]});
-
-		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[0]][endid],outerEdgePoint[0] });
-		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][endid],outerEdgePoint[1] });
-		wf3D.insert({ chkEdge[vertNega][outerEdgePoint[1]][endid],outerEdgePoint[0] });
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(chkEdge[vertPozi][outerEdgePoint[0]][endid], chkEdge[vertPozi][outerEdgePoint[1]][endid], outerEdgePoint[0], false);
@@ -1534,25 +1503,13 @@ void Delauney::MakeTeddyTempVerts() {
 			MakeTeddyTri(tri2);
 			MakeTeddyTri(tri3);
 			MakeTeddyTri(tri4);
+
+			MakeTeddyTriWire(tri1);
+			MakeTeddyTriWire(tri2);
+			MakeTeddyTriWire(tri3);
+			MakeTeddyTriWire(tri4);
 		}
 
-		/*
-		wf3D.insert({ vertPozi,outerEdgePoint[0] });
-		wf3D.insert({ vertPozi,outerEdgePoint[1] });
-		wf3D.insert({ outerEdgePoint[0],outerEdgePoint[1] });
-		wf3D.insert({ vertNega,outerEdgePoint[0] });
-		wf3D.insert({ vertNega,outerEdgePoint[1] });
-
-		Triangle tri1 = MakeTeddyTriangle(vertPozi, outerEdgePoint[0], outerEdgePoint[1], false);
-		Triangle tri2 = MakeTeddyTriangle(vertNega, outerEdgePoint[0], outerEdgePoint[1], true);
-
-		_TeddyIndices.push_back(tri1.id[0]);
-		_TeddyIndices.push_back(tri1.id[1]);
-		_TeddyIndices.push_back(tri1.id[2]);
-		_TeddyIndices.push_back(tri2.id[0]);
-		_TeddyIndices.push_back(tri2.id[1]);
-		_TeddyIndices.push_back(tri2.id[2]);
-		*/
 
 	}
 
@@ -1562,7 +1519,7 @@ void Delauney::MakeTeddyTempVerts() {
 		_WireIdx.emplace_back(e.second);
 	}
 
-	for (auto& e : wf3D) {
+	for (auto& e : _TeddyWireTemp) {
 		_TeddyWireIdx.emplace_back(e.first);
 		_TeddyWireIdx.emplace_back(e.second);
 	}

@@ -100,6 +100,7 @@ class Delauney
 	std::vector<int> _TeddyIndices;
 	std::vector<int> _TeddyWireIdx;
 	std::vector<int> _TetIdx;
+	std::set<DeEdge> _TeddyWireTemp;
 
 
 
@@ -164,6 +165,7 @@ public:
 	float CalcEllipse(float x, float lengx, float lengy);
 	void MakeTet(int a, int b, int c, int d);
 	void MakeTeddyTri(Triangle tri);
+	void MakeTeddyTriWire(Triangle tri);
 	void MakeTriPrism(int a, int b, int c, int a2, int b2, int c2);
 	Triangle MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode);
 
