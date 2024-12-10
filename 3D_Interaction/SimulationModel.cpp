@@ -44,6 +44,7 @@ void SimulationModel::Init() {
 	for (int i = 0; i < numTets; ++i) {
 		int k = i * 4;
 		InitDistanceConstraint(k);
+		InitVolumeConstraint(k);
 	}
 }
 
@@ -72,6 +73,16 @@ void SimulationModel::InitVolumeConstraint(int k) {
 	int c = m_tetIdx[k + 2];
 	int d = m_tetIdx[k + 3];
 
+	glm::vec3 p0 = m_vert[a];
+	glm::vec3 p1 = m_vert[b];
+	glm::vec3 p2 = m_vert[c];
+	glm::vec3 p3 = m_vert[d];
+
+	float volume = static_cast<float>(1.0 / 6.0) * glm::dot(glm::cross(p1 - p0, p2 - p0), p3 - p0);
+
+
+	volumeConstraint vc(a, b, c, d, volume);
+	m_volumeConstraint.push_back(vc);
 }
 
 
@@ -92,6 +103,7 @@ void SimulationModel::Simulate() {
 
 void SimulationModel::Solve(float dt) {
 	solveDistanceConstraint(dt);
+	solveVolumeConstaraint(dt);
 }
 void SimulationModel::PreSolve(float dt) {
 
@@ -121,7 +133,7 @@ void SimulationModel::PostSolve(float dt) {
 
 void SimulationModel::solveDistanceConstraint(float dt) {
 
-	float stif = 1.0;
+	float stif = 100.0;
 
 	for (auto& e : m_distanceConstraint) {
 		glm::vec3 p0 = m_vert[e.m_id[0]];
@@ -149,5 +161,50 @@ void SimulationModel::solveDistanceConstraint(float dt) {
 
 	}
 
+}
 
+void SimulationModel::solveVolumeConstaraint(float dt) {
+	float stif = 100.0;
+
+	for (auto& e : m_volumeConstraint) {
+
+		glm::vec3 p0 = m_vert[e.m_id[0]];
+		glm::vec3 p1 = m_vert[e.m_id[1]];
+		glm::vec3 p2 = m_vert[e.m_id[2]];
+		glm::vec3 p3 = m_vert[e.m_id[3]];
+
+		float invM0 = m_invMass[e.m_id[0]];
+		float invM1 = m_invMass[e.m_id[1]];
+		float invM2 = m_invMass[e.m_id[2]];
+		float invM3 = m_invMass[e.m_id[3]];
+
+		float restV = e.m_restVolume;
+
+		glm::vec3 corr0 = { 0,0,0 };
+		glm::vec3 corr1 = { 0,0,0 };
+		glm::vec3 corr2 = { 0,0,0 };
+		glm::vec3 corr3 = { 0,0,0 };
+
+		bool res = PBD::PositionBasedDynamics::solve_VolumeConstraint(
+			p0,invM0,p1,invM1,p2,invM2,p3,invM3,
+			restV,stif,
+			corr0,corr1,corr2,corr3);
+
+		if (res) {
+			if (invM0 != 0.0) {
+				m_vert[e.m_id[0]] += (corr0 * dt);
+			}
+			if (invM1 != 0.0) {
+				m_vert[e.m_id[1]] += (corr1 * dt);
+			}
+			if (invM2 != 0.0) {
+				m_vert[e.m_id[2]] += (corr2 * dt);
+			}
+			if (invM3 != 0.0) {
+				m_vert[e.m_id[3]] += (corr3 * dt);
+			}
+		}
+
+
+	}
 }

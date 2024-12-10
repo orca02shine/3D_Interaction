@@ -53,10 +53,11 @@ private:
 	std::vector<float> m_invMass;
 
 	std::vector<distanceConstraint> m_distanceConstraint;
+	std::vector<volumeConstraint> m_volumeConstraint;
 
 public:
 	int numSubstep = 10;
-	const float G = -1.0f;
+	const float G = -6.0f;
 
 	glm::vec3 gradient = { 0.0,0.0,0.0 };
 	glm::vec3 gravity = { 0.0,G,0.0 };
@@ -78,7 +79,7 @@ public:
 	void PostSolve(float dt);
 
 	void solveDistanceConstraint(float dt);
-	void solveVolumeConstaraint();
+	void solveVolumeConstaraint(float dt);
 
 
 };
