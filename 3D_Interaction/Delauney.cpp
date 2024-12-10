@@ -609,6 +609,26 @@ float Delauney::CalcEllipse(float x, float lengx, float lengy) {
 
 }
 
+void Delauney::MakeTet(int a, int b, int c, int d) {
+	_TetIdx.push_back(a);
+	_TetIdx.push_back(b);
+	_TetIdx.push_back(c);
+	_TetIdx.push_back(d);
+}
+
+void Delauney::MakeTriPrism(int a, int b, int c, int a2, int b2, int c2) {
+	MakeTet(a, a2, b2, c2);
+	MakeTet(b2, b, a, c);
+	MakeTet(a, c, c2, b2);;
+}
+
+void Delauney::MakeTeddyTri(Triangle tri) {
+	_TeddyIndices.push_back(tri.id[0]);
+	_TeddyIndices.push_back(tri.id[1]);
+	_TeddyIndices.push_back(tri.id[2]);
+
+}
+
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
@@ -1279,6 +1299,8 @@ void Delauney::MakeTeddyTempVerts() {
 		wf3D.insert({ v2_Nega,chkEdge[v2_Nega][notAxisPoint][0] });
 		wf3D.insert({ v2_Nega,chkEdge[v1_Nega][notAxisPoint][0] });
 
+		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], v1_Pozi, v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], v1_Nega);
+		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], chkEdge[v2_Pozi][notAxisPoint][0], v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], chkEdge[v2_Nega][notAxisPoint][0]);
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(v1_Pozi, v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], false);
@@ -1286,18 +1308,10 @@ void Delauney::MakeTeddyTempVerts() {
 			Triangle tri3 = MakeTeddyTriangle(v1_Nega, v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], true);
 			Triangle tri4 = MakeTeddyTriangle(v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], chkEdge[v2_Nega][notAxisPoint][0], true);
 
-			_TeddyIndices.push_back(tri1.id[0]);
-			_TeddyIndices.push_back(tri1.id[1]);
-			_TeddyIndices.push_back(tri1.id[2]);
-			_TeddyIndices.push_back(tri2.id[0]);
-			_TeddyIndices.push_back(tri2.id[1]);
-			_TeddyIndices.push_back(tri2.id[2]);
-			_TeddyIndices.push_back(tri3.id[0]);
-			_TeddyIndices.push_back(tri3.id[1]);
-			_TeddyIndices.push_back(tri3.id[2]);
-			_TeddyIndices.push_back(tri4.id[0]);
-			_TeddyIndices.push_back(tri4.id[1]);
-			_TeddyIndices.push_back(tri4.id[2]);
+			MakeTeddyTri(tri1);
+			MakeTeddyTri(tri2);
+			MakeTeddyTri(tri3);
+			MakeTeddyTri(tri4);
 		}
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
@@ -1317,18 +1331,10 @@ void Delauney::MakeTeddyTempVerts() {
 				Triangle tri3 = MakeTeddyTriangle(chkEdge[v1_Nega][notAxisPoint][itr], chkEdge[v2_Nega][notAxisPoint][itr], chkEdge[v1_Nega][notAxisPoint][itr + 1], true);
 				Triangle tri4 = MakeTeddyTriangle(chkEdge[v2_Nega][notAxisPoint][itr], chkEdge[v1_Nega][notAxisPoint][itr + 1], chkEdge[v2_Nega][notAxisPoint][itr + 1], true);
 
-				_TeddyIndices.push_back(tri1.id[0]);
-				_TeddyIndices.push_back(tri1.id[1]);
-				_TeddyIndices.push_back(tri1.id[2]);
-				_TeddyIndices.push_back(tri2.id[0]);
-				_TeddyIndices.push_back(tri2.id[1]);
-				_TeddyIndices.push_back(tri2.id[2]);
-				_TeddyIndices.push_back(tri3.id[0]);
-				_TeddyIndices.push_back(tri3.id[1]);
-				_TeddyIndices.push_back(tri3.id[2]);
-				_TeddyIndices.push_back(tri4.id[0]);
-				_TeddyIndices.push_back(tri4.id[1]);
-				_TeddyIndices.push_back(tri4.id[2]);
+				MakeTeddyTri(tri1);
+				MakeTeddyTri(tri2);
+				MakeTeddyTri(tri3);
+				MakeTeddyTri(tri4);
 			}
 		}
 		
@@ -1344,12 +1350,8 @@ void Delauney::MakeTeddyTempVerts() {
 			Triangle tri1 = MakeTeddyTriangle(chkEdge[v1_Pozi][notAxisPoint][endid], chkEdge[v2_Pozi][notAxisPoint][endid], notAxisPoint, false);
 			Triangle tri2 = MakeTeddyTriangle(chkEdge[v1_Nega][notAxisPoint][endid], chkEdge[v2_Nega][notAxisPoint][endid], notAxisPoint, true);
 
-			_TeddyIndices.push_back(tri1.id[0]);
-			_TeddyIndices.push_back(tri1.id[1]);
-			_TeddyIndices.push_back(tri1.id[2]);
-			_TeddyIndices.push_back(tri2.id[0]);
-			_TeddyIndices.push_back(tri2.id[1]);
-			_TeddyIndices.push_back(tri2.id[2]);
+			MakeTeddyTri(tri1);
+			MakeTeddyTri(tri2);
 
 		}
 
@@ -1482,12 +1484,8 @@ void Delauney::MakeTeddyTempVerts() {
 			Triangle tri1 = MakeTeddyTriangle(vertPozi, chkEdge[vertPozi][outerEdgePoint[0]][0], chkEdge[vertPozi][outerEdgePoint[1]][0],false);
 			Triangle tri2 = MakeTeddyTriangle(vertNega, chkEdge[vertNega][outerEdgePoint[0]][0], chkEdge[vertNega][outerEdgePoint[1]][0], true);
 
-			_TeddyIndices.push_back(tri1.id[0]);
-			_TeddyIndices.push_back(tri1.id[1]);
-			_TeddyIndices.push_back(tri1.id[2]);
-			_TeddyIndices.push_back(tri2.id[0]);
-			_TeddyIndices.push_back(tri2.id[1]);
-			_TeddyIndices.push_back(tri2.id[2]);
+			MakeTeddyTri(tri1);
+			MakeTeddyTri(tri2);
 		}
 
 		for (int itr = 0; itr < divNum - 1; ++itr) {
@@ -1507,18 +1505,10 @@ void Delauney::MakeTeddyTempVerts() {
 				Triangle tri3 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[0]][itr], chkEdge[vertNega][outerEdgePoint[1]][itr], chkEdge[vertNega][outerEdgePoint[0]][itr + 1], true);
 				Triangle tri4 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[1]][itr], chkEdge[vertNega][outerEdgePoint[0]][itr + 1], chkEdge[vertNega][outerEdgePoint[1]][itr + 1], true);
 
-				_TeddyIndices.push_back(tri1.id[0]);
-				_TeddyIndices.push_back(tri1.id[1]);
-				_TeddyIndices.push_back(tri1.id[2]);
-				_TeddyIndices.push_back(tri2.id[0]);
-				_TeddyIndices.push_back(tri2.id[1]);
-				_TeddyIndices.push_back(tri2.id[2]);
-				_TeddyIndices.push_back(tri3.id[0]);
-				_TeddyIndices.push_back(tri3.id[1]);
-				_TeddyIndices.push_back(tri3.id[2]);
-				_TeddyIndices.push_back(tri4.id[0]);
-				_TeddyIndices.push_back(tri4.id[1]);
-				_TeddyIndices.push_back(tri4.id[2]);
+				MakeTeddyTri(tri1);
+				MakeTeddyTri(tri2);
+				MakeTeddyTri(tri3);
+				MakeTeddyTri(tri4);
 			}
 		}
 
@@ -1540,18 +1530,10 @@ void Delauney::MakeTeddyTempVerts() {
 			Triangle tri3 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[0]][endid], chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0], true);
 			Triangle tri4 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0], outerEdgePoint[1], true);
 
-			_TeddyIndices.push_back(tri1.id[0]);
-			_TeddyIndices.push_back(tri1.id[1]);
-			_TeddyIndices.push_back(tri1.id[2]);
-			_TeddyIndices.push_back(tri2.id[0]);
-			_TeddyIndices.push_back(tri2.id[1]);
-			_TeddyIndices.push_back(tri2.id[2]);
-			_TeddyIndices.push_back(tri3.id[0]);
-			_TeddyIndices.push_back(tri3.id[1]);
-			_TeddyIndices.push_back(tri3.id[2]);
-			_TeddyIndices.push_back(tri4.id[0]);
-			_TeddyIndices.push_back(tri4.id[1]);
-			_TeddyIndices.push_back(tri4.id[2]);
+			MakeTeddyTri(tri1);
+			MakeTeddyTri(tri2);
+			MakeTeddyTri(tri3);
+			MakeTeddyTri(tri4);
 		}
 
 		/*

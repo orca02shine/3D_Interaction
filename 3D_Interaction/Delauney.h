@@ -99,6 +99,7 @@ class Delauney
 	std::vector<float> _TeddyUV;
 	std::vector<int> _TeddyIndices;
 	std::vector<int> _TeddyWireIdx;
+	std::vector<int> _TetIdx;
 
 
 
@@ -161,6 +162,9 @@ public:
 	void MakeTeddyTempVerts();
 	bool TeddyInCircle(DeEdge e, std::vector<int> vertices);
 	float CalcEllipse(float x, float lengx, float lengy);
+	void MakeTet(int a, int b, int c, int d);
+	void MakeTeddyTri(Triangle tri);
+	void MakeTriPrism(int a, int b, int c, int a2, int b2, int c2);
 	Triangle MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode);
 
 	void SetData();
@@ -174,4 +178,5 @@ public:
 	std::vector<int> GetIndices3D() { return _TeddyIndices; }
 	std::vector<int> GetWireFrame3D() { return _TeddyWireIdx; }
 	std::vector<float> GetUV3D() { return _TeddyUV; }
+	std::vector<int> GetTetMesh() { return _TetIdx; }
 };
