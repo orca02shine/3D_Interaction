@@ -727,27 +727,16 @@ void Delauney::MakeTeddyTempVerts() {
 		int kari1 = _Triangles[i].id[1];
 		int kari2 = _Triangles[i].id[2];
 
-		/*
-		wireFrame.insert({kari0-3,kari1-3});
-		wireFrame.insert({ kari1-3,kari2-3 });
-		wireFrame.insert({ kari2-3,kari0 -3});
-		*/
 
 
 		int e1 = Graph[i][0].e1;
 		int e2 = Graph[i][0].e2;
 
 		int terVert = _Triangles[i].opposite({ e1,e2 });
-		//std::cout << "kari " << kari0 << " " << kari1 << " " << kari2 << std::endl;
-		//std::cout << "tri " << e1 << " " << e2 << " " << terVert << std::endl;
+
 		vertOfFanTris.push_back(terVert);
 		vertOfFanTris.push_back(e1);
 		vertOfFanTris.push_back(e2);
-
-
-		//wireFrame.insert({ e1-3 ,e2-3  });
-		//wireFrame.insert({ e2-3 ,terVert-3  });
-		//wireFrame.insert({ terVert-3 ,e1-3 });
 
 		int mididx = -1;
 
@@ -800,6 +789,7 @@ void Delauney::MakeTeddyTempVerts() {
 					seen[now] = true;
 					prev1 = e.e1;
 					prev2 = e.e2;
+
 				}
 				else {
 					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
@@ -812,8 +802,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 					vertOfFanTris.push_back(e.e1);
 					vertOfFanTris.push_back(e.e2);
-					std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
-					vertOfFanTris.erase(std::unique(vertOfFanTris.begin(), vertOfFanTris.end()), vertOfFanTris.end());
+					
 					break;
 				}
 			}
@@ -823,32 +812,22 @@ void Delauney::MakeTeddyTempVerts() {
 		//‹L˜^
 		_IsChodralAxis[mididx] = true;
 
-		/*
-		std::cout << "terminal id is " << i << std::endl;;
-		for (int p = 0; p < vertOfFanTris.size(); ++p) {
-			std::cout << vertOfFanTris[p] << " ";
-		}
-		std::cout << std::endl;
-
-
-
-		for (int chk = 1; chk < vertOfFanTris.size(); ++chk) {
-
-		}
-		*/
-
+		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
+		vertOfFanTris.erase(std::unique(vertOfFanTris.begin(), vertOfFanTris.end()), vertOfFanTris.end());
 
 		//‡”Ô‚É‚·‚é---------------------------------------------------------------
 		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
 		int swapid = -1;
-		for (int c = 0; c < vertOfFanTris.size() - 1; ++c) {
-			if (vertOfFanTris[c] + 1 != vertOfFanTris[c + 1]) {
+		for (int c = 1; c < vertOfFanTris.size() ; ++c) {
+			if (vertOfFanTris[c-1] + 1 != vertOfFanTris[c]) {
 				swapid = c;
+				
 			}
+
 		}
 		std::vector<int> tempSwap;
 		if (swapid != -1) {
-			for (int c = 0; c <= swapid; ++c) {
+			for (int c = 0; c < swapid; ++c) {
 				tempSwap.push_back(vertOfFanTris[c]);
 			}
 			vertOfFanTris.erase(vertOfFanTris.begin(), vertOfFanTris.begin() + swapid);

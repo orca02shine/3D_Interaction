@@ -32,7 +32,7 @@ public:
 	glm::vec3 gravity = { 0.0,G,0.0 };
 
 	float fps = 1.0f / 60.0f;
-	bool pause = false;
+	bool pause = true;
 
 
 	float Width = 2.0f;
