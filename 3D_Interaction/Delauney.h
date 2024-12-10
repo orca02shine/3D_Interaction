@@ -166,8 +166,9 @@ public:
 	void MakeTet(int a, int b, int c, int d);
 	void MakeTeddyTri(Triangle tri);
 	void MakeTeddyTriWire(Triangle tri);
-	void MakeTriPrism(int a, int b, int c, int a2, int b2, int c2);
+	void MakeTriPrism(Triangle posi, Triangle Nega);
 	Triangle MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode);
+	Triangle MakeTempTriangle(size_t a, size_t b, size_t c);
 
 	void SetData();
 

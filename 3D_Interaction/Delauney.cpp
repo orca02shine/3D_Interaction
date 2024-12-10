@@ -602,6 +602,11 @@ Triangle Delauney::MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode
 	return Triangle{ a,b,c };
 
 }
+
+Triangle Delauney::MakeTempTriangle(size_t a, size_t b, size_t c) {
+	return Triangle{ a,b,c };
+}
+
 float Delauney::CalcEllipse(float x, float lengx, float lengy) {
 	double temp = 1 - ((x * x) / (lengx * lengx));
 	double ypow = temp * lengy * lengy;
@@ -614,9 +619,28 @@ void Delauney::MakeTet(int a, int b, int c, int d) {
 	_TetIdx.push_back(b);
 	_TetIdx.push_back(c);
 	_TetIdx.push_back(d);
+
+	Triangle tri0 = MakeTeddyTriangle(a, b, c,false);
+	Triangle tri1 = MakeTeddyTriangle(a, b, d,false);
+	Triangle tri2 = MakeTeddyTriangle(a, c, d,false);
+	Triangle tri3 = MakeTeddyTriangle(b, c, d,false);
+
+	MakeTeddyTriWire(tri0);
+	MakeTeddyTriWire(tri1);
+	MakeTeddyTriWire(tri2);
+	MakeTeddyTriWire(tri3);
 }
 
-void Delauney::MakeTriPrism(int a, int b, int c, int a2, int b2, int c2) {
+void Delauney::MakeTriPrism(Triangle pozi, Triangle nega) {
+	int a = pozi.id[0];
+	int b = pozi.id[1];
+	int c = pozi.id[2];
+
+	int a2 = nega.id[0];
+	int b2 = nega.id[1];
+	int c2 = nega.id[2];
+
+
 	MakeTet(a, a2, b2, c2);
 	MakeTet(b2, b, a, c);
 	MakeTet(a, c, c2, b2);;
@@ -1303,9 +1327,13 @@ void Delauney::MakeTeddyTempVerts() {
 			
 		}
 
+		Triangle tempTri1 = MakeTempTriangle(v1_Pozi, v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0]);
+		Triangle tempTri2= MakeTempTriangle(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], chkEdge[v2_Pozi][notAxisPoint][0]);
+		Triangle tempTri1_nega= MakeTempTriangle(v1_Nega, v2_Nega, chkEdge[v1_Nega][notAxisPoint][0]);
+		Triangle tempTri2_nega = MakeTempTriangle(v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], chkEdge[v2_Nega][notAxisPoint][0]);
 
-		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], v1_Pozi, v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], v1_Nega);
-		MakeTriPrism(v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], chkEdge[v2_Pozi][notAxisPoint][0], v2_Nega, chkEdge[v1_Nega][notAxisPoint][0], chkEdge[v2_Nega][notAxisPoint][0]);
+		MakeTriPrism(tempTri1,tempTri1_nega);
+		MakeTriPrism(tempTri2,tempTri2_nega);
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(v1_Pozi, v2_Pozi, chkEdge[v1_Pozi][notAxisPoint][0], false);
