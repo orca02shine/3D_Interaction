@@ -911,6 +911,8 @@ void Delauney::MakeTeddyTempVerts() {
 			wireFrame.insert({ we1 });
 			wireFrame.insert({ we2 });
 
+			//std::cout <<"now id"<<vertOfFanTris[t] << " mid idx id" << mididx << std::endl;
+
 			Triangle fantri = MakeTriangle(mididx, vertOfFanTris[t], vertOfFanTris[t - 1]);
 			_TeddyTriangles_Outer.push_back(fantri);
 
@@ -953,7 +955,7 @@ void Delauney::MakeTeddyTempVerts() {
 				junctionMidPoint[i] = vmid;
 				_IsChodralAxis[vmid] = true;
 			}
-			//length clc
+			//length clc-----------------------------------------------------------
 			if (invalidEdge[v0][v1] == !true && invalidEdge[v1][v2] != true) {
 				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
@@ -966,7 +968,7 @@ void Delauney::MakeTeddyTempVerts() {
 				float leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
-			//------
+			//-------
 
 			if (invalidEdge[v0][v1] != true) {
 				int mp = edgeMidPoint[v0][v1];
@@ -1194,6 +1196,8 @@ void Delauney::MakeTeddyTempVerts() {
 		int axisPoint = -1;
 		std::vector<int> outerEdgePoint;
 		for (int c = 0; c < 3; ++c) {
+
+			std::cout<< tri.id[c] <<"  ";
 			if (_IsChodralAxis[tri.id[c]]) {
 				axisPoint = tri.id[c];
 			}
@@ -1201,6 +1205,7 @@ void Delauney::MakeTeddyTempVerts() {
 				outerEdgePoint.push_back(tri.id[c]);
 			}
 		}
+		//std::cout <<"mid idx is"<<axisPoint<< std::endl;
 		float thick = 0;
 		if (_SumLengthFromAxis[axisPoint].size() != 0) {
 			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
