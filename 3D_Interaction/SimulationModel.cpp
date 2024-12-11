@@ -135,9 +135,9 @@ void SimulationModel::PreSolve(float dt) {
 			m_vert[i] = m_prevPos[i];
 			m_vert[i].z = -1.0;
 		}
-		if (m_vert[i].z > 1.0) {
+		if (m_vert[i].z > 2.0) {
 			m_vert[i] = m_prevPos[i];
-			m_vert[i].z = 1.0;
+			m_vert[i].z = 2.0;
 		}
 	}
 
