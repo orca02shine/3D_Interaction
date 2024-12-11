@@ -207,9 +207,10 @@ void SimulationWindow::MeshContoroller() {
 				glm::vec4 pos = m->GetPos(i);
 				glm::vec4 scr = _MVP*pos;
 
-				glm::vec2 v = { _CurrentLocation[0]*aspect,_CurrentLocation[1] };
+				std::cout << "aaa " << scr.x << " " << scr.y << " " << scr.z << std::endl;
+
+				glm::vec2 v = { _CurrentLocation[0],_CurrentLocation[1] };
 				glm::vec2 scxy = { scr.x,scr.y };
-				std::cout <<"vert id "<< i<<" pos " << scr.x << " " << scr.y << " " << scr.z << " " << scr.w << std::endl;
 				float d = glm::distance(v, scxy);
 				if (d < minD) {
 					_SelectedModel = m;
