@@ -200,19 +200,16 @@ bool SimulationWindow::LoopEvents() {
 void SimulationWindow::MeshContoroller() {
 	if (isClicked && _SelectedModel == nullptr) {
 		float minD = minArea;
-		std::cout << _CurrentLocation[0] << " " << _CurrentLocation[1] << std::endl;
 		for (const auto& m : _Models) {
 			int Num = m->GetNum();
 			for (int i = 0; i < Num; ++i) {
-				glm::vec4 pos = m->GetPos(i);
-				glm::vec4 scr = _MVP *pos;
-				glm::vec3 p = { pos.x,pos.y,pos.z };
+				glm::vec3 pos = m->GetPos(i);
 
+				glm::vec3 wim = glm::project(pos, _View, _Projection, glm::vec4(0, 0, size[0], size[1]));
+				glm::vec2 mp = glm::vec2{ _ClickedLocation[0],_ClickedLocation[1] };
+				glm::vec2 clip = glm::vec2{ wim.x*2/size[0]-1.0f,wim.y*2/size[1]-1.0};
 
-				std::cout << scr.x/scr.w << " " << scr.y/scr.w << " " << scr.z/scr.w << " "<<scr.w<< std::endl;
-				glm::vec2 v = { _CurrentLocation[0],_CurrentLocation[1] };
-				glm::vec2 scxy = { scr.x/scr.w,scr.y/scr.w };
-				float d = glm::distance(v, scxy);
+				float d = glm::distance(mp, clip);
 				if (d < minD) {
 					_SelectedModel = m;
 					_VertPtr = i;
@@ -223,6 +220,7 @@ void SimulationWindow::MeshContoroller() {
 	}
 	if (isClicked && _SelectedModel != nullptr && _VertPtr != -1) {
 
+		std::cout<< "vert id is " << _VertPtr << std::endl;
 		_SelectedModel->SetCoordinate(_VertPtr, 0, 0);
 
 	}

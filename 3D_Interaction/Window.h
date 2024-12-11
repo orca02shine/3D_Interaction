@@ -101,5 +101,6 @@ public:
 	bool LoopEvents() override;
 	void MeshContoroller();
 	void test();
+	glm::vec2 Clip(float a, float b);
 
 };

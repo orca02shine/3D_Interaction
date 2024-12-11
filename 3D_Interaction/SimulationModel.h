@@ -82,7 +82,7 @@ public:
 	void solveVolumeConstaraint(float dt);
 
 	void SetCoordinate(int id, int x, int y);
-	glm::vec4 GetPos(int i);
+	glm::vec3 GetPos(int i);
 	int GetNum();
 
 };
