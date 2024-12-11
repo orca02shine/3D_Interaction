@@ -22,7 +22,7 @@ Window::Window(int width = 1920, int height = 1080, const char* title = "No_Titl
 	glfwSetWindowUserPointer(window, this);
 
 	glfwSetWindowSizeCallback(window, Resize);
-	glfwSetMouseButtonCallback(window, MouseCallback);
+	//glfwSetMouseButtonCallback(window, MouseCallback);
 
 
 	Resize(window, width, height);
@@ -40,6 +40,7 @@ Window::Window(int width = 1920, int height = 1080, const char* title = "No_Titl
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 }
 
 
@@ -60,6 +61,7 @@ bool Window::LoopEvents()
 
 }
 
+/*
 void Window::MouseCallback(GLFWwindow* const window, int button, int action, int mods) {
 
 	Window* const
@@ -86,6 +88,7 @@ void Window::MouseCallback(GLFWwindow* const window, int button, int action, int
 
 
 }
+*/
 
 void Window::GetCursorPos(float& X, float& Y) {
 	double x, y;
@@ -129,6 +132,8 @@ float Window::GetAspect() { return aspect; }
 SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const char* title = "No_Title")
 	:Window(width, height, title)
 {
+	glfwSetMouseButtonCallback(window, MouseCallbackSim);
+
 	_Shader = new Shader();
 	_Shader->Load("shader.vert", "shader.frag");
 
@@ -160,6 +165,35 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 SimulationWindow::~SimulationWindow()
 {
 	//delete useShader;
+
+}
+
+void SimulationWindow::MouseCallbackSim(GLFWwindow* const window, int button, int action, int mods) {
+
+	SimulationWindow* const
+		instance(static_cast<SimulationWindow*>(glfwGetWindowUserPointer(window)));
+
+	if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_PRESS) {
+		instance->GetCursorPos(instance->_ClickedLocation[0], instance->_ClickedLocation[1]);
+		//std::cout << "Mouse pos is  " <<instance-> _ClickedLocation[0] << "  " <<instance-> _ClickedLocation[1] << std::endl;
+		instance->isClicked = true;
+		instance->MeshSearcher();
+	}
+
+
+	if (button == GLFW_MOUSE_BUTTON_1 && action == GLFW_RELEASE) {
+		instance->isClicked = false;
+		instance->MeshTargetClear();
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_PRESS) {
+		instance->_IsMid = true;
+	}
+	if (button == GLFW_MOUSE_BUTTON_3 && action == GLFW_RELEASE) {
+		instance->_IsMid = false;
+	}
+
+
 
 }
 
@@ -197,7 +231,7 @@ bool SimulationWindow::LoopEvents() {
 
 }
 
-void SimulationWindow::MeshContoroller() {
+void SimulationWindow::MeshSearcher() {
 	if (isClicked && _SelectedModel == nullptr) {
 		float minD = minArea;
 		for (const auto& m : _Models) {
@@ -207,7 +241,7 @@ void SimulationWindow::MeshContoroller() {
 
 				glm::vec3 wim = glm::project(pos, _View, _Projection, glm::vec4(0, 0, size[0], size[1]));
 				glm::vec2 mp = glm::vec2{ _ClickedLocation[0],_ClickedLocation[1] };
-				glm::vec2 clip = glm::vec2{ wim.x*2/size[0]-1.0f,wim.y*2/size[1]-1.0};
+				glm::vec2 clip = glm::vec2{ wim.x * 2 / size[0] - 1.0f,wim.y * 2 / size[1] - 1.0 };
 
 				float d = glm::distance(mp, clip);
 				if (d < minD) {
@@ -217,17 +251,24 @@ void SimulationWindow::MeshContoroller() {
 				}
 			}
 		}
+		//std::cout <<"id is " << _VertPtr << std::endl;
 	}
-	if (isClicked && _SelectedModel != nullptr && _VertPtr != -1) {
+}
 
-		std::cout<< "vert id is " << _VertPtr << std::endl;
+void SimulationWindow::MeshContoroller() {
+	
+	if (isClicked && _SelectedModel != nullptr && _VertPtr != -1) {
 		_SelectedModel->SetCoordinate(_VertPtr, 0, 0);
 
 	}
+}
+
+void SimulationWindow::MeshTargetClear() {
 	if (isClicked == false && _SelectedModel != nullptr) {
 		_SelectedModel = nullptr;
 		_VertPtr = -1;
 	}
+
 }
 
 void SimulationWindow::UpdateMVP() {

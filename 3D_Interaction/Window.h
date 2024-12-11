@@ -46,7 +46,7 @@ public:
 
 	virtual bool LoopEvents();
 
-	static void MouseCallback(GLFWwindow* const window, int button, int action, int mods);
+	//static void MouseCallback(GLFWwindow* const window, int button, int action, int mods);
 	void GetCursorPos(float& X, float& Y);
 
 	static void Resize(GLFWwindow* const window, int width, int height);
@@ -83,23 +83,26 @@ public:
 	glm::vec3 _Up = glm::vec3(0, 1, 0);
 
 	const float minArea = 0.1f;
-	float limX = 2.0f;
-	float limY = 1.0f;
+	//float limX = 2.0f;
+	//float limY = 1.0f;
 	float _Speed = 50.0f;
 
 public:
 
 
 	SimulationWindow(int width, int height, const char* title);
-
 	~SimulationWindow();
+
+	static void MouseCallbackSim(GLFWwindow* const window, int button, int action, int mods);
 
 	void UpdateMVP();
 	void UpdateMousePos();
 	void Revolution(float prex, float prey);
 
 	bool LoopEvents() override;
+	void MeshSearcher();
 	void MeshContoroller();
+	void MeshTargetClear();
 	void test();
 	glm::vec2 Clip(float a, float b);
 
