@@ -206,9 +206,11 @@ void SimulationWindow::MeshContoroller() {
 			for (int i = 0; i < Num; ++i) {
 				glm::vec4 pos = m->GetPos(i);
 				glm::vec4 scr = _MVP*pos;
+				glm::vec3 p = { pos.x,pos.y,pos.z };
 
-				std::cout << "aaa " << scr.x << " " << scr.y << " " << scr.z << std::endl;
+				//glm::vec3 scr = glm::project(p, _View, _Projection, glm::vec4(0, 0, size[0], size[1]));
 
+				std::cout << scr.x << " " << scr.y << " " << scr.z << " " << std::endl;
 				glm::vec2 v = { _CurrentLocation[0],_CurrentLocation[1] };
 				glm::vec2 scxy = { scr.x,scr.y };
 				float d = glm::distance(v, scxy);
