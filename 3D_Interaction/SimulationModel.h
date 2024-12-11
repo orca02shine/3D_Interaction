@@ -81,5 +81,8 @@ public:
 	void solveDistanceConstraint(float dt);
 	void solveVolumeConstaraint(float dt);
 
+	void SetCoordinate(int id, int x, int y);
+	glm::vec4 GetPos(int i);
+	int GetNum();
 
 };

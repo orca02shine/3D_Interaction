@@ -1197,7 +1197,7 @@ void Delauney::MakeTeddyTempVerts() {
 		std::vector<int> outerEdgePoint;
 		for (int c = 0; c < 3; ++c) {
 
-			std::cout<< tri.id[c] <<"  ";
+			//std::cout<< tri.id[c] <<"  ";
 			if (_IsChodralAxis[tri.id[c]]) {
 				axisPoint = tri.id[c];
 			}

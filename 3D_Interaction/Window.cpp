@@ -175,7 +175,7 @@ bool SimulationWindow::LoopEvents() {
 
 
 
-	//MeshContoroller();
+	MeshContoroller();
 
 
 
@@ -195,6 +195,40 @@ bool SimulationWindow::LoopEvents() {
 	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
 
 
+}
+
+void SimulationWindow::MeshContoroller() {
+	if (isClicked && _SelectedModel == nullptr) {
+		float minD = minArea;
+		std::cout << _CurrentLocation[0] << " " << _CurrentLocation[1] << std::endl;
+		for (const auto& m : _Models) {
+			int Num = m->GetNum();
+			for (int i = 0; i < Num; ++i) {
+				glm::vec4 pos = m->GetPos(i);
+				glm::vec4 scr = _MVP*pos;
+
+				glm::vec2 v = { _CurrentLocation[0]*aspect,_CurrentLocation[1] };
+				glm::vec2 scxy = { scr.x,scr.y };
+				std::cout <<"vert id "<< i<<" pos " << scr.x << " " << scr.y << " " << scr.z << " " << scr.w << std::endl;
+				float d = glm::distance(v, scxy);
+				if (d < minD) {
+					_SelectedModel = m;
+					_VertPtr = i;
+					minD = d;
+					cout << "sss" << scxy.x <<"  " << scxy.y << std::endl;
+				}
+			}
+		}
+	}
+	if (isClicked && _SelectedModel != nullptr && _VertPtr != -1) {
+
+		_SelectedModel->SetCoordinate(_VertPtr, 0, 0);
+
+	}
+	if (isClicked == false && _SelectedModel != nullptr) {
+		_SelectedModel = nullptr;
+		_VertPtr = -1;
+	}
 }
 
 void SimulationWindow::UpdateMVP() {

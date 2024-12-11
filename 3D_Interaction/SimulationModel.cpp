@@ -87,7 +87,7 @@ void SimulationModel::InitVolumeConstraint(int k) {
 
 
 void SimulationModel::Simulate() {
-	//if (pause) return;
+	if (pause) return;
 
 	float sdt = fps / numSubstep;
 
@@ -207,4 +207,15 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 
 
 	}
+}
+
+void SimulationModel::SetCoordinate(int id, int x, int y) {
+	m_vert[id].x = x;
+}
+
+glm::vec4 SimulationModel::GetPos(int i) {
+	return glm::vec4{ m_vert[i],1.0};
+}
+int SimulationModel::GetNum() {
+	return m_numParticles;
 }

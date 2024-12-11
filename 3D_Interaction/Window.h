@@ -62,9 +62,11 @@ public:
 class SimulationWindow :Window {
 
 public:
-	std::vector<class Mesh*> _Meshes;
+
 	std::vector<class Texture*> _Textures;
 	std::vector<class SimulationModel*> _Models;
+	class SimulationModel* _SelectedModel = nullptr;
+	int _VertPtr = -1;
 
 	Shader* _Shader;
 	Shader* _WireShader;
@@ -80,7 +82,7 @@ public:
 	glm::vec3 _CameraCenter;
 	glm::vec3 _Up = glm::vec3(0, 1, 0);
 
-	const float minArea = 0.4f;
+	const float minArea = 0.1f;
 	float limX = 2.0f;
 	float limY = 1.0f;
 	float _Speed = 50.0f;
@@ -97,7 +99,7 @@ public:
 	void Revolution(float prex, float prey);
 
 	bool LoopEvents() override;
-
+	void MeshContoroller();
 	void test();
 
 };
