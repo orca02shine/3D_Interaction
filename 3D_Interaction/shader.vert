@@ -8,7 +8,7 @@ void main()
 {
 	vec4 pos=MVP*position;
 
-  gl_Position =pos;
+	gl_Position =pos;
 
   UV=vertexUV;
 }
