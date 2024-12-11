@@ -825,11 +825,15 @@ void Delauney::MakeTeddyTempVerts() {
 			triQ.pop();
 
 			if (IsTerminal[now] == 3) {
-				glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]] + _Vertices[_Triangles[now].id[1]] + _Vertices[_Triangles[now].id[2]]);
-				midvert /= 3;
-				_Vertices.push_back(midvert);
-				mididx = _Vertices.size() - 1;
-				junctionMidPoint[now] = mididx;
+				mididx = junctionMidPoint[now];
+				if (mididx == -1) {
+					glm::vec2 midvert = (_Vertices[_Triangles[now].id[0]] + _Vertices[_Triangles[now].id[1]] + _Vertices[_Triangles[now].id[2]]);
+					midvert /= 3;
+					_Vertices.push_back(midvert);
+					mididx = _Vertices.size() - 1;
+					junctionMidPoint[now] = mididx;
+					
+				}
 				_IsChodralAxis[mididx] = true;
 				invalidEdge[prev1][prev2] = true;
 				invalidEdge[prev2][prev1] = true;
@@ -1196,8 +1200,6 @@ void Delauney::MakeTeddyTempVerts() {
 		int axisPoint = -1;
 		std::vector<int> outerEdgePoint;
 		for (int c = 0; c < 3; ++c) {
-
-			//std::cout<< tri.id[c] <<"  ";
 			if (_IsChodralAxis[tri.id[c]]) {
 				axisPoint = tri.id[c];
 			}
@@ -1205,7 +1207,6 @@ void Delauney::MakeTeddyTempVerts() {
 				outerEdgePoint.push_back(tri.id[c]);
 			}
 		}
-		//std::cout <<"mid idx is"<<axisPoint<< std::endl;
 		float thick = 0;
 		if (_SumLengthFromAxis[axisPoint].size() != 0) {
 			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {

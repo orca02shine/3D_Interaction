@@ -87,7 +87,7 @@ void SimulationModel::InitVolumeConstraint(int k) {
 
 
 void SimulationModel::Simulate() {
-	if (pause) return;
+	//if (pause) return;
 
 	float sdt = fps / numSubstep;
 
