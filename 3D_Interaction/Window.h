@@ -26,6 +26,7 @@ public:
 	GLfloat size[2];
 
 	float aspect;
+	glm::vec4 _ViewPort;
 
 	const char* name;
 
@@ -50,6 +51,7 @@ public:
 	void GetCursorPos(float& X, float& Y);
 
 	static void Resize(GLFWwindow* const window, int width, int height);
+	void SetViewPort();
 	GLFWwindow* getGLFW();
 
 	float GetAspect();
@@ -82,6 +84,9 @@ public:
 	glm::vec3 _CameraCenter;
 	glm::vec3 _Up = glm::vec3(0, 1, 0);
 
+	float _ScreenPos[2];
+	glm::vec3 _ScreenClipPos;
+
 	const float minArea = 0.1f;
 	//float limX = 2.0f;
 	//float limY = 1.0f;
@@ -99,10 +104,13 @@ public:
 	void UpdateMousePos();
 	void Revolution(float prex, float prey);
 
+	void GetScreenPos(float& x, float& y);
+
 	bool LoopEvents() override;
 	void MeshSearcher();
 	void MeshContoroller();
 	void MeshTargetClear();
+	void SetScreenClipPos();
 	void test();
 	glm::vec2 Clip(float a, float b);
 

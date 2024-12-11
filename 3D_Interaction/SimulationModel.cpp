@@ -118,6 +118,27 @@ void SimulationModel::PreSolve(float dt) {
 			m_vert[i] = m_prevPos[i];
 			m_vert[i].y = -2.0;
 		}
+		if (m_vert[i].y > 2.0) {
+			m_vert[i] = m_prevPos[i];
+			m_vert[i].y = 2.0;
+		}
+
+		if (m_vert[i].x < -3.0) {
+			m_vert[i] = m_prevPos[i];
+			m_vert[i].x = -3.0;
+		}
+		if (m_vert[i].x > 3.0) {
+			m_vert[i] = m_prevPos[i];
+			m_vert[i].x = 3.0;
+		}
+		if (m_vert[i].z < -1.0) {
+			m_vert[i] = m_prevPos[i];
+			m_vert[i].z = -1.0;
+		}
+		if (m_vert[i].z > 1.0) {
+			m_vert[i] = m_prevPos[i];
+			m_vert[i].z = 1.0;
+		}
 	}
 
 }
@@ -209,8 +230,10 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 	}
 }
 
-void SimulationModel::SetCoordinate(int id, int x, int y) {
-	m_vert[id].x = x;
+void SimulationModel::SetCoordinate(int id,glm::vec3 targetPos) {
+	glm::vec3 v = targetPos - m_vert[id];
+	v *= 100;
+	m_vel[id] =v;
 }
 
 glm::vec3 SimulationModel::GetPos(int i) {
