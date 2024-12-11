@@ -1147,7 +1147,7 @@ void Delauney::MakeTeddyTempVerts() {
 	//3Dlize---------------------------------------------------------
 	int divNum = 1;
 	float coef = 1.0f;
-	float thickSize = 0.3;
+	float thickSize = 0.15;
 
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(500, -1);//+z
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(500, -1);//-z
