@@ -51,7 +51,7 @@ void Application::MakeWindow()
 
 void Application::RunLoop()
 {
-	using frame_duration = std::chrono::duration<int, std::ratio<1, 90>>; // 90 FPS
+	using frame_duration = std::chrono::duration<int, std::ratio<1, 60>>; // 90 FPS
 	auto next_frame = std::chrono::steady_clock::now() + frame_duration{};
 
 

@@ -82,7 +82,7 @@ private:
 	std::vector<tetContactConstaraint> m_tetContactConstraint;
 
 public:
-	int numSubstep = 10;
+	int numSubstep = 5;
 	const float G = -6.0f;
 
 	float stif = 100.0;
