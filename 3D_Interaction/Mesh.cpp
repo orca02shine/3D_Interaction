@@ -2,7 +2,7 @@
 #include "Mesh.h"
 
 Mesh::Mesh()
-	:_Texture(nullptr),_VertexObject(nullptr)
+	:_Texture(nullptr),_VertexObject(nullptr),_WireObject(nullptr),_MatShader(nullptr),_WireShader(nullptr)
 {
 
 }

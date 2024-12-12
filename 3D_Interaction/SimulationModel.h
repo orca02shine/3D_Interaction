@@ -40,9 +40,9 @@ struct tetContactConstaraint {
 	glm::vec3 m_bary;
 	float m_lambda=1.0f;
 	float m_fricCoef=0.0f;
-	glm::mat3 m_constraintInfo;
-	std::array<glm::vec3, 4> m_x;
-	std::array<glm::vec3, 4> m_v;
+	//glm::mat3 m_constraintInfo;
+	//std::array<glm::vec3, 4> m_x;
+	//std::array<glm::vec3, 4> m_v;
 
 	tetContactConstaraint(int a, int b, int c, int d, glm::vec3 bary,
 						float ai, float bi, float ci, float di) {
@@ -76,6 +76,7 @@ private:
 	std::vector<unsigned int> m_wireIdx;
 
 	std::vector<int> m_tetIdx;
+
 	std::vector<float> m_invMass;
 
 	std::vector<distanceConstraint> m_distanceConstraint;
@@ -94,7 +95,7 @@ private:
 	//--------------------------------------------------
 
 public:
-	int numSubstep = 10;
+	int numSubstep = 6;
 	const float G = -6.0f;
 
 	float stif = 100.0;
