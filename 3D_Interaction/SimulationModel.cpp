@@ -230,6 +230,7 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 	}
 }
 
+
 void SimulationModel::SetCoordinate(int id,glm::vec3 targetPos) {
 	glm::vec3 v = targetPos - m_vert[id];
 	v *= 100;

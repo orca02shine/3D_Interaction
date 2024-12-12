@@ -160,6 +160,8 @@ public:
 	void DeleteOuterTris();
 	void DeleteInnerTris();
 
+	float CalcPointEdgeDist(int p, int p0, int p1);
+
 	void MakeTeddyTempVerts();
 	bool TeddyInCircle(DeEdge e, std::vector<int> vertices);
 	float CalcEllipse(float x, float lengx, float lengy);

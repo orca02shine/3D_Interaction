@@ -669,6 +669,22 @@ void Delauney::MakeTeddyTriWire(Triangle tri) {
 
 }
 
+float  Delauney::CalcPointEdgeDist(int p, int p0, int p1) {
+	glm::vec2 d = _Vertices[p1] - _Vertices[p0];
+	glm::vec2 vp = _Vertices[p] - _Vertices[p0];
+
+	float t = glm::dot(glm::normalize(d), vp) / glm::length(d);
+	if (t < 0.0) {
+		t = 0.0;
+	}
+	else if (t > 1.0) {
+		t = 1.0;
+	}
+	glm::vec2 h = -vp + (t * d);
+
+	return glm::length(h);
+}
+
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
@@ -901,7 +917,7 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 		//----------------------------------------------------------------------
 		for (int t = 0; t < vertOfFanTris.size(); ++t) {
-			float leng = glm::length(_Vertices[vertOfFanTris[t]] - _Vertices[mididx]);
+			float leng = glm::distance(_Vertices[vertOfFanTris[t]],_Vertices[mididx]);
 			_SumLengthFromAxis[mididx].push_back(leng);
 		}
 		for (int t = 1; t < vertOfFanTris.size(); ++t) {
@@ -960,15 +976,15 @@ void Delauney::MakeTeddyTempVerts() {
 				_IsChodralAxis[vmid] = true;
 			}
 			//length clc-----------------------------------------------------------
-			if (invalidEdge[v0][v1] == !true && invalidEdge[v1][v2] != true) {
+			if (invalidEdge[v0][v1] !=true && invalidEdge[v1][v2] != true) {
 				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
-			if (invalidEdge[v1][v2] == !true && invalidEdge[v2][v0] != true) {
+			if (invalidEdge[v1][v2] !=true && invalidEdge[v2][v0] != true) {
 				float leng = glm::length(_Vertices[v2] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
-			if (invalidEdge[v2][v0] == !true && invalidEdge[v0][v1] != true) {
+			if (invalidEdge[v2][v0] !=true && invalidEdge[v0][v1] != true) {
 				float leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
@@ -1093,10 +1109,14 @@ void Delauney::MakeTeddyTempVerts() {
 					edgeMidPoint[ot.first][v] = midp1;
 					_IsChodralAxis[midp1] = true;
 
+
+					
 					float leng1 = glm::length(_Vertices[v] - _Vertices[midp1]);
 					_SumLengthFromAxis[midp1].push_back(leng1);
 					float leng2 = glm::length(_Vertices[ot.first] - _Vertices[midp1]);
 					_SumLengthFromAxis[midp1].push_back(leng2);
+					
+					
 				}
 				wireFrame.insert({ v,midp1 });
 				wireFrame.insert({ midp1,ot.first });				
@@ -1114,10 +1134,14 @@ void Delauney::MakeTeddyTempVerts() {
 					edgeMidPoint[ot.second][v] = midp2;
 					_IsChodralAxis[midp2] = true;
 
+
+					
 					float leng1 = glm::length(_Vertices[v] - _Vertices[midp2]);
 					_SumLengthFromAxis[midp2].push_back(leng1);
 					float leng2 = glm::length(_Vertices[ot.second] - _Vertices[midp2]);
 					_SumLengthFromAxis[midp2].push_back(leng2);
+					
+					
 				}
 				wireFrame.insert({ v,midp2 });
 				wireFrame.insert({ midp2,ot.second });
@@ -1152,6 +1176,18 @@ void Delauney::MakeTeddyTempVerts() {
 	std::vector<int> indexOfAxisToIndexOf3D_Pozi(500, -1);//+z
 	std::vector<int> indexOfAxisToIndexOf3D_Nega(500, -1);//-z
 	std::vector<std::vector<std::vector<int>>> chkEdge(500, std::vector<std::vector<int>>(500, std::vector<int>(divNum, -1)));
+	float Sum = 0;
+	float Ct = 0;
+
+	for (int p = 0; p < _SumLengthFromAxis.size(); ++p) {
+		for (auto& e : _SumLengthFromAxis[p]) {
+			Sum += e;
+			Ct++;
+		}
+	}
+
+	thickSize = Sum / Ct * coef;
+
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
 		int notAxisPoint = -1;
@@ -1166,9 +1202,10 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 
 		for (int c = 0; c < 2; ++c) {
-			float thick = 0;
+			
 			int axisPoint = AxisPoints[c];
-
+			/*
+			* float thick = 0;
 			if (_SumLengthFromAxis[axisPoint].size() != 0) {
 				for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
 					thick += _SumLengthFromAxis[axisPoint][s];
@@ -1176,6 +1213,7 @@ void Delauney::MakeTeddyTempVerts() {
 				thick /= _SumLengthFromAxis[axisPoint].size();
 				thick *= coef;
 			}
+			*/
 
 			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
 			int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
@@ -1207,6 +1245,7 @@ void Delauney::MakeTeddyTempVerts() {
 				outerEdgePoint.push_back(tri.id[c]);
 			}
 		}
+		/*
 		float thick = 0;
 		if (_SumLengthFromAxis[axisPoint].size() != 0) {
 			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
@@ -1215,6 +1254,7 @@ void Delauney::MakeTeddyTempVerts() {
 			thick /= _SumLengthFromAxis[axisPoint].size();
 			thick *= coef;
 		}
+		*/
 
 		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
 		int vertNega = indexOfAxisToIndexOf3D_Nega[axisPoint];
