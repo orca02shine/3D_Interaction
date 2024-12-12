@@ -85,11 +85,28 @@ public:
 	int numSubstep = 10;
 	const float G = -6.0f;
 
+	float stif = 100.0;
+
 	glm::vec3 gradient = { 0.0,0.0,0.0 };
 	glm::vec3 gravity = { 0.0,G,0.0 };
 
 	float fps = 1.0f / 60.0f;
 	bool pause = true;
+
+	glm::vec3 corr0;
+	glm::vec3 corr1;
+	glm::vec3 corr2;
+	glm::vec3 corr3;
+
+	glm::vec3 p0;
+	glm::vec3 p1;
+	glm::vec3 p2;
+	glm::vec3 p3;
+
+	float invM0;
+	float invM1;
+	float invM2;
+	float invM3;
 
 public:
 	SimulationModel(std::vector<cv::Point> contour, Shader* shader, Shader* wireShader, Texture* t);

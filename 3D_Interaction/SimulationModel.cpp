@@ -174,22 +174,16 @@ void SimulationModel::PostSolve(float dt) {
 
 void SimulationModel::solveDistanceConstraint(float dt) {
 
-	float stif = 100.0;
-
 	for (auto& e : m_distanceConstraint) {
-		glm::vec3 p0 = m_vert[e.m_id[0]];
-		glm::vec3 p1 = m_vert[e.m_id[1]];
-		float invM0 = m_invMass[e.m_id[0]];
-		float invM1 = m_invMass[e.m_id[1]];
+		 p0 = m_vert[e.m_id[0]];
+		 p1 = m_vert[e.m_id[1]];
+		invM0 = m_invMass[e.m_id[0]];
+		invM1 = m_invMass[e.m_id[1]];
 
-		float restL = e.m_restLength;
-
-		glm::vec3 corr0 = { 0,0,0 };
-		glm::vec3 corr1 = { 0,0,0 };
 
 		bool res = PBD::PositionBasedDynamics::solve_DistanceConstraint(
 			p0, invM0, p1, invM1,
-			restL, stif, corr0, corr1);
+			e.m_restLength, stif, corr0, corr1);
 
 		if (res) {
 			if (invM0 != 0.0) {
@@ -205,30 +199,22 @@ void SimulationModel::solveDistanceConstraint(float dt) {
 }
 
 void SimulationModel::solveVolumeConstaraint(float dt) {
-	float stif = 100.0;
 
 	for (auto& e : m_volumeConstraint) {
 
-		glm::vec3 p0 = m_vert[e.m_id[0]];
-		glm::vec3 p1 = m_vert[e.m_id[1]];
-		glm::vec3 p2 = m_vert[e.m_id[2]];
-		glm::vec3 p3 = m_vert[e.m_id[3]];
+		p0 = m_vert[e.m_id[0]];
+		p1 = m_vert[e.m_id[1]];
+		p2 = m_vert[e.m_id[2]];
+		p3 = m_vert[e.m_id[3]];
 
-		float invM0 = m_invMass[e.m_id[0]];
-		float invM1 = m_invMass[e.m_id[1]];
-		float invM2 = m_invMass[e.m_id[2]];
-		float invM3 = m_invMass[e.m_id[3]];
-
-		float restV = e.m_restVolume;
-
-		glm::vec3 corr0 = { 0,0,0 };
-		glm::vec3 corr1 = { 0,0,0 };
-		glm::vec3 corr2 = { 0,0,0 };
-		glm::vec3 corr3 = { 0,0,0 };
+		invM0 = m_invMass[e.m_id[0]];
+		invM1 = m_invMass[e.m_id[1]];
+		invM2 = m_invMass[e.m_id[2]];
+		invM3 = m_invMass[e.m_id[3]];
 
 		bool res = PBD::PositionBasedDynamics::solve_VolumeConstraint(
 			p0,invM0,p1,invM1,p2,invM2,p3,invM3,
-			restV,stif,
+			e.m_restVolume,stif,
 			corr0,corr1,corr2,corr3);
 
 		if (res) {
