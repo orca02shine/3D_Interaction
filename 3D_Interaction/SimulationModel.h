@@ -73,8 +73,6 @@ private:
 
 	int m_numParticles;
 
-	std::vector<int> m_idx;
-
 	std::vector<int> m_tetIdx;
 
 	std::vector<float> m_invMass;

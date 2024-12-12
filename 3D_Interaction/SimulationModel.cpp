@@ -10,9 +10,9 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 
 	MeshCreator MC;
 
-	MC.CreateForeGround(contour, m_vert, uv, m_idx, wireIdx,m_tetIdx);
+	MC.CreateForeGround(contour, m_vert, uv, idx, wireIdx,m_tetIdx);
 
-	m_mesh->InsertMeshData(m_vert, uv, m_idx, wireIdx);
+	m_mesh->InsertMeshData(m_vert, uv, idx, wireIdx);
 	m_mesh->LinkShader(shader, wireShader);
 	m_mesh->LinkTexture(t);
 

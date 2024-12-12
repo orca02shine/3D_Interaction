@@ -374,7 +374,7 @@ void SimulationWindow::test() {
 }
 
 void SimulationWindow::test_pbd() {
-	for (int i = 0; i < 1; ++i) {
+	for (int i = 0; i < 3; ++i) {
 		CVInterface::UseInterface();
 		cv::Mat back = CVInterface::GetTexture(0);
 

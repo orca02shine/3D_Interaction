@@ -22,7 +22,6 @@ private:
 	class Shader* _MatShader;
 	class Shader* _WireShader;
 
-
 	std::vector<vec3> _Vertices; //’¼Ú‚¢‚¶‚é
 	std::vector<GLfloat> _UV;
 	std::vector<GLuint> _Indices;
