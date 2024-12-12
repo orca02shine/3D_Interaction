@@ -35,6 +35,33 @@ struct volumeConstraint {
 	}
 };
 
+struct tetContactConstaraint {
+	int m_id[4];
+	float m_invMass[4];
+	glm::vec3 m_bary;
+	float m_lambda=1.0f;
+	float m_fricCoef=0.0f;
+	glm::mat3 m_constraintInfo;
+	std::array<glm::vec3, 4> m_x;
+	std::array<glm::vec3, 4> m_v;
+
+	tetContactConstaraint(int a, int b, int c, int d, glm::vec3 bary,
+						float ai, float bi, float ci, float di) {
+		m_id[0] = a;
+		m_id[1] = b;
+		m_id[2] = c;
+		m_id[3] = d;
+
+		m_bary = bary;
+
+		m_invMass[0] = ai;
+		m_invMass[1] = bi;
+		m_invMass[2] = ci;
+		m_invMass[3] = di;
+	}
+
+};
+
 class SimulationModel {
 private:
 	class Window* ParWin;
@@ -54,6 +81,7 @@ private:
 
 	std::vector<distanceConstraint> m_distanceConstraint;
 	std::vector<volumeConstraint> m_volumeConstraint;
+	std::vector<tetContactConstaraint> m_tetContactConstraint;
 
 public:
 	int numSubstep = 10;
@@ -71,6 +99,7 @@ public:
 	void Init();
 	void InitDistanceConstraint(int k);
 	void InitVolumeConstraint(int k);
+	void InitTetContactConstraint(int k);
 	void Update();
 
 	void Simulate();
@@ -80,6 +109,8 @@ public:
 
 	void solveDistanceConstraint(float dt);
 	void solveVolumeConstaraint(float dt);
+	void solveTetContactConstraint();
+	void updateTetContactInfo();
 
 
 	void SetCoordinate(int id, glm::vec3 targetPos);

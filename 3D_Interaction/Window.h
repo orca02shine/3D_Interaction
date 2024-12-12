@@ -111,7 +111,8 @@ public:
 	void MeshContoroller();
 	void MeshTargetClear();
 	void SetScreenClipPos();
+
 	void test();
-	glm::vec2 Clip(float a, float b);
+	void test_pbd();
 
 };

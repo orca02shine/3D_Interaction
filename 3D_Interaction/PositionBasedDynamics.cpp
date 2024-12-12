@@ -137,3 +137,111 @@ bool PositionBasedDynamics::solve_VolumeConstraint(
 }
 
 // ----------------------------------------------------------------------------------------------
+
+bool PositionBasedDynamics::solve_ParticleTetContactConstraint(
+	const float invMass0,							// inverse mass is zero if particle is static
+	const glm::vec3& x0,								// particle which collides with tet
+	const float invMass[],							// inverse masses of tet particles
+	const glm::vec3 x[],								// positions of tet particles
+	const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+	glm::mat3& constraintInfo,		// precomputed contact info
+	float& lambda,
+	glm::vec3& corr0,
+	glm::vec3 corr[])
+{
+	// constraintInfo contains
+	// 0:	contact normal in body 1 (global)
+	// 1:	contact tangent (global)
+	// 0,2:  1.0 / normal^T * K * normal
+	// 1,2: maximal impulse in tangent direction
+
+	if ((invMass0 == 0.0) && (invMass[0] == 0.0) && (invMass[1] == 0.0) && (invMass[2] == 0.0))
+		return false;
+
+	const float bary0 = static_cast<float>(1.0) - bary[0] - bary[1] - bary[2];
+
+	// compute world space contact point in body 2	
+	const glm::vec3 cp1 = bary0 * x[0] + bary[0] * x[1] + bary[1] * x[2] + bary[2] * x[3];
+
+	const glm::vec3& normal = glm::vec3{constraintInfo[0][0],constraintInfo[1][0],constraintInfo[2][0]};
+
+	// 1.0 / normal^T * K * normal
+	const float nKn_inv = constraintInfo[0][2];
+
+	// penetration depth 
+	const float C = glm::dot(normal,(x0-cp1));
+
+	lambda = -nKn_inv * C;
+
+
+	glm::vec3 p = lambda * normal;
+	if (invMass0 != 0.0)
+	{
+		corr0 = invMass0 * p;
+	}
+
+	if (invMass[0] != 0.0)
+		corr[0] = -invMass[0] * bary0 * p;
+	if (invMass[1] != 0.0)
+		corr[1] = -invMass[1] * bary[0] * p;
+	if (invMass[2] != 0.0)
+		corr[2] = -invMass[2] * bary[1] * p;
+	if (invMass[3] != 0.0)
+		corr[3] = -invMass[3] * bary[2] * p;
+
+	return true;
+}
+bool PositionBasedDynamics::velocitySolve_ParticleTetContactConstraint(
+	const float invMass0,							// inverse mass is zero if particle is static
+	const glm::vec3& x0,								// particle which collides with tet
+	const glm::vec3& v0,								// velocity of particle
+	const float invMass[],							// inverse masses of tet particles
+	const glm::vec3 x[],								// positions of tet particles
+	const glm::vec3 v[],								// velocities of tet particles
+	const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+	const float lambda,
+	const float frictionCoeff,						// friction coefficient
+	glm::mat3& constraintInfo,		// precomputed contact info
+	glm::vec3& corr_v0,
+	glm::vec3 corr_v[])
+{
+	// constraintInfo contains
+	// 0:	contact normal in body 1 (global)
+	// 1:	contact tangent (global)
+	// 0,2:  1.0 / normal^T * K * normal
+	// 1,2: maximal impulse in tangent direction
+
+	if ((invMass0 == 0.0) && (invMass[0] == 0.0) && (invMass[1] == 0.0) && (invMass[2] == 0.0))
+		return false;
+
+	const float bary0 = static_cast<float>(1.0) - bary[0] - bary[1] - bary[2];
+
+	// Friction
+	// maximal impulse in tangent direction
+	const float pMax = constraintInfo[1][2];
+	const glm::vec3& tangent = glm::vec3{ constraintInfo[0][1],constraintInfo[1][1],constraintInfo[2][1] };;
+	glm::vec3 pv = { 0,0,0 };
+	if (frictionCoeff * lambda > pMax)
+		pv = -pMax * tangent;
+	else if (frictionCoeff * lambda < -pMax)
+		pv = pMax * tangent;
+	else
+		pv = -frictionCoeff * lambda * tangent;
+
+	if (invMass0 != 0.0)
+	{
+		corr_v0 = invMass0 * pv;
+	}
+
+	if (invMass[0] != 0.0)
+		corr_v[0] = -invMass[0] * bary0 * pv;
+	if (invMass[1] != 0.0)
+		corr_v[1] = -invMass[1] * bary[0] * pv;
+	if (invMass[2] != 0.0)
+		corr_v[2] = -invMass[2] * bary[1] * pv;
+	if (invMass[3] != 0.0)
+		corr_v[3] = -invMass[3] * bary[2] * pv;
+
+
+	return true;
+}

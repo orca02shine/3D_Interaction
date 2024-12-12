@@ -162,7 +162,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	_MVP = _Projection * _View * _Model;
 
 
-	test();
+	test_pbd();
 
 
 }
@@ -371,6 +371,23 @@ void SimulationWindow::test() {
 	_Models.push_back(sm);
 	_Textures.push_back(t);
 
+}
+
+void SimulationWindow::test_pbd() {
+	for (int i = 0; i < 3; ++i) {
+		CVInterface::UseInterface();
+		cv::Mat back = CVInterface::GetTexture(0);
+
+		Texture* t = new Texture(_Shader->GetShaderID());
+		t->SetShader(back.rows, back.cols, back.data);
+
+		std::vector<cv::Point> contour = CVInterface::GetContour();
+
+		SimulationModel* sm = new SimulationModel(contour, _Shader, _WireShader, t);
+
+		_Models.push_back(sm);
+		_Textures.push_back(t);
+	}
 }
 
 void SimulationWindow::GetScreenPos(float& x,float& y) {

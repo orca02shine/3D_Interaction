@@ -45,6 +45,7 @@ void SimulationModel::Init() {
 		int k = i * 4;
 		InitDistanceConstraint(k);
 		InitVolumeConstraint(k);
+		//InitTetContactConstraint(k);
 	}
 }
 
@@ -83,6 +84,25 @@ void SimulationModel::InitVolumeConstraint(int k) {
 
 	volumeConstraint vc(a, b, c, d, volume);
 	m_volumeConstraint.push_back(vc);
+}
+
+void SimulationModel::InitTetContactConstraint(int k) {
+	int a = m_tetIdx[k];
+	int b = m_tetIdx[k + 1];
+	int c = m_tetIdx[k + 2];
+	int d = m_tetIdx[k + 3];
+
+	float ai = m_invMass[a];
+	float bi = m_invMass[b];
+	float ci = m_invMass[c];
+	float di = m_invMass[d];
+
+	glm::vec3 bary = m_vert[a]*ai+m_vert[b]*bi+m_vert[c]*ci+m_vert[d]*di;
+	bary /= 4;
+
+	tetContactConstaraint tc(a, b, c, d, bary, ai, bi, ci, di);
+	m_tetContactConstraint.push_back(tc);
+
 }
 
 
@@ -230,6 +250,15 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 	}
 }
 
+void::SimulationModel::solveTetContactConstraint() {
+	//衝突すると判断されたとき更新？
+}
+
+void SimulationModel::updateTetContactInfo() {
+
+	//衝突すると判断されたとき更新？
+
+}
 
 void SimulationModel::SetCoordinate(int id,glm::vec3 targetPos) {
 	glm::vec3 v = targetPos - m_vert[id];

@@ -367,9 +367,7 @@ namespace PBD
 			const bool normalizeShear,		// use false as default
 			glm::vec3& corr0, glm::vec3& corr1, glm::vec3& corr2, glm::vec3& corr3);
 
-	};
-
-	/** Initialize contact between a particle and a tetrahedron and return
+		/** Initialize contact between a particle and a tetrahedron and return
 		* info which is required by the solver step.
 		*
 		* @param invMass0 inverse mass of particle which collides with tet
@@ -388,72 +386,76 @@ namespace PBD
 		* 0,2:   1.0 / normal^T * K * normal\n
 		* 1,2:  maximal impulse in tangent direction\n
 		*/
-	static bool init_ParticleTetContactConstraint(
-		const float invMass0,							// inverse mass is zero if particle is static
-		const glm::vec3& x0,								// particle which collides with tet
-		const glm::vec3& v0,								// velocity of particle
-		const float invMass[],							// inverse masses of tet particles
-		const glm::vec3 x[],								// positions of tet particles
-		const glm::vec3 v[],								// velocities of tet particles
-		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
-		const glm::vec3& normal,							// contact normal in body 1
-		glm::mat3& constraintInfo);
+		static bool init_ParticleTetContactConstraint(
+			const float invMass0,							// inverse mass is zero if particle is static
+			const glm::vec3& x0,								// particle which collides with tet
+			const glm::vec3& v0,								// velocity of particle
+			const float invMass[],							// inverse masses of tet particles
+			const glm::vec3 x[],								// positions of tet particles
+			const glm::vec3 v[],								// velocities of tet particles
+			const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+			const glm::vec3& normal,							// contact normal in body 1
+			glm::mat3& constraintInfo);
 
 
-	/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
-		* A contact constraint handles collisions and resting contacts between the bodies.
-		* The contact info must be generated in each time step.
-		*
-		* @param invMass0 inverse mass of particle which collides with tet
-		* @param x0 particle position
-		* @param invMass inverse masses of tet particles
-		* @param x positions of tet particles
-		* @param bary barycentric coordinates of contact point in tet
-		* @param constraintInfo information which is required by the solver. This
-		* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
-		* @param corr0 position correction of particle
-		* @param corr position corrections of tet particles
-		*/
-	static bool solve_ParticleTetContactConstraint(
-		const float invMass0,							// inverse mass is zero if particle is static
-		const glm::vec3& x0,								// particle which collides with tet
-		const float invMass[],							// inverse masses of tet particles
-		const glm::vec3 x[],								// positions of tet particles
-		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
-		glm::mat3& constraintInfo,		// precomputed contact info
-		float& lambda,
-		glm::vec3& corr0,
-		glm::vec3 corr[]);
+		/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
+			* A contact constraint handles collisions and resting contacts between the bodies.
+			* The contact info must be generated in each time step.
+			*
+			* @param invMass0 inverse mass of particle which collides with tet
+			* @param x0 particle position
+			* @param invMass inverse masses of tet particles
+			* @param x positions of tet particles
+			* @param bary barycentric coordinates of contact point in tet
+			* @param constraintInfo information which is required by the solver. This
+			* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
+			* @param corr0 position correction of particle
+			* @param corr position corrections of tet particles
+			*/
+		static bool solve_ParticleTetContactConstraint(
+			const float invMass0,							// inverse mass is zero if particle is static
+			const glm::vec3& x0,								// particle which collides with tet
+			const float invMass[],							// inverse masses of tet particles
+			const glm::vec3 x[],								// positions of tet particles
+			const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+			glm::mat3& constraintInfo,		// precomputed contact info
+			float& lambda,
+			glm::vec3& corr0,
+			glm::vec3 corr[]);
 
-	/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
-		* A contact constraint handles collisions and resting contacts between the bodies.
-		* The contact info must be generated in each time step.
-		*
-		* @param invMass0 inverse mass of particle which collides with tet
-		* @param x0 particle position
-		* @param v0 particle velocity
-		* @param invMass inverse masses of tet particles
-		* @param x positions of tet particles
-		* @param v velocities of tet particles
-		* @param bary barycentric coordinates of contact point in tet
-		* @param frictionCoeff friction coefficient
-		* @param constraintInfo information which is required by the solver. This
-		* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
-		* @param corr_v0 velocity correction of particle
-		* @param corr_v velocity corrections of tet particles
-		*/
-	static bool velocitySolve_ParticleTetContactConstraint(
-		const float invMass0,							// inverse mass is zero if particle is static
-		const glm::vec3& x0,								// particle which collides with tet
-		const glm::vec3& v0,								// velocity of particle
-		const float invMass[],							// inverse masses of tet particles
-		const glm::vec3 x[],								// positions of tet particles
-		const glm::vec3 v[],								// velocities of tet particles
-		const glm::vec3& bary,							// barycentric coordinates of contact point in tet
-		const float lambda,
-		const float frictionCoeff,						// friction coefficient
-		glm::mat3& constraintInfo,		// precomputed contact info
-		glm::vec3& corr_v0,
-		glm::vec3 corr_v[]);
+		/** Perform a solver step for a contact constraint between a particle and a tetrahedron.
+			* A contact constraint handles collisions and resting contacts between the bodies.
+			* The contact info must be generated in each time step.
+			*
+			* @param invMass0 inverse mass of particle which collides with tet
+			* @param x0 particle position
+			* @param v0 particle velocity
+			* @param invMass inverse masses of tet particles
+			* @param x positions of tet particles
+			* @param v velocities of tet particles
+			* @param bary barycentric coordinates of contact point in tet
+			* @param frictionCoeff friction coefficient
+			* @param constraintInfo information which is required by the solver. This
+			* information must be generated in the beginning by calling init_RigidBodyContactConstraint().
+			* @param corr_v0 velocity correction of particle
+			* @param corr_v velocity corrections of tet particles
+			*/
+		static bool velocitySolve_ParticleTetContactConstraint(
+			const float invMass0,							// inverse mass is zero if particle is static
+			const glm::vec3& x0,								// particle which collides with tet
+			const glm::vec3& v0,								// velocity of particle
+			const float invMass[],							// inverse masses of tet particles
+			const glm::vec3 x[],								// positions of tet particles
+			const glm::vec3 v[],								// velocities of tet particles
+			const glm::vec3& bary,							// barycentric coordinates of contact point in tet
+			const float lambda,
+			const float frictionCoeff,						// friction coefficient
+			glm::mat3& constraintInfo,		// precomputed contact info
+			glm::vec3& corr_v0,
+			glm::vec3 corr_v[]);
+
+	};
+
+	
 
 }
