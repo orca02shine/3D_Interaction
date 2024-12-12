@@ -185,7 +185,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 
 
 void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
-	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<int>& idx, std::vector<int>& wireIdx, std::vector<int>& tetIdx) {
+	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx) {
 
 	float targetSize = 512.0;
 

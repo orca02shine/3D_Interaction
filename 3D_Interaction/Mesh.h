@@ -39,7 +39,7 @@ public:
 	void ProtoMesh();
 	void ProtoMesh2();
 
-	void InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::vector<int> idx, std::vector<int> wireIdx);
+	void InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::vector<uint> idx, std::vector<uint> wireIdx);
 	void UpdateMesh();
 	void UpdateVertices(std::vector<vec3> vert);
 	void MakeVertices();

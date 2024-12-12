@@ -1,20 +1,16 @@
 #include "SimulationModel.h"
 
 SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader, Shader* wireShader, Texture* t)
-:ParWin(nullptr),m_mesh(new Mesh)
+	:ParWin(nullptr),
+	_VertexObject(nullptr), _WireObject(nullptr), _MatShader(shader), _WireShader(wireShader), _Texture(t)
 {
 
-	std::vector<float> uv;
-	std::vector<int> idx;
-	std::vector<int> wireIdx;
 
 	MeshCreator MC;
 
-	MC.CreateForeGround(contour, m_vert, uv, idx, wireIdx,m_tetIdx);
+	MC.CreateForeGround(contour, m_vert, m_uv, m_idx, m_wireIdx,m_tetIdx);
 
-	m_mesh->InsertMeshData(m_vert, uv, idx, wireIdx);
-	m_mesh->LinkShader(shader, wireShader);
-	m_mesh->LinkTexture(t);
+	MakeMesh();
 
 	m_numParticles = m_vert.size();
 
@@ -28,14 +24,48 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 	Init();
 }
 SimulationModel::~SimulationModel() {
-	delete m_mesh;
 }
 
 void SimulationModel::Update() {
 
 	Simulate();
 
-	m_mesh->UpdateVertices(m_vert);
+	UpdateMesh();
+}
+
+void SimulationModel::UpdateMesh() {
+
+	if (_EnableMat) {
+		_MatShader->SetActive();
+
+		_VertexObject->Update();
+		_VertexObject->SetActive();
+		_Texture->SetActive();
+		glDrawElements(GL_TRIANGLES, _VertexObject->_NumIndices, GL_UNSIGNED_INT, 0);
+	}
+
+	if (_EnableWire) {
+		_WireShader->SetActive();
+
+		_WireObject->Update();
+		_WireObject->SetActive();
+		glDrawElements(GL_LINES, _WireObject->_NumIndices, GL_UNSIGNED_INT, 0);
+	}
+
+}
+
+void SimulationModel::MakeMesh() {
+
+	_VertexObject = new VertexObject
+	(3, m_vert.size(), m_vert.data(),
+		m_uv.size(), m_uv.data(),
+		m_idx.size(), m_idx.data());
+
+	_WireObject = new VertexObject
+	(3, m_vert.size(), m_vert.data(),
+		m_uv.size(), m_uv.data(),
+		m_wireIdx.size(), m_wireIdx.data());
+
 }
 
 void SimulationModel::Init() {

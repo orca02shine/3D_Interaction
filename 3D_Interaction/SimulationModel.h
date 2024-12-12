@@ -3,7 +3,6 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui.hpp>
 
-#include "Mesh.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Window.h"
@@ -66,23 +65,36 @@ class SimulationModel {
 private:
 	class Window* ParWin;
 
-	class Mesh* m_mesh;
 	std::vector<glm::vec3> m_vert;
 	std::vector<glm::vec3> m_prevPos;
 	std::vector<glm::vec3> m_vel;
 
 	int m_numParticles;
 
-	std::vector<int> m_tetIdx;
+	std::vector<float> m_uv;
+	std::vector<unsigned int> m_idx;
+	std::vector<unsigned int> m_wireIdx;
 
+	std::vector<int> m_tetIdx;
 	std::vector<float> m_invMass;
 
 	std::vector<distanceConstraint> m_distanceConstraint;
 	std::vector<volumeConstraint> m_volumeConstraint;
 	std::vector<tetContactConstaraint> m_tetContactConstraint;
 
+	//---------------------------------------------
+	class Texture* _Texture;
+	class VertexObject* _VertexObject;
+	class VertexObject* _WireObject;
+	class Shader* _MatShader;
+	class Shader* _WireShader;
+
+	bool _EnableMat = true;
+	bool _EnableWire = false;
+	//--------------------------------------------------
+
 public:
-	int numSubstep = 5;
+	int numSubstep = 10;
 	const float G = -6.0f;
 
 	float stif = 100.0;
@@ -116,6 +128,8 @@ public:
 	void InitVolumeConstraint(int k);
 	void InitTetContactConstraint(int k);
 	void Update();
+	void UpdateMesh();
+	void MakeMesh();
 
 	void Simulate();
 	void Solve(float dt);
@@ -131,5 +145,8 @@ public:
 	void SetCoordinate(int id, glm::vec3 targetPos);
 	glm::vec3 GetPos(int i);
 	int GetNum();
+
+	void LinkTexture(Texture* tex);
+	void LinkShader(Shader* mat, Shader* wire);
 
 };
