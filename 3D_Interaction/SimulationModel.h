@@ -96,7 +96,7 @@ private:
 
 public:
 	int numSubstep = 6;
-	const float G = -6.0f;
+	const float G = -8.0f;
 
 	float stif = 100.0;
 

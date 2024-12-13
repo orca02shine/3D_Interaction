@@ -166,7 +166,7 @@ void SimulationModel::PreSolve(float dt) {
 
 		if (m_vert[i].y < -2.0) {
 			m_vert[i] = m_prevPos[i];
-			m_vert[i].y = -2.0;
+			m_vert[i].y = -1.0;
 		}
 		if (m_vert[i].y > 2.0) {
 			m_vert[i] = m_prevPos[i];
@@ -175,13 +175,13 @@ void SimulationModel::PreSolve(float dt) {
 
 		if (m_vert[i].x < -3.0) {
 			m_vert[i] = m_prevPos[i];
-			m_vert[i].x = -3.0;
+			m_vert[i].x = -2.0;
 		}
 		if (m_vert[i].x > 3.0) {
 			m_vert[i] = m_prevPos[i];
-			m_vert[i].x = 3.0;
+			m_vert[i].x = 2.0;
 		}
-		if (m_vert[i].z < -1.0) {
+		if (m_vert[i].z < -1.5) {
 			m_vert[i] = m_prevPos[i];
 			m_vert[i].z = -1.0;
 		}

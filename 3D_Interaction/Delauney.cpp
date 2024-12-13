@@ -1186,7 +1186,7 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 	}
 
-	thickSize = Sum / Ct * coef;
+	//thickSize = Sum / Ct * coef;
 
 	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
 		Triangle tri = _TeddyTriangles_Inner[i];
