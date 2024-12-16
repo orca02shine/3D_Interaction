@@ -441,6 +441,6 @@ std::vector<cv::Point> CVInterface::GetCorner() {
 	return Corners;
 }
 
-std::vector<cv::Point> CVInterface::GetContour() {
-	return Contours[0];
+std::vector<std::vector<cv::Point>> CVInterface::GetContour() {
+	return Contours;
 }

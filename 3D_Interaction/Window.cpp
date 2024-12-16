@@ -346,7 +346,7 @@ void SimulationWindow::test() {
 
 
 
-	std::vector<cv::Point> contour = CVInterface::GetContour();
+	std::vector<std::vector<cv::Point>> contour = CVInterface::GetContour();
 	std::vector<cv::Point> corner = CVInterface::GetCorner();
 	std::vector<cv::Point> boundary = CVInterface::GetBoundary();
 	//std::vector<glm::vec3> vert;
@@ -363,7 +363,7 @@ void SimulationWindow::test() {
 	}
 	*/
 
-	SimulationModel* sm = new SimulationModel(contour, _Shader, _WireShader, t);
+	SimulationModel* sm = new SimulationModel(contour[0], _Shader, _WireShader, t);
 
 	//MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
 
@@ -383,12 +383,18 @@ void SimulationWindow::test_pbd() {
 		Texture* t = new Texture(_Shader->GetShaderID());
 		t->SetShader(fore.rows, fore.cols, fore.data);
 
-		std::vector<cv::Point> contour = CVInterface::GetContour();
+		std::vector<std::vector<cv::Point>> contour = CVInterface::GetContour();
 
-		SimulationModel* sm = new SimulationModel(contour, _Shader, _WireShader, t);
-
-		_Models.push_back(sm);
 		_Textures.push_back(t);
+
+		for (const auto& cont : contour) {
+			SimulationModel* sm = new SimulationModel(cont, _Shader, _WireShader, t);
+
+			_Models.push_back(sm);
+
+
+		}
+
 		
 	}
 }
