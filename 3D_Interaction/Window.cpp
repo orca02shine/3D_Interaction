@@ -376,10 +376,12 @@ void SimulationWindow::test() {
 void SimulationWindow::test_pbd() {
 	for (int i = 0; i < 1; ++i) {
 		CVInterface::UseInterface();
-		cv::Mat back = CVInterface::GetTexture(0);
+
+		
+		cv::Mat fore = CVInterface::GetTexture(1);
 
 		Texture* t = new Texture(_Shader->GetShaderID());
-		t->SetShader(back.rows, back.cols, back.data);
+		t->SetShader(fore.rows, fore.cols, fore.data);
 
 		std::vector<cv::Point> contour = CVInterface::GetContour();
 
@@ -387,6 +389,7 @@ void SimulationWindow::test_pbd() {
 
 		_Models.push_back(sm);
 		_Textures.push_back(t);
+		
 	}
 }
 

@@ -28,11 +28,16 @@ public:
 	static cv::Point ClickedPos;
 	static std::vector<cv::Point> BoundaryPoint;
 	static std::vector<cv::Point> Corners;//0,leftup,1,rightup,2,leftbottom,3,rightbottom
+	static cv::Mat Img_Clone;
 	static cv::Mat Img;
 	static cv::Mat Img_Roi;
 	static cv::Mat Mask_FP;
 	static cv::Mat Mask_BP;
 	static cv::Mat Mask_Constraint;
+
+	static cv::Mat Mask_GC;
+	static cv::Mat BgModel;
+	static cv::Mat FgModel;
 
 	static cv::Mat Result_Back;
 	static cv::Mat Result_Fore;
@@ -47,6 +52,8 @@ public:
 	static void OnMouse(int event, int x, int y, int flags, void*);
 
 	static void UseInterface();
+
+	static void GrabCut(cv::Mat src, cv::Mat &fore,cv::Mat &back);
 
 	static void Clustering(cv::Mat img);
 

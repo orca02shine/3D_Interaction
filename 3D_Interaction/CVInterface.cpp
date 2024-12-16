@@ -10,11 +10,15 @@ cv::Point CVInterface::PrePos = cv::Point(0, 0);
 cv::Point CVInterface::ClickedPos = cv::Point(0, 0);
 std::vector<cv::Point> CVInterface:: BoundaryPoint;
 std::vector<cv::Point> CVInterface::Corners(4);
+cv::Mat CVInterface::Img_Clone;
 cv::Mat CVInterface::Img;
 cv::Mat CVInterface::Img_Roi;
 cv::Mat CVInterface::Mask_FP;
 cv::Mat CVInterface::Mask_BP;
 cv::Mat CVInterface::Mask_Constraint;
+cv::Mat CVInterface::Mask_GC;
+cv::Mat CVInterface::BgModel;
+cv::Mat CVInterface::FgModel;
 cv::Mat CVInterface::Result_Back;
 cv::Mat CVInterface::Result_Fore;
 
@@ -161,6 +165,11 @@ bool CVInterface::Loop() {
 
 	int key = cv::waitKey();
 
+	if (key == 'n') {
+		GrabCut(Img_Clone, Result_Fore, Result_Back);
+		return true;
+	}
+
 	return !(key == 27);
 }
 
@@ -169,27 +178,37 @@ void CVInterface::UseInterface() {
 	cv::Mat loadImg =LoadImg();
 
 
+
 	Roi(loadImg,Img_Roi);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_Constraint= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 
-
-	cv::Mat src = Img_Roi.clone();
+	Img_Clone = Img.clone();
 	cv::Mat result = Img_Roi.clone();
-	MSProc.SetupLabelST(src);
+	//MSProc.SetupLabelST(src);
 
-	cv::Mat con = Img_Roi.clone();
-	MakeContour(con);
-
-	cv::Mat Back = Img.clone();
-	cv::cvtColor(Back, Back, cv::COLOR_BGRA2RGBA);
+	//cv::Mat con = Img_Roi.clone();
+	//MakeContour(con);
 
 
 	cv::namedWindow(WinName, cv::WINDOW_AUTOSIZE);
 	cv::setMouseCallback(WinName, OnMouse, 0);
 	cv::imshow(WinName, Img_Roi);
-	while(Loop()){}
+
+	Result_Back= cv::Mat::zeros(cv::Size(Img.rows, Img.cols), CV_8UC4);;
+
+	if (loadImg.channels() == 3) {
+		while (Loop()) {}
+		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
+	}
+	else {
+		Result_Fore = Img.clone();
+		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
+	}
+
+	MakeContour(Result_Fore);
+
 
 	/*debug
 	for (int i = 0; i < 4; ++i) {
@@ -199,6 +218,7 @@ void CVInterface::UseInterface() {
 		cout << "Boudary " << p.x << " " << p.y << endl;
 	}
 	*/
+
 
 	cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);
 
@@ -216,8 +236,52 @@ void CVInterface::UseInterface() {
 
 
 	//cv::flip(Back, Back, 0);
-	Result_Back = Back;
-	//Result_Fore = Roi(Img);
+
+}
+
+void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
+
+	cv::Mat im = src.clone();
+
+	if (im.channels() == 4) {
+		cv::cvtColor(im, im, cv::COLOR_BGRA2BGR);
+	}
+
+	Mask_GC.create(im.size(), CV_8UC1);
+	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_FGD));
+
+	cv::Rect rec= cv::Rect(1, 1, im.cols - 4, im.rows - 4);
+	Mask_GC(rec).setTo(cv::Scalar(cv::GC_PR_FGD));
+
+	for (int i = 0; i < Mask_GC.rows; ++i) {
+		for (int j = 0; j < Mask_GC.cols; ++j){
+			if (Mask_BP.data[i * Mask_BP.step + j * Mask_BP.elemSize()] == 255) {
+				Mask_GC.data[i * Mask_GC.step + j * Mask_GC.elemSize()] = GC_BGD;
+			}
+			if (Mask_FP.data[i * Mask_FP.step + j * Mask_FP.elemSize()] == 255) {
+				Mask_GC.data[i * Mask_GC.step + j * Mask_GC.elemSize()] = GC_FGD;
+			}
+		}
+	}
+
+	cv::grabCut(im, Mask_GC, rec, BgModel, FgModel, 1);
+
+	cv::Mat binMask;
+	binMask = Mask_GC & 1;
+	
+	cv::Mat result_Fore= cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
+	cv::Mat result_Back = cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
+	cv::cvtColor(im, im, cv::COLOR_BGR2BGRA);
+	im.copyTo(result_Fore, binMask);
+
+	binMask = ~Mask_GC & 1;
+	im.copyTo(result_Back, binMask);
+
+	fore = result_Fore;
+	back = result_Back;
+
+	cv::imshow("test", result_Fore);
+
 
 }
 
