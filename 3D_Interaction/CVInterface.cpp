@@ -200,8 +200,8 @@ void CVInterface::UseInterface() {
 		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
 		cv::Mat tes = Img_Clone.clone();
 		cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
-		cv::imshow("testtt", Mask_Patch);
-		PatchMatch pm;
+
+		//PatchMatch pm;
 		//pm.image_complete(tes, Mask_Patch, Mask_Constraint);
 		//cv::Mat tmpBack;
 		//cv::Mat dammy;
