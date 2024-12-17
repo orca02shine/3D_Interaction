@@ -16,6 +16,7 @@ cv::Mat CVInterface::Img_Roi;
 cv::Mat CVInterface::Mask_FP;
 cv::Mat CVInterface::Mask_BP;
 cv::Mat CVInterface::Mask_Constraint;
+cv::Mat CVInterface::Mask_Patch;
 cv::Mat CVInterface::Mask_GC;
 cv::Mat CVInterface::BgModel;
 cv::Mat CVInterface::FgModel;
@@ -179,17 +180,13 @@ void CVInterface::UseInterface() {
 
 
 
-	Roi(loadImg,Img_Roi);
+	Roi(loadImg,Img_Roi,Img);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_BP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 	Mask_Constraint= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
 
-	Img_Clone = Img.clone();
-	cv::Mat result = Img_Roi.clone();
+	Img_Clone = Img_Roi.clone();
 	//MSProc.SetupLabelST(src);
-
-	//cv::Mat con = Img_Roi.clone();
-	//MakeContour(con);
 
 
 	cv::namedWindow(WinName, cv::WINDOW_AUTOSIZE);
@@ -201,6 +198,14 @@ void CVInterface::UseInterface() {
 	if (loadImg.channels() == 3) {
 		while (Loop()) {}
 		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
+		cv::Mat tes = Img_Clone.clone();
+		cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
+		cv::imshow("testtt", Mask_Patch);
+		PatchMatch pm;
+		//pm.image_complete(tes, Mask_Patch, Mask_Constraint);
+		//cv::Mat tmpBack;
+		//cv::Mat dammy;
+		//Roi(tmpBack, dammy, Result_Back);
 	}
 	else {
 		Result_Fore = Img.clone();
@@ -220,19 +225,13 @@ void CVInterface::UseInterface() {
 	*/
 
 
-	cv::cvtColor(result, result, cv::COLOR_BGRA2BGR);
 
 	/*
 	MSProc.SetMask(Mask_FP,Mask_BP);
 	Clustering(src);
 	MSProc.ShowLabelST(result);
 	*/
-
-
-	/*
-	PatchMatch pm;
-	pm.image_complete(result, Mask_BP, Mask_Constraint);
-	*/
+	
 
 
 	//cv::flip(Back, Back, 0);
@@ -246,6 +245,7 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 	if (im.channels() == 4) {
 		cv::cvtColor(im, im, cv::COLOR_BGRA2BGR);
 	}
+
 
 	Mask_GC.create(im.size(), CV_8UC1);
 	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_FGD));
@@ -268,20 +268,27 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 
 	cv::Mat binMask;
 	binMask = Mask_GC & 1;
+
+	Mask_Patch = cv::Mat(im.size(), CV_8UC1, cv::Scalar(0));
+	cv::Mat white = cv::Mat(im.size(), CV_8UC1, cv::Scalar(255));
+	white.copyTo(Mask_Patch, binMask);
 	
-	cv::Mat result_Fore= cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
-	cv::Mat result_Back = cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
+	cv::Mat res_fore= cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
+	cv::Mat res_back = cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
 	cv::cvtColor(im, im, cv::COLOR_BGR2BGRA);
-	im.copyTo(result_Fore, binMask);
+	im.copyTo(res_fore, binMask);
 
 	binMask = ~Mask_GC & 1;
-	im.copyTo(result_Back, binMask);
+	im.copyTo(res_back, binMask);
 
-	fore = result_Fore;
-	back = result_Back;
+	cv::Mat dammy,dammy2;
 
-	cv::imshow("test", result_Fore);
+	Roi(res_fore, dammy, fore);
+	Roi(res_back, dammy2, back);
 
+
+	cv::imshow("fore", res_fore);
+	cv::imshow("back", res_back);
 
 }
 
@@ -309,12 +316,12 @@ void CVInterface::Clustering(cv::Mat img) {
 
 }
 
-void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
+void CVInterface::Roi(cv::Mat img, cv::Mat &roi, cv::Mat &resizedImg) {
 	int targetSize = TargetSize;
 
 
 	cv:Mat loadMat = img.clone();
-	Img= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+	resizedImg= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
 	
 	if (loadMat.channels() < 4) {
 		cv::cvtColor(loadMat, loadMat, cv::COLOR_BGR2BGRA);
@@ -334,24 +341,24 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi) {
 		loadMat.cols, loadMat.rows));
 	*/
 
-	roi = cv::Mat(Img, cv::Rect(0, 0,
+	roi = cv::Mat(resizedImg, cv::Rect(0, 0,
 		loadMat.cols, loadMat.rows));
 
 	loadMat.copyTo(roi);
 
-	int x = Img.rows;
-	int y = Img.cols;
+	int x = resizedImg.rows;
+	int y = resizedImg.cols;
 	int alpha = 3;
 
-	for (int i = 0; i < Img.rows; ++i) {
-		int val = Img.data[0 * Img.step + i * Img.elemSize() + alpha];
+	for (int i = 0; i < resizedImg.rows; ++i) {
+		int val = resizedImg.data[0 * resizedImg.step + i * resizedImg.elemSize() + alpha];
 		if (val == 0) {
 			x = i;
 			break;
 		}
 	}
 	for (int i = 0; i < Img.cols; ++i) {
-		int val = Img.data[i * Img.step + 0 * Img.elemSize() + alpha];
+		int val = resizedImg.data[i * resizedImg.step + 0 * resizedImg.elemSize() + alpha];
 		if (val == 0) {
 			y = i;
 			break;

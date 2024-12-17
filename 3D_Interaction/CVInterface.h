@@ -33,6 +33,7 @@ public:
 	static cv::Mat Img_Roi;
 	static cv::Mat Mask_FP;
 	static cv::Mat Mask_BP;
+	static cv::Mat Mask_Patch;
 	static cv::Mat Mask_Constraint;
 
 	static cv::Mat Mask_GC;
@@ -60,7 +61,7 @@ public:
 	static cv::Mat LoadImg();
 	static bool FileOpen(std::string& sSelectedFile, std::string& sFilePath);
 
-	static void Roi(cv::Mat img,cv::Mat &roi);
+	static void Roi(cv::Mat img,cv::Mat &roi,cv::Mat &resiezedImg);
 	static void MakeContour(cv::Mat &img);
 
 	static cv::Mat GetTexture(int i);
