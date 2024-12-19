@@ -851,13 +851,17 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 
 		else {
-			glm::vec2 midvert = _Vertices[e1] + _Vertices[e2];
-			midvert /= 2;
-			_Vertices.emplace_back(midvert);
-			mididx = _Vertices.size() - 1;
-			edgeMidPoint[e1][e2] = mididx;
-			edgeMidPoint[e2][e1] = mididx;
-			_IsChodralAxis[mididx] = true;
+			mididx = edgeMidPoint[e1][e2];
+			if (mididx == -1) {
+				glm::vec2 midvert = _Vertices[e1] + _Vertices[e2];
+				midvert /= 2;
+				_Vertices.emplace_back(midvert);
+				mididx = _Vertices.size() - 1;
+				edgeMidPoint[e1][e2] = mididx;
+				edgeMidPoint[e2][e1] = mididx;
+				_IsChodralAxis[mididx] = true;
+			}
+
 		}
 
 
@@ -900,16 +904,20 @@ void Delauney::MakeTeddyTempVerts() {
 
 				}
 				else {
-					glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
-					midvert /= 2;
-					_Vertices.push_back(midvert);
-					mididx = _Vertices.size() - 1;
-					_IsChodralAxis[mididx] = true;
-					edgeMidPoint[e.e1][e.e2] = mididx;
-					edgeMidPoint[e.e2][e.e1] = mididx;
+					mididx = edgeMidPoint[e.e1][e.e2];
+					if (mididx == -1) {
+						glm::vec2 midvert = (_Vertices[e.e1] + _Vertices[e.e2]);
+						midvert /= 2;
+						_Vertices.push_back(midvert);
+						mididx = _Vertices.size() - 1;
+						_IsChodralAxis[mididx] = true;
+						edgeMidPoint[e.e1][e.e2] = mididx;
+						edgeMidPoint[e.e2][e.e1] = mididx;
 
+					}
 					vertOfFanTris.push_back(e.e1);
 					vertOfFanTris.push_back(e.e2);
+
 					
 					break;
 				}
