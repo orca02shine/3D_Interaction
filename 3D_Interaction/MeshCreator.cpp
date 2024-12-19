@@ -132,6 +132,10 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		}
 	}
 
+	for (int i = 0; i < vert.size(); ++i) {
+		vert[i].z =2.0f;
+	}
+
 	
 	for (int i = 0; i < vert.size(); ++i) {
 		vert[i].x = vert[i].x * -1.0;
