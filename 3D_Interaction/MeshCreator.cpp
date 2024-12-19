@@ -209,6 +209,7 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 	wireIdx.clear();
 
 
+
 	//0,leftup to leftdown
 	{
 		float uvx = float(cor[0].x) / targetSize;
@@ -347,32 +348,33 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 	}
 
 
+	float rati = abs(vert[vert.size() - 1].x- vert[2].x);
 
 	int cols = vert.size() / 3;
-	float wid = 6.0 / cols;
+	float wid = 6.0 / rati;
 	//down
 	for (int i = 0; i < cols; ++i) {
 		int p = i * 3;
 		p += 2;
 
-		vert[p] = { -3.0 + (i * wid),-1.0,-2.0 };
+		vert[p] = {vert[p].x*wid,-1.0,-2.0};
 
 	}
 
 	//hori
-	wid = 12.0 / cols;
+	wid = 12.0 / rati;
 	for (int i = 0; i < cols; ++i) {
 		int p = i * 3;
 		p += 1;
 
-		vert[p] = { -6.0 + (i * wid),-1.0,2.0};
+		vert[p] = { vert[p].x * wid,-1.0,2.0};
 
 	}
 
 	//up
 	for (int i = 0; i < cols; ++i) {
 		int p = i * 3;
-		vert[p] = { -6.0 + (i * wid),4.0,2.0 };
+		vert[p] = { vert[p].x * wid,4.0,2.0 };
 
 	}
 
