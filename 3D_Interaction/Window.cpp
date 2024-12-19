@@ -163,7 +163,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 
 
 	test_pbd();
-
+	//test();
 
 }
 
@@ -228,6 +228,9 @@ bool SimulationWindow::LoopEvents() {
 
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->Update();
+	}
+	if (_BackGround != nullptr) {
+		_BackGround->UpdateMesh();
 	}
 
 
@@ -352,14 +355,14 @@ void SimulationWindow::test() {
 	std::vector<uint> idx;
 	std::vector<uint> wireIdx;
 
-	/*debug
+	
 	for (int i = 0; i < 4; ++i) {
 		cout << "corner " << corner[i].x << " " << corner[i].y << endl;
 	}
 	for (auto& p : boundary) {
 		cout << "Boudary " << p.x << " " << p.y << endl;
 	}
-	*/
+	
 
 	MeshCreator MC;
 
@@ -367,10 +370,14 @@ void SimulationWindow::test() {
 
 	Mesh* m = new Mesh();
 	m->InsertMeshData(vert, uv, idx, wireIdx);
+	m->LinkShader(_Shader, _WireShader);
+	m->LinkTexture(t_back);
 
 
 	_BackGround = m;
 	_Textures.push_back(t_back);
+
+	std::cout << "Mesh created" << std::endl;
 
 }
 

@@ -67,7 +67,7 @@ public:
 
 	std::vector<class Texture*> _Textures;
 	std::vector<class SimulationModel*> _Models;
-	class Mesh* _BackGround;
+	class Mesh* _BackGround = nullptr;
 	class SimulationModel* _SelectedModel = nullptr;
 	int _VertPtr = -1;
 
