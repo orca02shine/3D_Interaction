@@ -220,10 +220,22 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 		uv.push_back(uvx);
 		uv.push_back(uvy);
 	}
-	//2 leftdown to left up
+	//2 horizon
 	{
 		float uvx = float(cor[0].x) / targetSize;
 		float uvy = float(boundary[0].y) / targetSize;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({ vx, vy, 0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	//3 left down to leftup
+	{
+		float uvx = float(cor[2].x) / targetSize;
+		float uvy = float(cor[2].y) / targetSize;
 		float vx = uvx * 2 - 1.0;
 		float vy = uvy * 2 - 1.0;
 		vy *= -1.0;
@@ -246,6 +258,17 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 		{
 			float uvx = float(boundary[i].x) / targetSize;
 			float uvy = float(boundary[i].y) / targetSize;
+			float vx = uvx * 2 - 1.0;
+			float vy = uvy * 2 - 1.0;
+			vy *= -1.0;
+			vert.push_back({ vx, vy, 0 });
+			uv.push_back(uvx);
+			uv.push_back(uvy);
+		}
+
+		{
+			float uvx = float(boundary[i].x) / targetSize;
+			float uvy = float(cor[2].y) / targetSize;
 			float vx = uvx * 2 - 1.0;
 			float vy = uvy * 2 - 1.0;
 			vy *= -1.0;
@@ -278,20 +301,41 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 		uv.push_back(uvy);
 	}
 
-	for (int i = 3; i < vert.size(); i += 2) {
-		int leftup = i - 3;
-		int leftdown = i - 2;
-		int rightup = i - 1;
+	{
+		float uvx = float(cor[3].x) / targetSize;
+		float uvy = float(cor[3].y) / targetSize;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vy *= -1.0;
+		vert.push_back({ vx, vy, 0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	for (int i = 5; i < vert.size(); i += 3) {
+		int leftup = i - 5;
+		int lefthori = i - 4;
+		int leftdown = i - 3;
+		int rightup = i - 2;
+		int righthori = i - 1;
 		int rightdown = i;
 
-		idx.push_back(leftup); idx.push_back(leftdown); idx.push_back(rightup);
-		idx.push_back(rightup); idx.push_back(leftdown); idx.push_back(rightdown);
+		idx.push_back(leftup); idx.push_back(lefthori); idx.push_back(rightup);
+		idx.push_back(rightup); idx.push_back(lefthori); idx.push_back(righthori);
+		idx.push_back(lefthori); idx.push_back(leftdown); idx.push_back(righthori);
+		idx.push_back(righthori); idx.push_back(leftdown); idx.push_back(rightdown);
 
-		wireIdx.push_back(leftup); wireIdx.push_back(leftdown);
+		wireIdx.push_back(leftup); wireIdx.push_back(lefthori);
+		wireIdx.push_back(lefthori); wireIdx.push_back(leftdown);
+		wireIdx.push_back(rightup); wireIdx.push_back(righthori);
+		wireIdx.push_back(righthori); wireIdx.push_back(rightdown);
+
+		wireIdx.push_back(leftup); wireIdx.push_back(rightup);
 		wireIdx.push_back(leftdown); wireIdx.push_back(rightdown);
-		wireIdx.push_back(rightdown); wireIdx.push_back(rightup);
-		wireIdx.push_back(rightup); wireIdx.push_back(leftup);
-		wireIdx.push_back(leftdown); wireIdx.push_back(rightup);
+		wireIdx.push_back(lefthori); wireIdx.push_back(righthori);
+
+		wireIdx.push_back(lefthori); wireIdx.push_back(rightup);
+		wireIdx.push_back(leftdown); wireIdx.push_back(righthori);
 
 	}
 
@@ -300,6 +344,36 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 
 	for (int i = 0; i < vert.size(); ++i) {
 		vert[i].z = 2.0f;
+	}
+
+
+
+	int cols = vert.size() / 3;
+	float wid = 6.0 / cols;
+	//down
+	for (int i = 0; i < cols; ++i) {
+		int p = i * 3;
+		p += 2;
+
+		vert[p] = { -3.0 + (i * wid),-1.0,-2.0 };
+
+	}
+
+	//hori
+	wid = 12.0 / cols;
+	for (int i = 0; i < cols; ++i) {
+		int p = i * 3;
+		p += 1;
+
+		vert[p] = { -6.0 + (i * wid),-1.0,2.0};
+
+	}
+
+	//up
+	for (int i = 0; i < cols; ++i) {
+		int p = i * 3;
+		vert[p] = { -6.0 + (i * wid),4.0,2.0 };
+
 	}
 
 
