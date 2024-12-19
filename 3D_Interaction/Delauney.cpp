@@ -2,7 +2,6 @@
 
 Delauney::Delauney(Contour contour, int texSize) :_Contour(contour), _TexSize(texSize)
 {
-	Init();
 }
 Delauney::~Delauney()
 {
@@ -10,7 +9,6 @@ Delauney::~Delauney()
 
 void Delauney::Init() {
 
-	MakePolygonData();
 }
 
 DeEdge Delauney::MakeEdge(size_t a, size_t b) { return DeEdge((std::min)(a, b), (std::max)(a, b)); }
@@ -195,6 +193,36 @@ void Delauney::MakePolygonData() {
 
 	//SetData();
 
+}
+
+void Delauney::MakePolygonData_2D(){
+	MakeVirtualTriangle();//ok
+
+	//“_‚Ì’€Ÿ’Ç‰Á
+	MakeContours();//?
+
+
+	//delete supartriangle
+	DeleteVirtualTri();
+
+	//‹«ŠEŠO‚ğíœ
+	DeleteOuterTris();
+
+	//‹«ŠE‚Ì“àŠO”»’è
+	DeleteTris();
+
+	//ŒŠ‹«ŠE
+	//MakeInternalContours();
+
+	//DeleteInnerTris();
+
+	//•i¿Œüã‚Ìˆ—
+
+	//-----
+
+	//MakeTeddyTempVerts();
+
+	SetData();
 }
 
 void Delauney::MakeEdgeConstraint(Contour contour)

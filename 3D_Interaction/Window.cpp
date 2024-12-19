@@ -162,8 +162,8 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	_MVP = _Projection * _View * _Model;
 
 
-	test_pbd();
-	//test();
+	//test_pbd();
+	test();
 
 }
 
@@ -342,6 +342,7 @@ void SimulationWindow::test() {
 
 	CVInterface::UseInterface();
 	cv::Mat back = CVInterface::GetTexture(0);
+	cv::imshow("kari", back);
 
 	Texture* t_back = new Texture(_Shader->GetShaderID());
 	t_back->SetShader(back.rows,back.cols,back.data);

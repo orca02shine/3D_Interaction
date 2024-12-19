@@ -116,6 +116,7 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 
 	if (contour.size() > 2) {
 		class Delauney delauney(contour, targetSize);
+		delauney.MakePolygonData_2D();
 
 		std::vector<int> tempIdx = delauney.GetIndices();
 		std::vector<int> tempWire = delauney.GetWireFrame();
@@ -131,9 +132,17 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 		}
 	}
 
+	
+	for (int i = 0; i < vert.size(); ++i) {
+		vert[i].x = vert[i].x * -1.0;
+	}
+	
+	/*
 	//coordinate xy-----------
 	if (contour.size() > 2) {
 
+		
+	
 		float f = 0.01f;
 		float wm = 0.1;//wM=1.0;
 		float y0 = vert[1].y;
@@ -142,10 +151,12 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 
 		glm::mat4 proj = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 1.0f);
 		glm::mat4 view = glm::lookAt(
-			glm::vec3(0, 0.0, -0.4),
+			glm::vec3(0, 0.0, -4.0),
 			glm::vec3(0, 0, 0),
 			glm::vec3(0, 1, 0)  // ƒJƒƒ‰‚Ì“ª‚Ì•ûŒü
 		);
+
+
 
 		glm::mat4 test = glm::mat4(1.0);
 
@@ -175,10 +186,10 @@ void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::P
 
 		}
 
-
+		
 
 	}
-
+	*/
 
 
 }
@@ -212,6 +223,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 	*/
 	if (cont.size() > 2) {
 		class Delauney delauney(revcont, targetSize);
+		delauney.MakePolygonData();
 
 		std::vector<glm::vec2> tempVert = delauney.GetVertices();
 		std::vector<float> tempUv = delauney.GetUV();

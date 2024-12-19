@@ -129,6 +129,7 @@ public:
 	//void MakeAdditionalTriangle();
 
 	void MakePolygonData();
+	void MakePolygonData_2D();
 
 	int FIndTriange(size_t tar);
 	//int LawsonTriangleDetection(size_t tar);
