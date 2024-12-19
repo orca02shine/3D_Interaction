@@ -366,7 +366,7 @@ void SimulationWindow::test() {
 
 	MeshCreator MC;
 
-	MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
+	MC.CreateBackGround_NoWall(corner, boundary, vert, uv, idx, wireIdx);
 
 	Mesh* m = new Mesh();
 	m->InsertMeshData(vert, uv, idx, wireIdx);
