@@ -198,9 +198,10 @@ void CVInterface::UseInterface() {
 	if (loadImg.channels() == 3) {
 		while (Loop()) {}
 		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
-		cv::Mat tes = Img_Clone.clone();
-		cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
+		cv::cvtColor(Result_Back, Result_Back, cv::COLOR_BGRA2RGBA);
 
+		//cv::Mat tes = Img_Clone.clone();
+		//cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
 		//PatchMatch pm;
 		//pm.image_complete(tes, Mask_Patch, Mask_Constraint);
 		//cv::Mat tmpBack;

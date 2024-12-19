@@ -340,19 +340,17 @@ void SimulationWindow::test() {
 	CVInterface::UseInterface();
 	cv::Mat back = CVInterface::GetTexture(0);
 
-	Texture* t = new Texture(_Shader->GetShaderID());
-	t->SetShader(back.rows,back.cols,back.data);
+	Texture* t_back = new Texture(_Shader->GetShaderID());
+	t_back->SetShader(back.rows,back.cols,back.data);
 
 
 
-
-	std::vector<std::vector<cv::Point>> contour = CVInterface::GetContour();
 	std::vector<cv::Point> corner = CVInterface::GetCorner();
 	std::vector<cv::Point> boundary = CVInterface::GetBoundary();
-	//std::vector<glm::vec3> vert;
-	//std::vector<float> uv;
-	//std::vector<int> idx;
-	//std::vector<int> wireIdx;
+	std::vector<glm::vec3> vert;
+	std::vector<float> uv;
+	std::vector<uint> idx;
+	std::vector<uint> wireIdx;
 
 	/*debug
 	for (int i = 0; i < 4; ++i) {
@@ -363,13 +361,16 @@ void SimulationWindow::test() {
 	}
 	*/
 
-	SimulationModel* sm = new SimulationModel(contour[0], _Shader, _WireShader, t);
+	MeshCreator MC;
 
-	//MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
+	MC.CreateBackGround(corner, boundary, vert, uv, idx, wireIdx);
+
+	Mesh* m = new Mesh();
+	m->InsertMeshData(vert, uv, idx, wireIdx);
 
 
-	_Models.push_back(sm);
-	_Textures.push_back(t);
+	_BackGround = m;
+	_Textures.push_back(t_back);
 
 }
 
@@ -391,7 +392,6 @@ void SimulationWindow::test_pbd() {
 			SimulationModel* sm = new SimulationModel(cont, _Shader, _WireShader, t);
 
 			_Models.push_back(sm);
-
 
 		}
 

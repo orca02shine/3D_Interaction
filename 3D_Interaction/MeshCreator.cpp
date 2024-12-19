@@ -8,7 +8,7 @@ MeshCreator::~MeshCreator() {
 }
 
 void MeshCreator::CreateBackGround(std::vector<cv::Point> cor, std::vector<cv::Point> boundary,
-	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<int>& idx, std::vector<int>& wireIdx)
+	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx)
 {
 	float targetSize = 512.0;
 
