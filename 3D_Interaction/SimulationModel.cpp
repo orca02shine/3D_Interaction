@@ -43,20 +43,17 @@ void SimulationModel::SwitchPause() {
 }
 
 void SimulationModel::UpdateMesh() {
-
 	if (_EnableMat) {
-		_MatShader->SetActive();
-
 		_VertexObject->Update();
+		_MatShader->SetActive();
 		_VertexObject->SetActive();
 		_Texture->SetActive();
 		glDrawElements(GL_TRIANGLES, _VertexObject->_NumIndices, GL_UNSIGNED_INT, 0);
 	}
 
 	if (_EnableWire) {
-		_WireShader->SetActive();
-
 		_WireObject->Update();
+		_WireShader->SetActive();
 		_WireObject->SetActive();
 		glDrawElements(GL_LINES, _WireObject->_NumIndices, GL_UNSIGNED_INT, 0);
 	}

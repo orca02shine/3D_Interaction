@@ -259,14 +259,12 @@ void SimulationWindow::SwitchMeshVisibility() {
 
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->SwitchVisibility();
-		_Models[i]->UpdateMesh();
 	}
 }
 
 void SimulationWindow::SwitchPause() {
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->SwitchPause();
-		_Models[i]->UpdateMesh();
 	}
 }
 
