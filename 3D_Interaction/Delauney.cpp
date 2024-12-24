@@ -716,10 +716,10 @@ float  Delauney::CalcPointEdgeDist(int p, int p0, int p1) {
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
-	_IsChodralAxis.resize(500, false);
-	std::vector<std::vector<float>> _SumLengthFromAxis(500);
+	_IsChodralAxis.resize(2000, false);
+	std::vector<std::vector<float>> _SumLengthFromAxis(2000);
 
-	_TeddyVertices.reserve(100000);
+	_TeddyVertices.reserve(40000);
 
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
