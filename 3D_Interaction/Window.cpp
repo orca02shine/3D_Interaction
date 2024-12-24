@@ -138,6 +138,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 	:Window(width, height, title)
 {
 	glfwSetMouseButtonCallback(window, MouseCallbackSim);
+	glfwSetKeyCallback(window, KeyCallbackSim);
 
 	_Shader = new Shader();
 	_Shader->Load("shader.vert", "shader.frag");
@@ -202,6 +203,20 @@ void SimulationWindow::MouseCallbackSim(GLFWwindow* const window, int button, in
 
 
 }
+void SimulationWindow::KeyCallbackSim(GLFWwindow* const window, int key, int scancode, int action, int mods) {
+
+	SimulationWindow* const
+		instance(static_cast<SimulationWindow*>(glfwGetWindowUserPointer(window)));
+
+	if (key == GLFW_KEY_M && action == GLFW_PRESS) {
+		instance->SwitchPause();
+	}
+
+	if (key == GLFW_KEY_V && action == GLFW_PRESS) {
+		instance->SwitchMeshVisibility();
+	}
+
+}
 
 bool SimulationWindow::LoopEvents() {
 
@@ -238,6 +253,21 @@ bool SimulationWindow::LoopEvents() {
 	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
 
 
+}
+
+void SimulationWindow::SwitchMeshVisibility() {
+
+	for (int i = 0; i < _Models.size(); ++i) {
+		_Models[i]->SwitchVisibility();
+		_Models[i]->UpdateMesh();
+	}
+}
+
+void SimulationWindow::SwitchPause() {
+	for (int i = 0; i < _Models.size(); ++i) {
+		_Models[i]->SwitchPause();
+		_Models[i]->UpdateMesh();
+	}
 }
 
 void SimulationWindow::MeshSearcher() {

@@ -104,7 +104,7 @@ public:
 	glm::vec3 gravity = { 0.0,G,0.0 };
 
 	float fps = 1.0f / 60.0f;
-	bool pause = true;
+	bool _Pause = false;
 
 	glm::vec3 corr0;
 	glm::vec3 corr1;
@@ -129,6 +129,8 @@ public:
 	void InitVolumeConstraint(int k);
 	void InitTetContactConstraint(int k);
 	void Update();
+	void SwitchVisibility();
+	void SwitchPause();
 	void UpdateMesh();
 	void MakeMesh();
 

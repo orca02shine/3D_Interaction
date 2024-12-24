@@ -100,6 +100,7 @@ public:
 	~SimulationWindow();
 
 	static void MouseCallbackSim(GLFWwindow* const window, int button, int action, int mods);
+	static void KeyCallbackSim(GLFWwindow* const window, int key, int scancode, int action, int mods);
 
 	void UpdateMVP();
 	void UpdateMousePos();
@@ -108,6 +109,8 @@ public:
 	void GetScreenPos(float& x, float& y);
 
 	bool LoopEvents() override;
+	void SwitchMeshVisibility();
+	void SwitchPause();
 	void MeshSearcher();
 	void MeshContoroller();
 	void MeshTargetClear();

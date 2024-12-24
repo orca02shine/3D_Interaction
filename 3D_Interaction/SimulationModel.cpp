@@ -33,6 +33,15 @@ void SimulationModel::Update() {
 	UpdateMesh();
 }
 
+void SimulationModel::SwitchVisibility() {
+	_EnableMat = !_EnableMat;
+	_EnableWire = !_EnableWire;
+}
+
+void SimulationModel::SwitchPause() {
+	_Pause = !_Pause;
+}
+
 void SimulationModel::UpdateMesh() {
 
 	if (_EnableMat) {
@@ -137,7 +146,7 @@ void SimulationModel::InitTetContactConstraint(int k) {
 
 
 void SimulationModel::Simulate() {
-	//if (pause) return;
+	if (_Pause) return;
 
 	float sdt = fps / numSubstep;
 
