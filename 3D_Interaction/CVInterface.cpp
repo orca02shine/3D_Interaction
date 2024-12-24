@@ -193,7 +193,7 @@ void CVInterface::UseInterface() {
 	cv::setMouseCallback(WinName, OnMouse, 0);
 	cv::imshow(WinName, Img_Roi);
 
-	Result_Back= cv::Mat::zeros(cv::Size(Img.rows, Img.cols), CV_8UC4);;
+	//Result_Back= cv::Mat::zeros(cv::Size(Img.rows, Img.cols), CV_8UC4);;
 
 	if (loadImg.channels() == 3) {
 		while (Loop()) {}

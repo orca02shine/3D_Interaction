@@ -342,6 +342,10 @@ void SimulationWindow::test() {
 
 	//CVInterface::UseInterface();
 	cv::Mat back = CVInterface::GetTexture(0);
+	if (back.empty()) {
+		//std::cout << "back data is empty." << std::endl;
+		return;
+	}
 
 	Texture* t_back = new Texture(_Shader->GetShaderID());
 	t_back->SetShader(back.rows,back.cols,back.data);
