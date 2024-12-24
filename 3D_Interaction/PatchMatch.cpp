@@ -593,6 +593,7 @@ void::PatchMatch::image_complete(Mat im_orig, Mat mask, Mat constraint) {
     }
 
     imshow("final_out.png", resize_img);
+    _resultImg = resize_img;
 }
 
 PatchMatch::PatchMatch() {

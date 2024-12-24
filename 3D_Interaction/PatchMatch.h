@@ -53,6 +53,8 @@ private:
     int rs_max = INT_MAX; // random search
     int sigma = 1 * patch_w * patch_w;
 
+    Mat _resultImg;
+
 private:
     void getCMap(Mat constraint, CMap* cmap);
     Box getBox(Mat mask);
@@ -65,6 +67,7 @@ public:
     PatchMatch();
     ~PatchMatch();
     void image_complete(Mat im_orig, Mat mask, Mat constraint);
+    Mat getResult() { return _resultImg; }
 };
 
 

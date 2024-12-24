@@ -200,13 +200,15 @@ void CVInterface::UseInterface() {
 		cv::cvtColor(Result_Fore, Result_Fore, cv::COLOR_BGRA2RGBA);
 		cv::cvtColor(Result_Back, Result_Back, cv::COLOR_BGRA2RGBA);
 
-		//cv::Mat tes = Img_Clone.clone();
-		//cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
-		//PatchMatch pm;
-		//pm.image_complete(tes, Mask_Patch, Mask_Constraint);
-		//cv::Mat tmpBack;
-		//cv::Mat dammy;
-		//Roi(tmpBack, dammy, Result_Back);
+		//patchmatch
+		cv::Mat tes = Img_Clone.clone();
+		cv::cvtColor(tes, tes, cv::COLOR_BGRA2BGR);
+		PatchMatch pm;
+		pm.image_complete(tes, Mask_Patch, Mask_Constraint);
+		cv::Mat tmpBack = pm.getResult();
+		cv::Mat dammy;
+		Roi(tmpBack, dammy, Result_Back);
+		cv::cvtColor(Result_Back, Result_Back, cv::COLOR_BGRA2RGBA);
 	}
 	else {
 		Result_Fore = Img.clone();
