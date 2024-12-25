@@ -716,8 +716,8 @@ float  Delauney::CalcPointEdgeDist(int p, int p0, int p1) {
 void Delauney::MakeTeddyTempVerts() {
 
 	std::vector<bool> _IsChodralAxis;
-	_IsChodralAxis.resize(2000, false);
-	std::vector<std::vector<float>> _SumLengthFromAxis(2000);
+	_IsChodralAxis.resize(4000, false);
+	std::vector<std::vector<float>> _SumLengthFromAxis(4000);
 
 	_TeddyVertices.reserve(40000);
 
@@ -1011,12 +1011,13 @@ void Delauney::MakeTeddyTempVerts() {
 				junctionMidPoint[i] = vmid;
 				_IsChodralAxis[vmid] = true;
 
-				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				float leng = glm::length(_Vertices[v0] - _Vertices[v1]) / 2;
 				_SumLengthFromAxis[vmid].push_back(leng);
-				leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				leng = glm::length(_Vertices[v1] - _Vertices[v2]) / 2;
 				_SumLengthFromAxis[vmid].push_back(leng);
-				leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
+				leng = glm::length(_Vertices[v2] - _Vertices[v0]) / 2;
 				_SumLengthFromAxis[vmid].push_back(leng);
+
 
 			}
 			//length clc-----------------------------------------------------------

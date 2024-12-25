@@ -399,26 +399,14 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 
 	std::reverse(revcont.begin(), revcont.end());
 
-	/*
-	for (int i = 0; i < revcont.size(); ++i) {
-
-		float uvx = float(revcont[i].x) / targetSize;
-		float uvy = float(revcont[i].y) / targetSize;
-
-		uv.push_back(uvx);
-		uv.push_back(uvy);
-
-
-	}
-	*/
 	if (cont.size() > 2) {
 		class Delauney delauney(revcont, targetSize);
 		delauney.MakePolygonData();
 
-		std::vector<glm::vec2> tempVert = delauney.GetVertices();
-		std::vector<float> tempUv = delauney.GetUV();
-		std::vector<int> tempIdx = delauney.GetIndices();
-		std::vector<int> tempWire = delauney.GetWireFrame();
+		//std::vector<glm::vec2> tempVert = delauney.GetVertices();
+		//std::vector<float> tempUV = delauney.GetUV();
+		//std::vector<int> tempIdx = delauney.GetIndices();
+		//std::vector<int> tempWire = delauney.GetWireFrame();
 
 		std::vector<glm::vec3> tempVert3D = delauney.GetVertices3D();
 		std::vector<int> tempIdx3D = delauney.GetIndices3D();
@@ -426,6 +414,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		std::vector<float> tempUV3D = delauney.GetUV3D();
 
 		std::vector<int> tempTet = delauney.GetTetMesh();
+
 		/*
 		for (int i = 0; i < tempVert.size(); ++i) {
 			vert.push_back({ tempVert[i].x,tempVert[i].y,0 });
@@ -433,6 +422,9 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		for (int i = 0; i < tempIdx.size(); ++i) {
 			int id = tempIdx[i];
 			idx.push_back(id);
+		}
+		for (int i = 0; i < tempUV.size(); ++i) {
+			uv.push_back(tempUV[i]);
 		}
 		for (int i = 0; i < tempWire.size(); ++i) {
 			wireIdx.push_back(tempWire[i]);
@@ -452,11 +444,10 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		}
 		for (int i = 0; i < tempUV3D.size(); ++i) {
 			uv.push_back(tempUV3D[i]);
-		}
+		}	
 		for (int i = 0; i < tempTet.size(); ++i) {
 			tetIdx.push_back(tempTet[i]);
 		}
-		
 	}
 
 

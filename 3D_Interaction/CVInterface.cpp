@@ -404,10 +404,10 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	cv::threshold(gray, gray, 0, 255, cv::THRESH_BINARY);
 	cv::blur(gray, gray, cv::Size(3, 3));
 
-	cv::findContours(gray, Contours, Hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_TC89_L1);
+	cv::findContours(gray, Contours, Hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_TC89_L1);
 
 	for (auto& con : Contours) {
-		double approxDist = 0.003*cv::arcLength(con, true);//ãﬂéóê∏ìx
+		double approxDist = 0.004*cv::arcLength(con, true);//ãﬂéóê∏ìx
 		cv::approxPolyDP(con, con, approxDist, true);
 	}
 
