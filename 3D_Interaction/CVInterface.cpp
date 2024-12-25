@@ -406,8 +406,8 @@ void CVInterface::MakeContour(cv::Mat &img) {
 
 	cv::findContours(gray, Contours, Hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_TC89_L1);
 
-	double approxDist = 8.0;//ãﬂéóê∏ìx
 	for (auto& con : Contours) {
+		double approxDist = 0.003*cv::arcLength(con, true);//ãﬂéóê∏ìx
 		cv::approxPolyDP(con, con, approxDist, true);
 	}
 
@@ -416,7 +416,7 @@ void CVInterface::MakeContour(cv::Mat &img) {
 
 	//cv::flip(showImg, showImg, 0);
 	//cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
-	//cv::imshow("aaa", showImg);
+	cv::imshow("aaa", showImg);
 
 }
 

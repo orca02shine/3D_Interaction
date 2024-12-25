@@ -1010,20 +1010,30 @@ void Delauney::MakeTeddyTempVerts() {
 				vmid = _Vertices.size() - 1;
 				junctionMidPoint[i] = vmid;
 				_IsChodralAxis[vmid] = true;
+
+				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+				leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+				leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng);
+
 			}
 			//length clc-----------------------------------------------------------
+			/*
 			if (invalidEdge[v0][v1] !=true && invalidEdge[v1][v2] != true) {
 				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
 			if (invalidEdge[v1][v2] !=true && invalidEdge[v2][v0] != true) {
-				float leng = glm::length(_Vertices[v2] - _Vertices[vmid]);
+				float leng = glm::length(_Vertices[v1] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
 			if (invalidEdge[v2][v0] !=true && invalidEdge[v0][v1] != true) {
 				float leng = glm::length(_Vertices[v0] - _Vertices[vmid]);
 				_SumLengthFromAxis[vmid].push_back(leng);
 			}
+			*/
 			//-------
 
 			if (invalidEdge[v0][v1] != true) {
@@ -1036,13 +1046,14 @@ void Delauney::MakeTeddyTempVerts() {
 					edgeMidPoint[v0][v1] = idm;
 					edgeMidPoint[v1][v0] = idm;
 					_IsChodralAxis[idm] = true;
-
-					float leng1 = glm::length(_Vertices[v0] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng1);
-					float leng2 = glm::length(_Vertices[v1] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v0][v1];
+
+				float leng1 = glm::length(_Vertices[v0] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng1);
+				float leng2 = glm::length(_Vertices[v1] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng2);
+
 				wireFrame.insert({ v0,emid });
 				wireFrame.insert({ v0,vmid });
 				wireFrame.insert({ vmid,emid });
@@ -1064,13 +1075,13 @@ void Delauney::MakeTeddyTempVerts() {
 					edgeMidPoint[v1][v2] = idm;
 					edgeMidPoint[v2][v1] = idm;
 					_IsChodralAxis[idm] = true;
-
-					float leng1 = glm::length(_Vertices[v1] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng1);
-					float leng2 = glm::length(_Vertices[v2] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v1][v2];
+				float leng1 = glm::length(_Vertices[v1] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng1);
+				float leng2 = glm::length(_Vertices[v2] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng2);
+
 				wireFrame.insert({ v1,emid });
 				wireFrame.insert({ v1,vmid });
 				wireFrame.insert({ vmid,emid });
@@ -1092,13 +1103,13 @@ void Delauney::MakeTeddyTempVerts() {
 					edgeMidPoint[v0][v2] = idm;
 					edgeMidPoint[v2][v0] = idm;
 					_IsChodralAxis[idm] = true;
-
-					float leng1 = glm::length(_Vertices[v2] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng1);
-					float leng2 = glm::length(_Vertices[v0] - _Vertices[idm]);
-					_SumLengthFromAxis[idm].push_back(leng2);
 				}
 				int emid = edgeMidPoint[v0][v2];
+				float leng1 = glm::length(_Vertices[v2] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng1);
+				float leng2 = glm::length(_Vertices[v0] - _Vertices[emid]);
+				_SumLengthFromAxis[emid].push_back(leng2);
+
 				wireFrame.insert({ v0,emid });
 				wireFrame.insert({ v0,vmid });
 				wireFrame.insert({ vmid,emid });
@@ -1143,17 +1154,15 @@ void Delauney::MakeTeddyTempVerts() {
 					midp1 = _Vertices.size() - 1;
 					edgeMidPoint[v][ot.first] = midp1;
 					edgeMidPoint[ot.first][v] = midp1;
-					_IsChodralAxis[midp1] = true;
-
-
-					
-					float leng1 = glm::length(_Vertices[v] - _Vertices[midp1]);
-					_SumLengthFromAxis[midp1].push_back(leng1);
-					float leng2 = glm::length(_Vertices[ot.first] - _Vertices[midp1]);
-					_SumLengthFromAxis[midp1].push_back(leng2);
-					
-					
+					_IsChodralAxis[midp1] = true;	
 				}
+
+				float leng1 = glm::length(_Vertices[v] - _Vertices[midp1]);
+				_SumLengthFromAxis[midp1].push_back(leng1);
+				float leng2 = glm::length(_Vertices[ot.first] - _Vertices[midp1]);
+				_SumLengthFromAxis[midp1].push_back(leng2);
+
+
 				wireFrame.insert({ v,midp1 });
 				wireFrame.insert({ midp1,ot.first });				
 			}
@@ -1168,17 +1177,14 @@ void Delauney::MakeTeddyTempVerts() {
 					midp2 = _Vertices.size() - 1;
 					edgeMidPoint[v][ot.second] = midp2;
 					edgeMidPoint[ot.second][v] = midp2;
-					_IsChodralAxis[midp2] = true;
-
-
-					
-					float leng1 = glm::length(_Vertices[v] - _Vertices[midp2]);
-					_SumLengthFromAxis[midp2].push_back(leng1);
-					float leng2 = glm::length(_Vertices[ot.second] - _Vertices[midp2]);
-					_SumLengthFromAxis[midp2].push_back(leng2);
-					
-					
+					_IsChodralAxis[midp2] = true;					
 				}
+
+				float leng1 = glm::length(_Vertices[v] - _Vertices[midp2]);
+				_SumLengthFromAxis[midp2].push_back(leng1);
+				float leng2 = glm::length(_Vertices[ot.second] - _Vertices[midp2]);
+				_SumLengthFromAxis[midp2].push_back(leng2);
+
 				wireFrame.insert({ v,midp2 });
 				wireFrame.insert({ midp2,ot.second });
 			}
