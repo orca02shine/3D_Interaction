@@ -271,6 +271,9 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 
 	cv::Mat binMask;
 	binMask = Mask_GC & 1;
+	cv::Mat kernel= cv::Mat::ones(cv::Size(4,4), CV_8UC1);
+	cv::morphologyEx(binMask, binMask, cv::MORPH_OPEN, kernel);
+	cv::erode(binMask, binMask, kernel);
 
 	Mask_Patch = cv::Mat(im.size(), CV_8UC1, cv::Scalar(0));
 	cv::Mat white = cv::Mat(im.size(), CV_8UC1, cv::Scalar(255));
@@ -282,6 +285,8 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 	im.copyTo(res_fore, binMask);
 
 	binMask = ~Mask_GC & 1;
+	cv::erode(binMask, binMask, kernel);
+	cv::erode(binMask, binMask, kernel);
 	im.copyTo(res_back, binMask);
 
 	cv::Mat dammy,dammy2;
