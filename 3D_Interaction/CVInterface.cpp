@@ -416,7 +416,7 @@ void CVInterface::MakeContour(cv::Mat &img) {
 
 	//cv::flip(showImg, showImg, 0);
 	//cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
-	cv::imshow("aaa", showImg);
+	//cv::imshow("aaa", showImg);
 
 }
 
