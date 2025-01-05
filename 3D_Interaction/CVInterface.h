@@ -63,6 +63,7 @@ public:
 
 	static void Roi(cv::Mat img,cv::Mat &roi,cv::Mat &resiezedImg);
 	static void MakeContour(cv::Mat &img);
+	static void ImpaintFore(cv::Mat& img);
 
 	static cv::Mat GetTexture(int i);
 

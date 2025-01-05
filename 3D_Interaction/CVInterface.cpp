@@ -236,6 +236,7 @@ void CVInterface::UseInterface() {
 	*/
 	
 
+	ImpaintFore(Result_Fore);
 
 	//cv::flip(Back, Back, 0);
 
@@ -422,6 +423,121 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	//cv::flip(showImg, showImg, 0);
 	//cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
 	//cv::imshow("aaa", showImg);
+
+}
+
+void CVInterface::ImpaintFore(cv::Mat& img) {
+	if (img.channels() < 4) {
+		return;
+	}
+
+	cv::Mat work = img;
+
+	for (int y = 0; y < img.cols; y++) {
+		for (int x = 0; x < img.rows; x++) {
+			if (img.data[y * img.step + x * img.elemSize() + 3] != 255) {
+				img.data[y * img.step + x * img.elemSize() + 3] = 0;
+			}
+		}
+	}
+
+
+	for (int y = 0; y < img.cols; y++) {
+		bool flag = false;
+		for (int x = 0; x < img.rows; x++) {
+			int val = img.data[y * img.step + x * img.elemSize() + 3];
+			if (val == 255 && flag == false) {
+				flag = true;
+				int col0 = img.data[y * img.step + x * img.elemSize() + 0];
+				int col1 = img.data[y * img.step + x * img.elemSize() + 1];
+				int col2 = img.data[y * img.step + x * img.elemSize() + 2];
+				int col3 = img.data[y * img.step + x * img.elemSize() + 3];
+
+				for (int i = x-1; i > 0; i--) {
+					if (work.data[y * work.step + i * work.elemSize() + 3] != 255) {
+						work.data[y * work.step + i * work.elemSize() + 0] = col0;
+						work.data[y * work.step + i * work.elemSize() + 1] = col1;
+						work.data[y * work.step + i * work.elemSize() + 2] = col2;
+						work.data[y * work.step + i * work.elemSize() + 3] = 255;
+					}
+					else {
+						break;
+					}
+				}
+			}
+
+			else if (val == 0 && flag==true && x>0) {
+				flag = false;
+				int col0 = img.data[y * img.step + (x-1) * img.elemSize() + 0];
+				int col1 = img.data[y * img.step + (x-1) * img.elemSize() + 1];
+				int col2 = img.data[y * img.step + (x-1) * img.elemSize() + 2];
+				int col3 = img.data[y * img.step + (x-1) * img.elemSize() + 3];
+
+				for (int i = x; i < img.rows; i++) {
+					if (work.data[y * work.step + i * work.elemSize() + 3] != 255) {
+						work.data[y * work.step + i * work.elemSize() + 0] = col0;
+						work.data[y * work.step + i * work.elemSize() + 1] = col1;
+						work.data[y * work.step + i * work.elemSize() + 2] = col2;
+						work.data[y * work.step + i * work.elemSize() + 3] = 255;
+					}
+					else {
+						break;
+					}
+				}
+
+			}
+		}
+	}
+
+
+	for (int x = 0; x < img.rows; x++) {
+		bool flag = false;
+		for (int y = 0; y < img.cols; y++) {
+			int val = img.data[y * img.step + x * img.elemSize() + 3];
+			if (val == 255 && flag == false) {
+				flag = true;
+				int col0 = img.data[y * img.step + x * img.elemSize() + 0];
+				int col1 = img.data[y * img.step + x * img.elemSize() + 1];
+				int col2 = img.data[y * img.step + x * img.elemSize() + 2];
+				int col3 = img.data[y * img.step + x * img.elemSize() + 3];
+
+				for (int i = y-1; i > 0; i--) {
+					if (work.data[i * work.step + x * work.elemSize() + 3] != 255) {
+						work.data[i * work.step + x * work.elemSize() + 0] = col0;
+						work.data[i * work.step + x * work.elemSize() + 1] = col1;
+						work.data[i * work.step + x * work.elemSize() + 2] = col2;
+						work.data[i * work.step + x * work.elemSize() + 3] = 255;
+					}
+					else {
+						break;
+					}
+				}
+			}
+
+			else if (val == 0 && flag == true && y>0) {
+				flag = false;
+				int col0 = img.data[(y-1) * img.step + x * img.elemSize() + 0];
+				int col1 = img.data[(y-1) * img.step + x * img.elemSize() + 1];
+				int col2 = img.data[(y-1) * img.step + x * img.elemSize() + 2];
+				int col3 = img.data[(y-1) * img.step + x * img.elemSize() + 3];
+
+				for (int i = y; i < img.cols; i++) {
+					if (work.data[i * work.step + x * work.elemSize() + 3] != 255) {
+						work.data[i * work.step + x * work.elemSize() + 0] = col0;
+						work.data[i * work.step + x * work.elemSize() + 1] = col1;
+						work.data[i * work.step + x * work.elemSize() + 2] = col2;
+						work.data[i * work.step + x * work.elemSize() + 3] = 255;
+					}
+					else {
+						break;
+					}
+				}
+			}
+
+		}
+	}
+
+	//cv::imshow("test1", work);
 
 }
 
