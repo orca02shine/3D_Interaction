@@ -42,6 +42,7 @@ public:
 
 	static cv::Mat Result_Back;
 	static cv::Mat Result_Fore;
+	static cv::Mat Result_ForeFlip;
 
 	static std::vector< std::vector<cv::Point>> Contours;
 	static std::vector<cv::Vec4i> Hierarchy;

@@ -22,6 +22,7 @@ cv::Mat CVInterface::BgModel;
 cv::Mat CVInterface::FgModel;
 cv::Mat CVInterface::Result_Back;
 cv::Mat CVInterface::Result_Fore;
+cv::Mat CVInterface::Result_ForeFlip;
 
 std::vector< std::vector<cv::Point>> CVInterface::Contours;
 std::vector<cv::Vec4i>CVInterface::Hierarchy;
@@ -537,8 +538,13 @@ void CVInterface::ImpaintFore(cv::Mat& img) {
 		}
 	}
 
-	//cv::imshow("test1", work);
+	cv::imshow("test1", work);
 
+	cv::Mat fliptex = work.clone();
+	cv::medianBlur(fliptex, fliptex, 63);
+	Result_ForeFlip = fliptex;
+
+	imshow("test2", Result_ForeFlip);
 }
 
 cv::Mat CVInterface::GetTexture(int i) {
@@ -547,6 +553,9 @@ cv::Mat CVInterface::GetTexture(int i) {
 	}
 	else if (i==1) {
 		return Result_Fore;
+	}
+	else if (i == 2) {
+		return Result_ForeFlip;
 	}
 	else {
 		int targetSize = 1024;
