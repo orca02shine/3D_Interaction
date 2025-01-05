@@ -418,7 +418,7 @@ void SimulationWindow::test_pbd() {
 		CVInterface::UseInterface();
 
 		
-		cv::Mat fore = CVInterface::GetTexture(1);
+		cv::Mat fore = CVInterface::GetTexture(2);
 
 		Texture* t = new Texture(_Shader->GetShaderID());
 		t->SetShader(fore.rows, fore.cols, fore.data);

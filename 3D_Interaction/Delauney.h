@@ -173,6 +173,7 @@ public:
 	Triangle MakeTeddyTriangle(size_t a, size_t b, size_t c, bool negaMode);
 	Triangle MakeTempTriangle(size_t a, size_t b, size_t c);
 
+	void MakeTeddyUV(int i, bool isFlip);
 	void SetData();
 
 public:
