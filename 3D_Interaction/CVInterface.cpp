@@ -23,6 +23,7 @@ cv::Mat CVInterface::FgModel;
 cv::Mat CVInterface::Result_Back;
 cv::Mat CVInterface::Result_Fore;
 cv::Mat CVInterface::Result_ForeFlip;
+cv::Mat CVInterface::Result_TexAtlas;
 
 std::vector< std::vector<cv::Point>> CVInterface::Contours;
 std::vector<cv::Vec4i>CVInterface::Hierarchy;
@@ -238,6 +239,8 @@ void CVInterface::UseInterface() {
 	
 
 	ImpaintFore(Result_Fore);
+
+	MakeAtlas();
 
 	//cv::flip(Back, Back, 0);
 
@@ -547,6 +550,22 @@ void CVInterface::ImpaintFore(cv::Mat& img) {
 	//imshow("test2", Result_ForeFlip);
 }
 
+void CVInterface::MakeAtlas() {
+	int targetSize = TargetSize*2;
+	cv::Mat atlas= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+	cv::Rect recRoi1(0, 0, TargetSize, TargetSize);
+	cv::Rect recRoi2(TargetSize, 0, TargetSize, TargetSize);
+	
+	cv::Mat roi1 = atlas(recRoi1);
+	cv::Mat roi2 = atlas(recRoi2);
+	Result_Fore.copyTo(roi1);
+	Result_ForeFlip.copyTo(roi2);
+
+	Result_TexAtlas = atlas;
+
+	//imshow("test4", atlas);
+}
+
 cv::Mat CVInterface::GetTexture(int i) {
 	if (i == 0) {
 		return Result_Back;
@@ -555,10 +574,10 @@ cv::Mat CVInterface::GetTexture(int i) {
 		return Result_Fore;
 	}
 	else if (i == 2) {
-		return Result_ForeFlip;
+		return Result_TexAtlas;
 	}
 	else {
-		int targetSize = 1024;
+		int targetSize = 512;
 		return cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
 	}
 

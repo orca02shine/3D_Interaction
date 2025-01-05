@@ -43,6 +43,7 @@ public:
 	static cv::Mat Result_Back;
 	static cv::Mat Result_Fore;
 	static cv::Mat Result_ForeFlip;
+	static cv::Mat Result_TexAtlas;
 
 	static std::vector< std::vector<cv::Point>> Contours;
 	static std::vector<cv::Vec4i> Hierarchy;
@@ -65,6 +66,7 @@ public:
 	static void Roi(cv::Mat img,cv::Mat &roi,cv::Mat &resiezedImg);
 	static void MakeContour(cv::Mat &img);
 	static void ImpaintFore(cv::Mat& img);
+	static void MakeAtlas();
 
 	static cv::Mat GetTexture(int i);
 
