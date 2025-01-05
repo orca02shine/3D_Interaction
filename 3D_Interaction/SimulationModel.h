@@ -77,6 +77,8 @@ private:
 
 	std::vector<int> m_tetIdx;
 
+	int m_negaOfset;
+
 	std::vector<float> m_invMass;
 
 	std::vector<distanceConstraint> m_distanceConstraint;
@@ -144,6 +146,7 @@ public:
 	void solveTetContactConstraint();
 	void updateTetContactInfo();
 
+	void DuplicateConstraint();
 
 	void SetCoordinate(int id, glm::vec3 targetPos);
 	glm::vec3 GetPos(int i);

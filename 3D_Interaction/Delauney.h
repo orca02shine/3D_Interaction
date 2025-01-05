@@ -102,7 +102,7 @@ class Delauney
 	std::vector<int> _TetIdx;
 	std::set<DeEdge> _TeddyWireTemp;
 
-
+	int _TeddyNegaOfset;
 
 	bool _EdgeC[200][200];
 	std::vector<int> _VertexBound;
@@ -186,4 +186,5 @@ public:
 	std::vector<int> GetWireFrame3D() { return _TeddyWireIdx; }
 	std::vector<float> GetUV3D() { return _TeddyUV; }
 	std::vector<int> GetTetMesh() { return _TetIdx; }
+	int GetNegaOfset() { return _TeddyNegaOfset; }
 };

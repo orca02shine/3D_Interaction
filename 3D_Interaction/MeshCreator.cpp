@@ -386,7 +386,7 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 
 
 void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
-	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx) {
+	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx, int& negaOfset) {
 
 	float targetSize = 512.0;
 
@@ -414,7 +414,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 		std::vector<float> tempUV3D = delauney.GetUV3D();
 
 		std::vector<int> tempTet = delauney.GetTetMesh();
-
+		negaOfset = delauney.GetNegaOfset();
 		/*
 		for (int i = 0; i < tempVert.size(); ++i) {
 			vert.push_back({ tempVert[i].x,tempVert[i].y,0 });

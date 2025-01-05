@@ -732,6 +732,14 @@ void Delauney::MakeTeddyTempVerts() {
 		MakeTeddyUV(num, false);
 	}
 
+	for (int i = 0; i < _Vertices.size(); ++i) {
+		glm::vec2 v = _Vertices[i];
+		_TeddyVertices.push_back({ v.x,v.y,0 });
+		int num = _TeddyVertices.size() - 1;
+		MakeTeddyUV(num, true);
+	}
+	int NegaOfset = _Vertices.size();
+	_TeddyNegaOfset = NegaOfset;
 
 
 	for (int i = 0; i < _Triangles.size(); ++i) {
@@ -1492,7 +1500,7 @@ void Delauney::MakeTeddyTempVerts() {
 
 		{
 			Triangle tri1 = MakeTeddyTriangle(chkEdge[v1_Pozi][notAxisPoint][endid], chkEdge[v2_Pozi][notAxisPoint][endid], notAxisPoint, false);
-			Triangle tri2 = MakeTeddyTriangle(chkEdge[v1_Nega][notAxisPoint][endid], chkEdge[v2_Nega][notAxisPoint][endid], notAxisPoint, true);
+			Triangle tri2 = MakeTeddyTriangle(chkEdge[v1_Nega][notAxisPoint][endid], chkEdge[v2_Nega][notAxisPoint][endid], notAxisPoint+NegaOfset, true);
 
 			MakeTeddyTri(tri1);
 			MakeTeddyTri(tri2);
@@ -1665,8 +1673,8 @@ void Delauney::MakeTeddyTempVerts() {
 		{
 			Triangle tri1 = MakeTeddyTriangle(chkEdge[vertPozi][outerEdgePoint[0]][endid], chkEdge[vertPozi][outerEdgePoint[1]][endid], outerEdgePoint[0], false);
 			Triangle tri2 = MakeTeddyTriangle(chkEdge[vertPozi][outerEdgePoint[1]][endid], outerEdgePoint[0], outerEdgePoint[1], false);
-			Triangle tri3 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[0]][endid], chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0], true);
-			Triangle tri4 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0], outerEdgePoint[1], true);
+			Triangle tri3 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[0]][endid], chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0]+NegaOfset, true);
+			Triangle tri4 = MakeTeddyTriangle(chkEdge[vertNega][outerEdgePoint[1]][endid], outerEdgePoint[0]+NegaOfset, outerEdgePoint[1]+NegaOfset, true);
 
 			MakeTeddyTri(tri1);
 			MakeTeddyTri(tri2);

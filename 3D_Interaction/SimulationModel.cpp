@@ -8,7 +8,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 
 	MeshCreator MC;
 
-	MC.CreateForeGround(contour, m_vert, m_uv, m_idx, m_wireIdx,m_tetIdx);
+	MC.CreateForeGround(contour, m_vert, m_uv, m_idx, m_wireIdx,m_tetIdx,m_negaOfset);
 
 	MakeMesh();
 
@@ -160,6 +160,7 @@ void SimulationModel::Simulate() {
 void SimulationModel::Solve(float dt) {
 	solveDistanceConstraint(dt);
 	solveVolumeConstaraint(dt);
+	DuplicateConstraint();
 }
 void SimulationModel::PreSolve(float dt) {
 
@@ -269,6 +270,12 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 		}
 
 
+	}
+}
+
+void SimulationModel::DuplicateConstraint() {
+	for (int i = 0; i < m_negaOfset; ++i) {
+		m_vert[i + m_negaOfset] = m_vert[i];
 	}
 }
 

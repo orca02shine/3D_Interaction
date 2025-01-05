@@ -28,7 +28,7 @@ public:
 
 
 	void CreateForeGround(std::vector<cv::Point> contour,
-		std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx);
+		std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx, int &negaOfset);
 
 	void CalcCord(float& x, float& y, float& z);
 
