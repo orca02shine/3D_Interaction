@@ -728,6 +728,8 @@ void Delauney::MakeTeddyTempVerts() {
 	for (int i = 0; i < _Vertices.size(); ++i) {
 		glm::vec2 v = _Vertices[i];
 		_TeddyVertices.push_back({ v.x,v.y,0 });
+		int num = _TeddyVertices.size()-1;
+		MakeTeddyUV(num, false);
 	}
 
 
@@ -1267,6 +1269,7 @@ void Delauney::MakeTeddyTempVerts() {
 				vertPozi = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 
+				MakeTeddyUV(vertPozi, false);
 			}
 			if (vertNega == -1) {
 				glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick};
@@ -1274,6 +1277,7 @@ void Delauney::MakeTeddyTempVerts() {
 				vertNega = _TeddyVertices.size() - 1;
 				indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
 
+				MakeTeddyUV(vertNega, true);
 			}
 		}
 	}
@@ -1310,6 +1314,7 @@ void Delauney::MakeTeddyTempVerts() {
 			vertPozi = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Pozi[axisPoint] = vertPozi;
 
+			MakeTeddyUV(vertPozi, false);
 		}
 		if (vertNega == -1) {
 			glm::vec3 newv = { _Vertices[axisPoint].x,_Vertices[axisPoint].y,-thick};
@@ -1317,6 +1322,7 @@ void Delauney::MakeTeddyTempVerts() {
 			vertNega = _TeddyVertices.size() - 1;
 			indexOfAxisToIndexOf3D_Nega[axisPoint] = vertNega;
 
+			MakeTeddyUV(vertNega, true);
 		}
 	}
 
@@ -1358,6 +1364,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v1_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Pozi][edg] = id;
 
+				MakeTeddyUV(id, false);
 			}
 			int v2div = chkEdge[v2_Pozi][notAxisPoint][edg];
 			if (v2div == -1) {
@@ -1378,6 +1385,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Pozi][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Pozi][edg] = id;
 
+				MakeTeddyUV(id, false);
 			}
 			
 			int v3div = chkEdge[v1_Nega][notAxisPoint][edg];
@@ -1399,6 +1407,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v1_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v1_Nega][edg] = id;
 
+				MakeTeddyUV(id, true);
 			}
 			
 			int v4div = chkEdge[v2_Nega][notAxisPoint][edg];
@@ -1420,6 +1429,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[v2_Nega][notAxisPoint][edg] = id;
 				chkEdge[notAxisPoint][v2_Nega][edg] = id;
 
+				MakeTeddyUV(id, true);
 			}
 			
 			
@@ -1535,6 +1545,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[vertPozi][outerEdgePoint[0]][edg] = id;
 				chkEdge[outerEdgePoint[0]][vertPozi][edg] = id;
 
+				MakeTeddyUV(id, false);
 			}
 			int v2div = chkEdge[vertPozi][outerEdgePoint[1]][edg];
 			if (v2div == -1) {
@@ -1555,6 +1566,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[vertPozi][outerEdgePoint[1]][edg] = id;
 				chkEdge[outerEdgePoint[1]][vertPozi][edg] = id;
 
+				MakeTeddyUV(id, false);
 			}
 
 			int v3div = chkEdge[vertNega][outerEdgePoint[0]][edg];
@@ -1576,6 +1588,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[vertNega][outerEdgePoint[0]][edg] = id;
 				chkEdge[outerEdgePoint[0]][vertNega][edg] = id;
 
+				MakeTeddyUV(id, true);
 			}
 			int v4div = chkEdge[vertNega][outerEdgePoint[1]][edg];
 			if (v4div == -1) {
@@ -1596,6 +1609,7 @@ void Delauney::MakeTeddyTempVerts() {
 				chkEdge[vertNega][outerEdgePoint[1]][edg] = id;
 				chkEdge[outerEdgePoint[1]][vertNega][edg] = id;
 
+				MakeTeddyUV(id, true);
 			}
 
 		}
@@ -1683,11 +1697,11 @@ void Delauney::MakeTeddyTempVerts() {
 		_TeddyWireIdx.emplace_back(e.second);
 	}
 
-	
+	/*
 	for (int i = 0; i < _TeddyVertices.size(); ++i) {
 		MakeTeddyUV(i, true);
 	}
-	
+	*/
 }
 
 void Delauney::MakeTeddyUV(int i,bool isFlip) {
