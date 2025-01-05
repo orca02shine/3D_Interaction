@@ -538,13 +538,13 @@ void CVInterface::ImpaintFore(cv::Mat& img) {
 		}
 	}
 
-	cv::imshow("test1", work);
+	//cv::imshow("test1", work);
 
 	cv::Mat fliptex = work.clone();
 	cv::medianBlur(fliptex, fliptex, 63);
 	Result_ForeFlip = fliptex;
 
-	imshow("test2", Result_ForeFlip);
+	//imshow("test2", Result_ForeFlip);
 }
 
 cv::Mat CVInterface::GetTexture(int i) {
