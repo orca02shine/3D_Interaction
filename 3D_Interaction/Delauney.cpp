@@ -1259,28 +1259,66 @@ void Delauney::MakeTeddyTempVerts() {
 		adjChordGraph[i].erase(unique(adjChordGraph[i].begin(), adjChordGraph[i].end()), adjChordGraph[i].end());
 
 	}
-	for (int i = 0; i < ves; ++i) {
-		if (adjChordGraph[i].size() == 0)continue;
-		int adnum = adjChordGraph[i].size();
-		std::vector<float> ls;
-		ls.push_back(chordLeng[i]);
-		for (int j = 0; j < adnum; ++j) {
-			float chorlen = chordLeng[adjChordGraph[i][j]];
-			ls.push_back(chorlen);
-		}
-		std::sort(ls.begin(), ls.end());
+	for (int itr = 0; itr < 3; ++itr) {
+		for (int i = 0; i < ves; ++i) {
+			if (adjChordGraph[i].size() == 0)continue;
+			int adnum = adjChordGraph[i].size();
+			std::vector<float> ls;
+			ls.push_back(chordLeng[i]);
+			for (int j = 0; j < adnum; ++j) {
+				float chorlen = chordLeng[adjChordGraph[i][j]];
+				ls.push_back(chorlen);
+			}
+			std::sort(ls.begin(), ls.end());
 
-		if (adnum == 1) {
-			correctedLeng[i] = ls[0];
+			if (adnum == 1) {
+				correctedLeng[i] = ls[0];
+			}
+			else if (adnum == 2) {
+				correctedLeng[i] = ls[1];
+			}
+			else if (adnum == 3) {
+				correctedLeng[i] = ls[3];
+			}
 		}
-		else if (adnum == 2) {
-			correctedLeng[i] = ls[1];
-		}
-		else if (adnum == 3) {
-			correctedLeng[i] = ls[3];
+		for (int i = 0; i < ves; ++i) {
+			chordLeng[i] = correctedLeng[i];
 		}
 	}
 
+	
+	for (int itr = 0; itr < 5; ++itr) {
+		for (int i = 0; i < ves; ++i) {
+			int adnum = adjChordGraph[i].size();
+			if (adnum < 2)continue;
+
+			bool chk = true;
+			for (int j = 0; j < adnum; ++j) {
+				int adjid = adjChordGraph[i][j];
+				if (adjChordGraph[adjid].size() < 2) {
+					chk = false;
+					break;
+				}
+			}
+			if (chk) {
+				std::vector<float> ls;
+				for (int j = 0; j < adnum; ++j) {
+					float chorlen = chordLeng[adjChordGraph[i][j]];
+					ls.push_back(chorlen);
+				}
+				std::sort(ls.begin(), ls.end());
+
+				if (ls.size() >= 2) {
+					correctedLeng[i] = (ls[ls.size() - 1] + ls[ls.size() - 2]) / 2;
+				}
+			}
+
+		}
+		for (int i = 0; i < ves; ++i) {
+			chordLeng[i] = correctedLeng[i];
+		}
+	}
+	
 
 	//3Dlize---------------------------------------------------------
 	int divNum = 1;
