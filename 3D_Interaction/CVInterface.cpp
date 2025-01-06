@@ -457,6 +457,13 @@ void CVInterface::ImpaintFore(cv::Mat& img) {
 				int col2 = img.data[y * img.step + x * img.elemSize() + 2];
 				int col3 = img.data[y * img.step + x * img.elemSize() + 3];
 
+				if (x + 5 < img.rows) {
+					col0 = img.data[y * img.step + (x + 5) * img.elemSize() + 0];
+					col1 = img.data[y * img.step + (x + 5) * img.elemSize() + 1];
+					col2 = img.data[y * img.step + (x + 5) * img.elemSize() + 2];
+					col3 = img.data[y * img.step + (x + 5) * img.elemSize() + 3];
+				}
+
 				for (int i = x-1; i > 0; i--) {
 					if (work.data[y * work.step + i * work.elemSize() + 3] != 255) {
 						work.data[y * work.step + i * work.elemSize() + 0] = col0;
@@ -476,6 +483,13 @@ void CVInterface::ImpaintFore(cv::Mat& img) {
 				int col1 = img.data[y * img.step + (x-1) * img.elemSize() + 1];
 				int col2 = img.data[y * img.step + (x-1) * img.elemSize() + 2];
 				int col3 = img.data[y * img.step + (x-1) * img.elemSize() + 3];
+
+				if (x -5 >=0) {
+					col0 = img.data[y * img.step + (x - 5) * img.elemSize() + 0];
+					col1 = img.data[y * img.step + (x - 5) * img.elemSize() + 1];
+					col2 = img.data[y * img.step + (x - 5) * img.elemSize() + 2];
+					col3 = img.data[y * img.step + (x - 5) * img.elemSize() + 3];
+				}
 
 				for (int i = x; i < img.rows; i++) {
 					if (work.data[y * work.step + i * work.elemSize() + 3] != 255) {
