@@ -1021,12 +1021,12 @@ void Delauney::MakeTeddyTempVerts() {
 				junctionMidPoint[i] = vmid;
 				_IsChodralAxis[vmid] = true;
 
-				float leng = glm::length(_Vertices[v0] - _Vertices[v1]) / 2;
-				_SumLengthFromAxis[vmid].push_back(leng);
-				leng = glm::length(_Vertices[v1] - _Vertices[v2]) / 2;
-				_SumLengthFromAxis[vmid].push_back(leng);
-				leng = glm::length(_Vertices[v2] - _Vertices[v0]) / 2;
-				_SumLengthFromAxis[vmid].push_back(leng);
+				float leng0 = glm::length(_Vertices[v0] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng0);
+				float leng1 = glm::length(_Vertices[v1] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng1);
+				float leng2 = glm::length(_Vertices[v2] - _Vertices[vmid]);
+				_SumLengthFromAxis[vmid].push_back(leng2);
 
 
 			}
@@ -1221,6 +1221,67 @@ void Delauney::MakeTeddyTempVerts() {
 		}
 
 	}
+	//data sort-----------
+	int ves = _Vertices.size();
+	std::vector<std::vector<int>> adjChordGraph(ves);
+	std::vector<float> chordLeng(ves,0);
+	std::vector<float> correctedLeng(ves, 0);
+	std::vector<int> terminalAxis;
+
+	for (int i = 0; i < ves; ++i) {
+		float wid = 0;
+		if (_SumLengthFromAxis[i].size() != 0) {
+			for (int s = 0; s < _SumLengthFromAxis[i].size(); ++s) {
+				wid += _SumLengthFromAxis[i][s];
+			}
+			wid /= _SumLengthFromAxis[i].size();
+			chordLeng[i] = wid;
+		}
+	}
+	for (int i = 0; i < _TeddyTriangles_Inner.size(); ++i) {
+		Triangle tri= _TeddyTriangles_Inner[i];
+		std::vector<int> AxisPoints;
+		for (int c = 0; c < 3; ++c) {
+			if (_IsChodralAxis[tri.id[c]]) {
+				AxisPoints.push_back(tri.id[c]);
+			}
+		}
+		int ax0 = AxisPoints[0];
+		int ax1 = AxisPoints[1];
+
+		adjChordGraph[ax0].push_back(ax1);
+		adjChordGraph[ax1].push_back(ax0);
+	}
+	for (int i = 0; i < ves; ++i) {
+		if (adjChordGraph[i].size() == 0)continue;
+
+		std::sort(adjChordGraph[i].begin(), adjChordGraph[i].end());
+		adjChordGraph[i].erase(unique(adjChordGraph[i].begin(), adjChordGraph[i].end()), adjChordGraph[i].end());
+
+	}
+	for (int i = 0; i < ves; ++i) {
+		if (adjChordGraph[i].size() == 0)continue;
+		int adnum = adjChordGraph[i].size();
+		std::vector<float> ls;
+		ls.push_back(chordLeng[i]);
+		for (int j = 0; j < adnum; ++j) {
+			float chorlen = chordLeng[adjChordGraph[i][j]];
+			ls.push_back(chorlen);
+		}
+		std::sort(ls.begin(), ls.end());
+
+		if (adnum == 1) {
+			correctedLeng[i] = ls[0];
+		}
+		else if (adnum == 2) {
+			correctedLeng[i] = ls[1];
+		}
+		else if (adnum == 3) {
+			correctedLeng[i] = ls[3];
+		}
+	}
+
+
 	//3Dlize---------------------------------------------------------
 	int divNum = 1;
 	float coef = 1.0f;
@@ -1258,14 +1319,7 @@ void Delauney::MakeTeddyTempVerts() {
 			
 			int axisPoint = AxisPoints[c];
 			//------------------------------------------
-			float thick = 0;
-			if (_SumLengthFromAxis[axisPoint].size() != 0) {
-				for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
-					thick += _SumLengthFromAxis[axisPoint][s];
-				}
-				thick /= _SumLengthFromAxis[axisPoint].size();
-				thick *= coef;
-			}
+			float thick = correctedLeng[axisPoint] * coef;
 			//-------------------------------------------------------
 
 			int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
@@ -1303,14 +1357,7 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 		}
 		//------------------------------------------------
-		float thick = 0;
-		if (_SumLengthFromAxis[axisPoint].size() != 0) {
-			for (int s = 0; s < _SumLengthFromAxis[axisPoint].size(); ++s) {
-				thick += _SumLengthFromAxis[axisPoint][s];
-			}
-			thick /= _SumLengthFromAxis[axisPoint].size();
-			thick *= coef;
-		}
+		float thick = correctedLeng[axisPoint] * coef;
 		//---------------------------------------------
 
 		int vertPozi = indexOfAxisToIndexOf3D_Pozi[axisPoint];
