@@ -1278,7 +1278,7 @@ void Delauney::MakeTeddyTempVerts() {
 				correctedLeng[i] = ls[1];
 			}
 			else if (adnum == 3) {
-				correctedLeng[i] = ls[3];
+				correctedLeng[i] = (ls[2]+ls[3])/2;
 			}
 		}
 		for (int i = 0; i < ves; ++i) {
