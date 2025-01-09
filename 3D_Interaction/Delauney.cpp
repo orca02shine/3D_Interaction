@@ -167,6 +167,16 @@ void Delauney::MakeContours() {
 	FixDelauney(_Contour);
 }
 
+void Delauney::MakeInternalContours() {
+	if (_InnerConts.size() == 0)return;
+
+	for (const auto& cont : _InnerConts) {
+		MakeEdgeConstraint(cont);
+		MakeDelauney(cont);
+		FixDelauney(cont);
+	}
+}
+
 
 void Delauney::MakePolygonData() {
 	MakeVirtualTriangle();//ok
@@ -508,6 +518,8 @@ void Delauney::DeleteOuterTris() {
 }
 
 void Delauney::DeleteInnerTris() {
+
+	if (_InnerConts.size() == 0)return;
 
 	_VertexBound.push_back(_Vertices.size());
 	std::stack<int> delTriId;
@@ -942,11 +954,13 @@ void Delauney::MakeTeddyTempVerts() {
 		//ãLò^
 		_IsChodralAxis[mididx] = true;
 
-		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
-		vertOfFanTris.erase(std::unique(vertOfFanTris.begin(), vertOfFanTris.end()), vertOfFanTris.end());
+		if (vertOfFanTris.size() > 0) {
+			std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
+			vertOfFanTris.erase(std::unique(vertOfFanTris.begin(), vertOfFanTris.end()), vertOfFanTris.end());
+		}
 
 		//èáî‘Ç…Ç∑ÇÈ---------------------------------------------------------------
-		std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
+		//std::sort(vertOfFanTris.begin(), vertOfFanTris.end());
 		int swapid = -1;
 		for (int c = 1; c < vertOfFanTris.size() ; ++c) {
 			if (vertOfFanTris[c-1] + 1 != vertOfFanTris[c]) {

@@ -156,6 +156,8 @@ public:
 
 	void FixDelauney(Contour contour);
 
+	void MakeInternalContours();
+
 	void DeleteVirtualTri();
 
 	void DeleteTris();
