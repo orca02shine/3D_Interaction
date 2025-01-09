@@ -104,7 +104,7 @@ class Delauney
 
 	int _TeddyNegaOfset;
 
-	bool _EdgeC[200][200];
+	bool _EdgeC[400][400];
 	std::vector<int> _VertexBound;
 	std::stack<std::pair<int, int>> _ContourIdx;
 
