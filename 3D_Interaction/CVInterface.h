@@ -73,6 +73,7 @@ public:
 	static std::vector<cv::Point> GetBoundary();
 	static std::vector<cv::Point> GetCorner();
 	static std::vector<std::vector<cv::Point>> GetContour();
+	static std::vector<cv::Vec4i> GetHierarchy();
 
 
 };

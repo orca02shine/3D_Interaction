@@ -617,3 +617,6 @@ std::vector<cv::Point> CVInterface::GetCorner() {
 std::vector<std::vector<cv::Point>> CVInterface::GetContour() {
 	return Contours;
 }
+std::vector<cv::Vec4i> CVInterface::GetHierarchy() {
+	return Hierarchy;
+}
