@@ -787,7 +787,25 @@ void Delauney::MakeTeddyTempVerts() {
 
 		int ct = 0;
 
-		if ((k2 + 1) % numVerts != k1) {
+		if (_EdgeC[k0 + 3][k1 + 3]) {
+			OuterEdge[i] = { k1,k0 };
+		}
+		else {
+			if (edgeChk[k0][k1] == -1 && edgeChk[k1][k0] == -1) {
+				edgeChk[k0][k1] = i;
+				edgeChk[k1][k0] = i;
+			}
+			else {
+				Graph[i].push_back({ edgeChk[k0][k1],k1,k0 });
+				Graph[edgeChk[k0][k1]].push_back({ i, k1, k0 });
+			}
+			ct++;
+		}
+
+		if (_EdgeC[k1 + 3][k2 + 3]) {
+			OuterEdge[i] = { k2,k1 };
+		}
+		else {
 			if (edgeChk[k1][k2] == -1 && edgeChk[k2][k1] == -1) {
 				edgeChk[k2][k1] = i;
 				edgeChk[k1][k2] = i;
@@ -798,26 +816,11 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 			ct++;
 		}
-		else {
-			OuterEdge[i] = { k2,k1 };
-		}
 
-		if ((k1 + 1) % numVerts != k0) {
-			if (edgeChk[k1][k0] == -1 && edgeChk[k0][k1] == -1) {
-				edgeChk[k0][k1] = i;
-				edgeChk[k1][k0] = i;
-			}
-			else {
-				Graph[i].push_back({ edgeChk[k0][k1],k1,k0 });
-				Graph[edgeChk[k0][k1]].push_back({ i, k1, k0 });
-			}
-			ct++;
+		if (_EdgeC[k2 + 3][k0 + 3]) {
+			OuterEdge[i] = { k2,k0 };
 		}
 		else {
-			OuterEdge[i] = { k1,k0 };
-		}
-
-		if ((k0 + 1) % numVerts != k2) {
 			if (edgeChk[k0][k2] == -1 && edgeChk[k2][k0] == -1) {
 				edgeChk[k0][k2] = i;
 				edgeChk[k2][k0] = i;
@@ -828,12 +831,11 @@ void Delauney::MakeTeddyTempVerts() {
 			}
 			ct++;
 		}
-		else {
-			OuterEdge[i] = { k2,k0 };
-		}
 
+		
 		IsTerminal[i] = ct;
 	}
+
 	/*
 	for (int triid = 0; triid<Graph.size(); ++triid) {
 		for (auto adj : Graph[triid]) {
