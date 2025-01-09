@@ -396,12 +396,20 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont, std::vector<std:
 	wireIdx.clear();
 
 	std::vector<cv::Point> revcont = cont;
+	std::vector<std::vector<cv::Point>> revInnerConts;
+
+	for (int i = 0; i < innerConts.size(); ++i) {
+		std::vector<cv::Point> rev=innerConts[i];
+		std::reverse(rev.begin(), rev.end());
+		revInnerConts.push_back(rev);
+	}
 
 	std::reverse(revcont.begin(), revcont.end());
 
+
 	if (cont.size() > 2) {
 		class Delauney delauney(revcont, targetSize);
-		delauney.SetInnerConts(innerConts);
+		delauney.SetInnerConts(revInnerConts);
 		delauney.MakePolygonData();
 
 		//std::vector<glm::vec2> tempVert = delauney.GetVertices();

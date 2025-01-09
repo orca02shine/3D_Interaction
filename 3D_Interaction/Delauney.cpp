@@ -195,9 +195,9 @@ void Delauney::MakePolygonData() {
 	DeleteTris();
 
 	//ŒŠ‹«ŠE
-	//MakeInternalContours();
+	MakeInternalContours();
 
-	//DeleteInnerTris();
+	DeleteInnerTris();
 
 	//•i¿Œüã‚Ìˆ—
 
