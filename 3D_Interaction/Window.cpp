@@ -432,10 +432,11 @@ void SimulationWindow::test_pbd() {
 		for (int con = 0; con < contour.size(); ++con) {
 			if (hierarchy[con][3] != -1)continue;
 			std::vector<cv::Point> outer = contour[con];
+			if (outer.size() < 3)continue;
 
 			std::vector<std::vector<cv::Point>> innerConts;
 			for (int con2=0; con2 < contour.size(); ++con2) {
-				if (hierarchy[con2][3] == con) {
+				if (hierarchy[con2][3] == con && contour[con2].size()>3) {
 					innerConts.push_back(contour[con2]);
 				}
 			}
