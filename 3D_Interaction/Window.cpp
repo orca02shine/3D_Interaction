@@ -424,16 +424,35 @@ void SimulationWindow::test_pbd() {
 		t->SetShader(fore.rows, fore.cols, fore.data);
 
 		std::vector<std::vector<cv::Point>> contour = CVInterface::GetContour();
+		std::vector<cv::Vec4i> hierarchy = CVInterface::GetHierarchy();
 
 		_Textures.push_back(t);
 
-		for (const auto& cont : contour) {
-			SimulationModel* sm = new SimulationModel(cont, _Shader, _WireShader, t);
+		for (int con = 0; con < contour.size(); ++con) {
+			if (hierarchy[con][3] != -1)continue;
+			std::vector<cv::Point> outer = contour[con];
 
+			std::vector<std::vector<cv::Point>> innerConts;
+			for (int con2=0; con2 < contour.size(); ++con2) {
+				if (hierarchy[con2][3] == con) {
+					innerConts.push_back(contour[con2]);
+				}
+			}
+			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t);
 			_Models.push_back(sm);
 
 		}
 
+		/*
+		for (const auto& cont : contour) {
+
+			std::vector<std::vector<cv::Point>> innerConts;
+			SimulationModel* sm = new SimulationModel(cont,innerConts,_Shader, _WireShader, t);
+
+			_Models.push_back(sm);
+
+		}
+		*/
 		
 	}
 }

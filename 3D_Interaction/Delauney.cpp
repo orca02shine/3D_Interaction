@@ -7,8 +7,12 @@ Delauney::~Delauney()
 {
 }
 
-void Delauney::Init() {
+void Delauney::Init() {}
 
+
+
+void Delauney::SetInnerConts(std::vector<Contour> innerConts){
+	_InnerConts = innerConts;
 }
 
 DeEdge Delauney::MakeEdge(size_t a, size_t b) { return DeEdge((std::min)(a, b), (std::max)(a, b)); }

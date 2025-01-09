@@ -385,7 +385,7 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 }
 
 
-void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
+void MeshCreator::CreateForeGround(std::vector<cv::Point> cont, std::vector<std::vector<cv::Point>> innerConts,
 	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx, int& negaOfset) {
 
 	float targetSize = 512.0;
@@ -401,6 +401,7 @@ void MeshCreator::CreateForeGround(std::vector<cv::Point> cont,
 
 	if (cont.size() > 2) {
 		class Delauney delauney(revcont, targetSize);
+		delauney.SetInnerConts(innerConts);
 		delauney.MakePolygonData();
 
 		//std::vector<glm::vec2> tempVert = delauney.GetVertices();

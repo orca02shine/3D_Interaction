@@ -81,6 +81,7 @@ struct AdjTriangles {
 class Delauney
 {
 	Contour _Contour;
+	std::vector<Contour> _InnerConts;
 	int _TexSize;
 
 
@@ -187,4 +188,6 @@ public:
 	std::vector<float> GetUV3D() { return _TeddyUV; }
 	std::vector<int> GetTetMesh() { return _TetIdx; }
 	int GetNegaOfset() { return _TeddyNegaOfset; }
+
+	void SetInnerConts(std::vector<Contour> innerConts);
 };

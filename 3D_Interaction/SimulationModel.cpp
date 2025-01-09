@@ -1,6 +1,6 @@
 #include "SimulationModel.h"
 
-SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader, Shader* wireShader, Texture* t)
+SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std::vector<cv::Point>> innerConts,Shader* shader, Shader* wireShader, Texture* t)
 	:ParWin(nullptr),
 	_VertexObject(nullptr), _WireObject(nullptr), _MatShader(shader), _WireShader(wireShader), _Texture(t)
 {
@@ -8,7 +8,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour, Shader* shader,
 
 	MeshCreator MC;
 
-	MC.CreateForeGround(contour, m_vert, m_uv, m_idx, m_wireIdx,m_tetIdx,m_negaOfset);
+	MC.CreateForeGround(contour,innerConts,m_vert, m_uv, m_idx, m_wireIdx,m_tetIdx,m_negaOfset);
 
 	MakeMesh();
 
