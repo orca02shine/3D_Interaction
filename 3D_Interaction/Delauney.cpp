@@ -227,9 +227,9 @@ void Delauney::MakePolygonData_2D(){
 	DeleteTris();
 
 	//ŒŠ‹«ŠE
-	//MakeInternalContours();
+	MakeInternalContours();
 
-	//DeleteInnerTris();
+	DeleteInnerTris();
 
 	//•i¿Œüã‚Ìˆ—
 
