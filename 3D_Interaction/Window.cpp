@@ -29,6 +29,7 @@ Window::Window(int width = 1920, int height = 1080, const char* title = "No_Titl
 
 	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 
+	//glDisable(GL_CULL_FACE);
 	glFrontFace(GL_CCW);
 	glCullFace(GL_BACK);
 	glEnable(GL_CULL_FACE);

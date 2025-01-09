@@ -171,6 +171,7 @@ void Delauney::MakeInternalContours() {
 	if (_InnerConts.size() == 0)return;
 
 	for (const auto& cont : _InnerConts) {
+		if (cont.size() < 3)continue;
 		MakeEdgeConstraint(cont);
 		MakeDelauney(cont);
 		FixDelauney(cont);
@@ -735,7 +736,7 @@ void Delauney::MakeTeddyTempVerts() {
 	_IsChodralAxis.resize(400, false);
 	std::vector<std::vector<float>> _SumLengthFromAxis(400);
 
-	_TeddyVertices.reserve(400);
+	_TeddyVertices.reserve(4000);
 
 	_Vertices.erase(_Vertices.begin() + 2);
 	_Vertices.erase(_Vertices.begin() + 1);
