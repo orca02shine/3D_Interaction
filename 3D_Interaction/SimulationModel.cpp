@@ -200,7 +200,7 @@ void SimulationModel::PreSolve(float dt) {
 	for (int i = 0; i < m_numParticles; ++i) {
 		if (m_invMass[i] == 0)continue;
 
-		m_vel[i] += (gravity * dt);
+		//m_vel[i] += (gravity * dt);
 
 		m_prevPos[i] = m_vert[i];
 
