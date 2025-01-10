@@ -21,9 +21,33 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std:
 	m_vel.resize(m_numParticles, { 0.0,0.0,0.0 });
 	m_invMass.resize(m_numParticles, 1.0);
 
+	FixPosition();
+
 	Init();
 }
 SimulationModel::~SimulationModel() {
+}
+
+void SimulationModel::FixPosition() {
+	int idx = -1;
+	float maxY = 2.0f;
+
+	for (int i = 0; i < m_vert.size(); ++i) {
+		float y = m_vert[i].y;
+
+		if (y < maxY) {
+			maxY = y;
+			idx = i;
+		}
+	}
+	if (idx != -1) {
+		m_invMass[idx] = 0;
+	}
+	float offset = maxY - (-1.0);
+	for (int i = 0; i < m_vert.size(); ++i) {
+		m_vert[i].y = m_vert[i].y - offset;
+	}
+
 }
 
 void SimulationModel::Update() {
@@ -279,7 +303,12 @@ void SimulationModel::solveVolumeConstaraint(float dt) {
 
 void SimulationModel::DuplicateConstraint() {
 	for (int i = 0; i < m_negaOfset; ++i) {
-		m_vert[i + m_negaOfset] = m_vert[i];
+		if (m_invMass[i + m_negaOfset] != 0) {
+			m_vert[i + m_negaOfset] = m_vert[i];
+		}
+		if (m_invMass[i] != 0) {
+			m_vert[i] = m_vert[i + m_negaOfset];
+		}
 	}
 }
 

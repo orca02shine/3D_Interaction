@@ -140,6 +140,8 @@ public:
 	void UpdateMesh();
 	void MakeMesh();
 
+	void FixPosition();
+
 	void Simulate();
 	void Solve(float dt);
 	void PreSolve(float dt);
