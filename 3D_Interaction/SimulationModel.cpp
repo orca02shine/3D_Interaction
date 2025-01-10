@@ -21,7 +21,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std:
 	m_vel.resize(m_numParticles, { 0.0,0.0,0.0 });
 	m_invMass.resize(m_numParticles, 1.0);
 
-	FixPosition();
+	//FixPosition();
 
 	Init();
 }
