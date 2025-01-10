@@ -40,12 +40,17 @@ void SimulationModel::FixPosition() {
 			idx = i;
 		}
 	}
-	if (idx != -1) {
-		m_invMass[idx] = 0;
-	}
 	float offset = maxY - (-1.0);
 	for (int i = 0; i < m_vert.size(); ++i) {
 		m_vert[i].y = m_vert[i].y - offset;
+	}
+
+	float fixRange = -0.95;
+
+	for (int i = 0; i < m_vert.size(); ++i) {
+		if (m_vert[i].y < fixRange) {
+			m_invMass[i] = 0;
+		}
 	}
 
 }
@@ -193,6 +198,8 @@ void SimulationModel::Solve(float dt) {
 void SimulationModel::PreSolve(float dt) {
 
 	for (int i = 0; i < m_numParticles; ++i) {
+		if (m_invMass[i] == 0)continue;
+
 		m_vel[i] += (gravity * dt);
 
 		m_prevPos[i] = m_vert[i];
