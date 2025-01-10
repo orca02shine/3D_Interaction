@@ -195,7 +195,6 @@ void Delauney::MakePolygonData() {
 	//‹«ŠE‚Ì“àŠO”»’è
 	DeleteTris();
 
-	outerContNum = _Vertices.size()-3;
 
 	//ŒŠ‹«ŠE
 	MakeInternalContours();

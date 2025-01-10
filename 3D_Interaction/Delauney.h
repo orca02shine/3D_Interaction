@@ -82,7 +82,6 @@ class Delauney
 {
 	Contour _Contour;
 	std::vector<Contour> _InnerConts;
-	int outerContNum;
 	int _TexSize;
 
 
