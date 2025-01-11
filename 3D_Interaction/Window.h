@@ -51,6 +51,7 @@ public:
 	void GetCursorPos(float& X, float& Y);
 
 	static void Resize(GLFWwindow* const window, int width, int height);
+	void SetSize(int width, int height);
 	void SetViewPort();
 	GLFWwindow* getGLFW();
 

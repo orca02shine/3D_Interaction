@@ -101,7 +101,7 @@ void Window::GetCursorPos(float& X, float& Y) {
 
 void Window::Resize(GLFWwindow* const window, int width, int height) {
 
-	int fbWidth, fbHeight;;
+	int fbWidth, fbHeight;
 	glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
 	glViewport(0, 0, fbWidth, fbHeight);
 
@@ -117,6 +117,17 @@ void Window::Resize(GLFWwindow* const window, int width, int height) {
 		instance->SetViewPort();
 	}
 
+}
+
+void Window::SetSize(int width, int height) {
+	glfwSetWindowSize(window, width, height);
+
+	size[0] = static_cast<GLfloat>(width);
+	size[1] = static_cast<GLfloat>(height);
+
+	aspect = static_cast<GLfloat>(width) / static_cast<GLfloat>(height);
+	SetViewPort();
+	glViewport(0, 0, width, height);
 }
 
 void Window::SetViewPort() {
@@ -370,7 +381,7 @@ void SimulationWindow::Revolution(float prex, float prey) {
 void SimulationWindow::test() {
 
 	std::pair<int, int> asp = CVInterface::GetAspect();
-	//Resize(window, asp.first, asp.second);
+	SetSize(asp.first, asp.second);
 
 	//CVInterface::UseInterface();
 	cv::Mat back = CVInterface::GetTexture(0);
