@@ -119,10 +119,12 @@ void SimulationModel::Init() {
 		InitVolumeConstraint(k);
 		//InitTetContactConstraint(k);
 	}
+	
 	glm::mat3 rot = { -1, 0, 0, 0, 1, 0, 0, 0, -1 };
 	for (int i = 0; i < m_vert.size(); ++i) {
 		m_vert[i] = rot * m_vert[i];
 	}
+	
 }
 
 void SimulationModel::InitDistanceConstraint(int k) {
@@ -213,6 +215,7 @@ void SimulationModel::PreSolve(float dt) {
 
 		m_vert[i] += m_vel[i]*dt;
 
+		
 		if (m_vert[i].y < -1.0) {
 			m_vert[i] = m_prevPos[i];
 			m_vert[i].y = -1.0;
@@ -238,6 +241,7 @@ void SimulationModel::PreSolve(float dt) {
 			m_vert[i] = m_prevPos[i];
 			m_vert[i].z = 2.0;
 		}
+		
 	}
 
 }
