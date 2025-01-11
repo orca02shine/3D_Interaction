@@ -13,6 +13,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std:
 	MakeMesh();
 
 	m_numParticles = m_vert.size();
+	ResizeMesh(1.0);
 
 	m_prevPos.resize(m_numParticles);
 	for (int i = 0; i < m_numParticles; ++i) {
@@ -53,6 +54,12 @@ void SimulationModel::FixPosition() {
 		}
 	}
 
+}
+
+void SimulationModel::ResizeMesh(float ratio) {
+	for (int i = 0; i < m_vert.size(); ++i) {
+		m_vert[i] *= ratio;
+	}
 }
 
 void SimulationModel::Update() {

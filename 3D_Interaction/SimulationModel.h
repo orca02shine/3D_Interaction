@@ -141,6 +141,7 @@ public:
 	void MakeMesh();
 
 	void FixPosition();
+	void ResizeMesh(float ratio);
 
 	void Simulate();
 	void Solve(float dt);
