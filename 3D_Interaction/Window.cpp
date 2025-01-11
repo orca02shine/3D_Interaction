@@ -228,6 +228,10 @@ void SimulationWindow::KeyCallbackSim(GLFWwindow* const window, int key, int sca
 		instance->SwitchMeshVisibility();
 	}
 
+	if (key == GLFW_KEY_P && action == GLFW_PRESS) {
+		instance->SwitchView();
+	}
+
 }
 
 bool SimulationWindow::LoopEvents() {
@@ -278,6 +282,10 @@ void SimulationWindow::SwitchPause() {
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->SwitchPause();
 	}
+}
+
+void SimulationWindow::SwitchView() {
+	IsPerspective = !IsPerspective;
 }
 
 void SimulationWindow::MeshSearcher() {
@@ -345,7 +353,12 @@ void SimulationWindow::UpdateMVP() {
 		glm::vec3(0, 1, 0)  // ÉJÉÅÉâÇÃì™ÇÃï˚å¸
 	);
 
-	_Projection = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 10.0f);
+	if (IsPerspective) {
+		_Projection = glm::perspectiveFov(glm::radians(45.0f), size[0],size[1], 0.1f, 10.0f);
+	}
+	else {
+		_Projection = glm::ortho(-1.0, 1.0, -1.0, 1.0,0.1,10.0);
+	}
 
 	_MVP = _Projection * _View * _Model;
 }
@@ -456,7 +469,7 @@ void SimulationWindow::test_pbd() {
 					innerConts.push_back(contour[con2]);
 				}
 			}
-			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t,meshSize);
+			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t);
 			_Models.push_back(sm);
 
 		}

@@ -188,11 +188,12 @@ void CVInterface::UseInterface() {
 
 	float asp = std::max(wi, he);
 	float r1 = asp / (double)TargetSize;
+	//std::cout <<"texture target size  " << r1 << std::endl;
 
 	float as = 1.0f;
 	if (wi < 1024 || he < 1024) {
 		float mi = min(wi, he);
-		float as = 1024 / mi;
+		as = 1024.0 / mi;
 		wi = wi * as;
 		he = he * as;
 	}

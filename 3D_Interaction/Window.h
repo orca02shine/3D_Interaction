@@ -81,6 +81,7 @@ public:
 	glm::mat4 _View;
 	glm::mat4 _Projection;
 	glm::mat4 _MVP;
+	bool IsPerspective = true;
 
 	glm::vec3 _CameraPos;
 	glm::vec3 _CameraCenter;
@@ -108,6 +109,8 @@ public:
 	void Revolution(float prex, float prey);
 
 	void GetScreenPos(float& x, float& y);
+
+	void SwitchView();
 
 	bool LoopEvents() override;
 	void SwitchMeshVisibility();
