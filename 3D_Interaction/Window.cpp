@@ -170,7 +170,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 		_CameraCenter, // ƒJƒƒ‰‚Ì‹“_
 		glm::vec3(0, 1, 0)  // ƒJƒƒ‰‚Ì“ª‚Ì•ûŒü
 	);
-	_Projection = glm::perspective(glm::radians(45.0f), 1.0f, 0.1f, 10.0f);
+	_Projection = glm::perspectiveFov(glm::radians(45.0f), size[0], size[1], 0.1f, 10.0f);
 
 	_MVP = _Projection * _View * _Model;
 
@@ -469,7 +469,7 @@ void SimulationWindow::test_pbd() {
 					innerConts.push_back(contour[con2]);
 				}
 			}
-			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t);
+			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t,meshSize);
 			_Models.push_back(sm);
 
 		}

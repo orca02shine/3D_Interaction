@@ -183,13 +183,8 @@ void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
 
-	int wi = loadImg.cols;
-	int he = loadImg.rows;
-
-	float asp = std::max(wi, he);
-	float r1 = asp / (double)TargetSize;
-	//std::cout <<"texture target size  " << r1 << std::endl;
-
+	float wi = loadImg.cols;
+	float he = loadImg.rows;
 	float as = 1.0f;
 	if (wi < 1024 || he < 1024) {
 		float mi = min(wi, he);
@@ -197,8 +192,8 @@ void CVInterface::UseInterface() {
 		wi = wi * as;
 		he = he * as;
 	}
+	MeshRatio = std::max(wi, he) / std::min(wi, he);
 	TexSize = { (int)wi,(int)he};
-	MeshRatio = r1 * as;
 
 	Roi(loadImg,Img_Roi,Img);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
@@ -420,7 +415,7 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	for (int y = 0; y < img.cols; y++) {
 		for (int x = 0; x < img.rows; x++) {
 			int val = img.data[y * img.step + x * img.elemSize() + alpha];
-			if (val != 0) {
+			if (val > 127) {
 				gray.data[y * gray.step + x * gray.elemSize()] = 255;
 			}
 			else {
