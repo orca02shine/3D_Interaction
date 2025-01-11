@@ -50,6 +50,8 @@ public:
 
 	static MeanShift MSProc;
 
+	static std::pair<int, int> TexSize;
+
 	static bool Loop();
 
 	static void OnMouse(int event, int x, int y, int flags, void*);
@@ -74,6 +76,7 @@ public:
 	static std::vector<cv::Point> GetCorner();
 	static std::vector<std::vector<cv::Point>> GetContour();
 	static std::vector<cv::Vec4i> GetHierarchy();
+	static std::pair<int, int> GetAspect();
 
 
 };

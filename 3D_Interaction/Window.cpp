@@ -369,6 +369,9 @@ void SimulationWindow::Revolution(float prex, float prey) {
 
 void SimulationWindow::test() {
 
+	std::pair<int, int> asp = CVInterface::GetAspect();
+	//Resize(window, asp.first, asp.second);
+
 	//CVInterface::UseInterface();
 	cv::Mat back = CVInterface::GetTexture(0);
 	if (back.empty()) {

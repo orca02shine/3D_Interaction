@@ -28,6 +28,8 @@ cv::Mat CVInterface::Result_TexAtlas;
 std::vector< std::vector<cv::Point>> CVInterface::Contours;
 std::vector<cv::Vec4i>CVInterface::Hierarchy;
 
+std::pair<int, int> CVInterface::TexSize;
+
 MeanShift CVInterface::MSProc(8, 16);
 
 bool CVInterface::FileOpen(std::string& sSelectedFile, std::string& sFilePath)
@@ -180,7 +182,15 @@ void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
 
-
+	int width = loadImg.cols;
+	int height = loadImg.rows;
+	if (width < 1024 || height < 1024) {
+		float mi = min(width, height);
+		float as = 1024 / mi;
+		float w = width * as;
+		float h = height * as;
+		TexSize = { (int)w,(int)h };
+	}
 
 	Roi(loadImg,Img_Roi,Img);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
@@ -280,9 +290,6 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 	cv::morphologyEx(binMask, binMask, cv::MORPH_OPEN, kernel);
 	cv::erode(binMask, binMask, kernel);
 
-	Mask_Patch = cv::Mat(im.size(), CV_8UC1, cv::Scalar(0));
-	cv::Mat white = cv::Mat(im.size(), CV_8UC1, cv::Scalar(255));
-	white.copyTo(Mask_Patch, binMask);
 	
 	cv::Mat res_fore= cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
 	cv::Mat res_back = cv::Mat(im.size(), CV_8UC4, cv::Scalar(0, 0, 0, 0));
@@ -293,6 +300,10 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 	cv::erode(binMask, binMask, kernel);
 	cv::erode(binMask, binMask, kernel);
 	im.copyTo(res_back, binMask);
+
+	Mask_Patch = cv::Mat(im.size(), CV_8UC1, cv::Scalar(255));
+	cv::Mat tb = cv::Mat(im.size(), CV_8UC1, cv::Scalar(0));
+	tb.copyTo(Mask_Patch, binMask);
 
 	cv::Mat dammy,dammy2;
 
@@ -346,6 +357,7 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi, cv::Mat &resizedImg) {
 
 	float asp = std::max(w, h);
 	float ratio = (double)targetSize / asp;
+
 
 	cv::resize(loadMat, loadMat, cv::Size(), ratio, ratio, cv::INTER_NEAREST);
 
@@ -619,4 +631,7 @@ std::vector<std::vector<cv::Point>> CVInterface::GetContour() {
 }
 std::vector<cv::Vec4i> CVInterface::GetHierarchy() {
 	return Hierarchy;
+}
+std::pair<int, int> CVInterface::GetAspect() {
+	return TexSize;
 }
