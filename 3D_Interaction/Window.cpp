@@ -434,6 +434,8 @@ void SimulationWindow::test_pbd() {
 
 		
 		cv::Mat fore = CVInterface::GetTexture(2);
+		float meshSize = CVInterface::GetMeshRatio();
+		std::cout << "MeshRatioSize  " << meshSize << std::endl;
 
 		Texture* t = new Texture(_Shader->GetShaderID());
 		t->SetShader(fore.rows, fore.cols, fore.data);
@@ -454,7 +456,7 @@ void SimulationWindow::test_pbd() {
 					innerConts.push_back(contour[con2]);
 				}
 			}
-			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t);
+			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t,meshSize);
 			_Models.push_back(sm);
 
 		}

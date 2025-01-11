@@ -29,6 +29,7 @@ std::vector< std::vector<cv::Point>> CVInterface::Contours;
 std::vector<cv::Vec4i>CVInterface::Hierarchy;
 
 std::pair<int, int> CVInterface::TexSize;
+float CVInterface::MeshRatio=1.0f;
 
 MeanShift CVInterface::MSProc(8, 16);
 
@@ -182,15 +183,21 @@ void CVInterface::UseInterface() {
 
 	cv::Mat loadImg =LoadImg();
 
-	int width = loadImg.cols;
-	int height = loadImg.rows;
-	if (width < 1024 || height < 1024) {
-		float mi = min(width, height);
+	int wi = loadImg.cols;
+	int he = loadImg.rows;
+
+	float asp = std::max(wi, he);
+	float r1 = asp / (double)TargetSize;
+
+	float as = 1.0f;
+	if (wi < 1024 || he < 1024) {
+		float mi = min(wi, he);
 		float as = 1024 / mi;
-		float w = width * as;
-		float h = height * as;
-		TexSize = { (int)w,(int)h };
+		wi = wi * as;
+		he = he * as;
 	}
+	TexSize = { (int)wi,(int)he};
+	MeshRatio = r1 * as;
 
 	Roi(loadImg,Img_Roi,Img);
 	Mask_FP= cv::Mat::zeros(Img_Roi.rows, Img_Roi.cols, CV_8UC1);
@@ -634,4 +641,7 @@ std::vector<cv::Vec4i> CVInterface::GetHierarchy() {
 }
 std::pair<int, int> CVInterface::GetAspect() {
 	return TexSize;
+}
+float CVInterface::GetMeshRatio() {
+	return MeshRatio;
 }

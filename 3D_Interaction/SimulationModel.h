@@ -128,7 +128,7 @@ public:
 	float invM3;
 
 public:
-	SimulationModel(std::vector<cv::Point> contour, std::vector<std::vector<cv::Point>> innerConts,Shader* shader, Shader* wireShader, Texture* t);
+	SimulationModel(std::vector<cv::Point> contour, std::vector<std::vector<cv::Point>> innerConts,Shader* shader, Shader* wireShader, Texture* t, float meshSize=1.0f);
 	~SimulationModel();
 	void Init();
 	void InitDistanceConstraint(int k);

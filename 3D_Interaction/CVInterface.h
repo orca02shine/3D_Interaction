@@ -51,6 +51,7 @@ public:
 	static MeanShift MSProc;
 
 	static std::pair<int, int> TexSize;
+	static float MeshRatio;
 
 	static bool Loop();
 
@@ -77,6 +78,7 @@ public:
 	static std::vector<std::vector<cv::Point>> GetContour();
 	static std::vector<cv::Vec4i> GetHierarchy();
 	static std::pair<int, int> GetAspect();
+	static float GetMeshRatio();
 
 
 };

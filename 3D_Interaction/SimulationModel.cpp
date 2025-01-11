@@ -1,6 +1,6 @@
 #include "SimulationModel.h"
 
-SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std::vector<cv::Point>> innerConts,Shader* shader, Shader* wireShader, Texture* t)
+SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std::vector<cv::Point>> innerConts,Shader* shader, Shader* wireShader, Texture* t,float meshSize)
 	:ParWin(nullptr),
 	_VertexObject(nullptr), _WireObject(nullptr), _MatShader(shader), _WireShader(wireShader), _Texture(t)
 {
@@ -13,7 +13,7 @@ SimulationModel::SimulationModel(std::vector<cv::Point> contour,std::vector<std:
 	MakeMesh();
 
 	m_numParticles = m_vert.size();
-	ResizeMesh(1.0);
+	ResizeMesh(meshSize);
 
 	m_prevPos.resize(m_numParticles);
 	for (int i = 0; i < m_numParticles; ++i) {
