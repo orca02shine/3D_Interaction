@@ -248,7 +248,7 @@ void MeshCreator::CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vecto
 	for (int i = 0; i < boundary.size(); ++i) {
 		{
 			float uvx = float(boundary[i].x) / targetSize;
-			float uvy = 0.0;
+			float uvy = (cor[0].y) / targetSize;
 			float vx = uvx * 2 - 1.0;
 			float vy = uvy * 2 - 1.0;
 			vy *= -1.0;

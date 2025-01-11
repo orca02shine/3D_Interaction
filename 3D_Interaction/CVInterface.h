@@ -52,6 +52,7 @@ public:
 
 	static std::pair<int, int> TexSize;
 	static float MeshRatio;
+	static std::pair<int, int> Ofs;
 
 	static bool Loop();
 

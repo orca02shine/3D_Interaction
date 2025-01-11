@@ -30,6 +30,7 @@ std::vector<cv::Vec4i>CVInterface::Hierarchy;
 
 std::pair<int, int> CVInterface::TexSize;
 float CVInterface::MeshRatio=1.0f;
+std::pair<int, int> CVInterface::Ofs = { 0,0 };
 
 MeanShift CVInterface::MSProc(8, 16);
 
@@ -111,7 +112,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
 			ClickedPos = cv::Point(x, y);
 
-			BoundaryPoint.push_back(cv::Point(x, y));
+			BoundaryPoint.push_back(cv::Point(x+Ofs.first, y+Ofs.second));
 
 			buffer = Img_Roi.clone();
 		}
@@ -122,7 +123,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			cv::polylines(Mask_Constraint, li, false, 255, brushSize_S*2);
 			ClickedPos = cv::Point(x, y);
 
-			BoundaryPoint.push_back(cv::Point(x, y));
+			BoundaryPoint.push_back(cv::Point(x+Ofs.first, y+Ofs.second));
 
 			buffer = Img_Roi.clone();
 		}
@@ -361,7 +362,6 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi, cv::Mat &resizedImg) {
 	float asp = std::max(w, h);
 	float ratio = (double)targetSize / asp;
 
-
 	cv::resize(loadMat, loadMat, cv::Size(), ratio, ratio, cv::INTER_NEAREST);
 
 	/*
@@ -369,35 +369,38 @@ void CVInterface::Roi(cv::Mat img, cv::Mat &roi, cv::Mat &resizedImg) {
 		loadMat.cols, loadMat.rows));
 	*/
 
-	roi = cv::Mat(resizedImg, cv::Rect(0, 0,
+	int ofsx = (targetSize - loadMat.cols) / 2;
+	int ofsy = (targetSize - loadMat.rows) / 2;
+
+	roi = cv::Mat(resizedImg, cv::Rect(ofsx, ofsy,
 		loadMat.cols, loadMat.rows));
 
 	loadMat.copyTo(roi);
 
+	Ofs = { ofsx,ofsy };
+	/*
 	int x = resizedImg.rows;
 	int y = resizedImg.cols;
 	int alpha = 3;
-
-	for (int i = 0; i < resizedImg.rows; ++i) {
-		int val = resizedImg.data[0 * resizedImg.step + i * resizedImg.elemSize() + alpha];
+	for (int i = 0; i < resizedImg.cols; ++i) {
+		int val = resizedImg.data[ofsy * resizedImg.step + i * resizedImg.elemSize() + alpha];
 		if (val == 0) {
 			x = i;
 			break;
 		}
 	}
-	for (int i = 0; i < Img.cols; ++i) {
-		int val = resizedImg.data[i * resizedImg.step + 0 * resizedImg.elemSize() + alpha];
+	for (int i = 0; i < resizedImg.rows; ++i) {
+		int val = resizedImg.data[i * resizedImg.step + ofsx * resizedImg.elemSize() + alpha];
 		if (val == 0) {
 			y = i;
 			break;
 		}
 	}
-	Corners[0] = cv::Point(0, 0);
-	Corners[1] = cv::Point(x, 0);
-	Corners[2] = cv::Point(0, y);
-	Corners[3] = cv::Point(x, y);
-
-
+	*/
+	Corners[0] = cv::Point(ofsx, ofsy);
+	Corners[1] = cv::Point(ofsx+loadMat.cols, ofsy);
+	Corners[2] = cv::Point(ofsx, ofsy+loadMat.rows);
+	Corners[3] = cv::Point(ofsx+loadMat.cols, ofsy+loadMat.rows);
 
 
 }
