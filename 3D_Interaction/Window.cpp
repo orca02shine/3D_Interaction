@@ -232,6 +232,10 @@ void SimulationWindow::KeyCallbackSim(GLFWwindow* const window, int key, int sca
 		instance->SwitchView();
 	}
 
+	if (key == GLFW_KEY_R && action == GLFW_PRESS) {
+		instance->ResetView();
+	}
+
 }
 
 bool SimulationWindow::LoopEvents() {
@@ -286,6 +290,13 @@ void SimulationWindow::SwitchPause() {
 
 void SimulationWindow::SwitchView() {
 	IsPerspective = !IsPerspective;
+}
+
+void SimulationWindow::ResetView() {
+	_CameraPos = glm::vec3(0.0, 0.0, -4.0);
+	_CameraCenter = glm::vec3(0, 0, 0);
+
+	_Model = glm::mat4(1.0f);
 }
 
 void SimulationWindow::MeshSearcher() {

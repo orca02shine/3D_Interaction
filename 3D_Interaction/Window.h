@@ -111,6 +111,7 @@ public:
 	void GetScreenPos(float& x, float& y);
 
 	void SwitchView();
+	void ResetView();
 
 	bool LoopEvents() override;
 	void SwitchMeshVisibility();
