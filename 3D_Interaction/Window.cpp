@@ -484,7 +484,7 @@ void SimulationWindow::test_pbd() {
 					innerConts.push_back(contour[con2]);
 				}
 			}
-			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t,meshSize);
+			SimulationModel* sm = new SimulationModel(outer, innerConts, _Shader, _WireShader, t);
 			_Models.push_back(sm);
 
 		}
