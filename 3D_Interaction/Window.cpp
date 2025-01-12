@@ -426,7 +426,9 @@ void SimulationWindow::test() {
 
 	MeshCreator MC;
 
-	MC.CreateBackGround_NoWall(corner, boundary, vert, uv, idx, wireIdx);
+	//MC.CreateBackGround_NoWall(corner, boundary, vert, uv, idx, wireIdx);
+	float rat = max((float)size[0], (float)size[1]) / min((float)size[0], (float)size[1]);
+	MC.CreateQuad(rat,vert, uv, idx, wireIdx);
 
 	Mesh* m = new Mesh();
 	m->InsertMeshData(vert, uv, idx, wireIdx);
@@ -438,6 +440,8 @@ void SimulationWindow::test() {
 	_Textures.push_back(t_back);
 
 	std::cout << "Mesh created" << std::endl;
+
+	IsPerspective = false;
 
 }
 

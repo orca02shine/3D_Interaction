@@ -26,6 +26,8 @@ public:
 	void CreateBackGround_NoWall(std::vector<cv::Point> cor, std::vector<cv::Point> boundary,
 		std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx);
 
+	void CreateQuad(float asp,
+			std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx);
 
 	void CreateForeGround(std::vector<cv::Point> contour, std::vector<std::vector<cv::Point>> innerConts,
 		std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx, int &negaOfset);
