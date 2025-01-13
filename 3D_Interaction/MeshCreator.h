@@ -34,4 +34,6 @@ public:
 
 	void CalcCord(float& x, float& y, float& z);
 
+	void CreateCursor(std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx);
+
 };

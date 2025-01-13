@@ -610,7 +610,10 @@ cv::Mat CVInterface::GetTexture(int i) {
 	}
 	else {
 		int targetSize = 512;
-		return cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC4);
+		cv::Mat k= cv::Mat::zeros(cv::Size(targetSize, targetSize), CV_8UC3);
+		cv::cvtColor(k, k, cv::COLOR_BGR2BGRA);
+
+		return k;
 	}
 
 }

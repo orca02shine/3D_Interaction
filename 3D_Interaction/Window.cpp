@@ -177,6 +177,7 @@ SimulationWindow::SimulationWindow(int width = 1280, int height = 720, const cha
 
 	test_pbd();
 	test();
+	MakeCursor();
 
 }
 
@@ -250,8 +251,9 @@ bool SimulationWindow::LoopEvents() {
 
 	GetScreenPos(_ScreenPos[0], _ScreenPos[1]);
 
-	MeshContoroller();
+	CursorPos();
 
+	MeshContoroller();
 
 
 	//í∑âüÇµèÛë‘
@@ -261,14 +263,20 @@ bool SimulationWindow::LoopEvents() {
 		//std::cout << "Mouse pos is  " << _CurrentLocation[0] << "  " << _CurrentLocation[1] << std::endl;
 	}
 
-	for (int i = 0; i < _Models.size(); ++i) {
-		_Models[i]->Update();
-	}
 	if (_BackGround != nullptr) {
 		_BackGround->UpdateMesh();
 	}
 
+	if (_Cursor != nullptr) {
+		_Cursor->UpdateMesh();
+	}
 
+	for (int i = 0; i < _Models.size(); ++i) {
+		_Models[i]->Update();
+	}
+
+	
+	
 	glfwSwapBuffers(window);
 	return !glfwWindowShouldClose(window) && !glfwGetKey(window, GLFW_KEY_ESCAPE);
 
@@ -279,6 +287,14 @@ void SimulationWindow::SwitchMeshVisibility() {
 
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->SwitchVisibility();
+	}
+
+	if (_BackGround != nullptr) {
+		_BackGround->ChangeVisiblity();
+	}
+
+	if (_Cursor != nullptr) {
+		_Cursor->ChangeVisiblity();
 	}
 }
 
@@ -462,8 +478,8 @@ void SimulationWindow::test_pbd() {
 
 		
 		cv::Mat fore = CVInterface::GetTexture(2);
-		float meshSize = CVInterface::GetMeshRatio();
-		std::cout << "MeshRatioSize  " << meshSize << std::endl;
+		//float meshSize = CVInterface::GetMeshRatio();
+		//std::cout << "MeshRatioSize  " << meshSize << std::endl;
 
 		Texture* t = new Texture(_Shader->GetShaderID());
 		t->SetShader(fore.rows, fore.cols, fore.data);
@@ -510,5 +526,39 @@ void SimulationWindow::GetScreenPos(float& x,float& y) {
 	x = X;
 	y = size[1] - Y;
 
+
+}
+
+void SimulationWindow::MakeCursor() {
+	cv::Mat dammy = CVInterface::GetTexture(-1);
+
+	Texture* t_cursor = new Texture(_Shader->GetShaderID());
+	t_cursor->SetShader(dammy.rows, dammy.cols, dammy.data);
+
+	std::vector<glm::vec3> vert;
+	std::vector<float> uv;
+	std::vector<uint> idx;
+	std::vector<uint> wireIdx;
+	MeshCreator MC;
+	MC.CreateCursor(vert, uv, idx, wireIdx);
+
+	Mesh* m = new Mesh();
+	m->InsertMeshData(vert, uv, idx, wireIdx);
+	m->LinkShader(_Shader, _WireShader);
+	m->LinkTexture(t_cursor);
+	_Cursor = m;
+	_Textures.push_back(t_cursor);
+}
+
+void SimulationWindow::CursorPos() {
+	float x = _CurrentLocation[0];
+	float y = _CurrentLocation[1];
+	std::vector<glm::vec3> ver;
+	ver.push_back({-x - 0.04, y - 0.04, -3});
+	ver.push_back({ -x + 0.04, y - 0.04, -3 });
+	ver.push_back({ -x + 0.04, y + 0.04, -3 });
+	ver.push_back({ -x - 0.04, y + 0.04, -3 });
+
+	_Cursor->UpdateVertices(ver);
 
 }

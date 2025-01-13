@@ -30,14 +30,6 @@ public:
 
 	const char* name;
 
-	float _CurrentLocation[2];
-	float _ClickedLocation[2];
-	bool isClicked = false;
-
-	float _CurMid[2];
-	float _PreMid[2];
-	float _IsMid = false;
-
 
 
 public:
@@ -66,9 +58,12 @@ class SimulationWindow :Window {
 
 public:
 
+
+
 	std::vector<class Texture*> _Textures;
 	std::vector<class SimulationModel*> _Models;
 	class Mesh* _BackGround = nullptr;
+	class Mesh* _Cursor = nullptr;
 	class SimulationModel* _SelectedModel = nullptr;
 	int _VertPtr = -1;
 
@@ -89,6 +84,14 @@ public:
 
 	float _ScreenPos[2];
 	glm::vec3 _ScreenClipPos;
+
+	float _CurrentLocation[2];
+	float _ClickedLocation[2];
+	bool isClicked = false;
+
+	float _CurMid[2];
+	float _PreMid[2];
+	float _IsMid = false;
 
 	const float minArea = 0.1f;
 	//float limX = 2.0f;
@@ -123,5 +126,7 @@ public:
 
 	void test();
 	void test_pbd();
+	void MakeCursor();
+	void CursorPos();
 
 };

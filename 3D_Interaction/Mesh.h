@@ -45,5 +45,6 @@ public:
 	void MakeVertices();
 	void LinkTexture(Texture* tex);
 	void LinkShader(Shader* mat, Shader* wire);
+	void ChangeVisiblity();
 
 };

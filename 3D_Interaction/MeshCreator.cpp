@@ -453,6 +453,74 @@ void MeshCreator::CreateQuad(float asp,
 	wireIdx.push_back(3), wireIdx.push_back(2);
 }
 
+void MeshCreator::CreateCursor(std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx) {
+	float asp = 0.04;
+	{
+		float uvx = 0;
+		float uvy = 0;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vx *= -1.0;
+		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
+		vert.push_back({ vx, vy, -1.0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	{
+		float uvx = 1.0;
+		float uvy = 0;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vx *= -1.0;
+		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
+		vert.push_back({ vx, vy, -1.0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	{
+		float uvx = 1.0;
+		float uvy = 1.0;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vx *= -1.0;
+		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
+		vert.push_back({ vx, vy, -1.0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	{
+		float uvx = 0;
+		float uvy = 1.0;
+		float vx = uvx * 2 - 1.0;
+		float vy = uvy * 2 - 1.0;
+		vx *= -1.0;
+		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
+		vert.push_back({ vx, vy, -1.0 });
+		uv.push_back(uvx);
+		uv.push_back(uvy);
+	}
+
+	idx.push_back(0); idx.push_back(2); idx.push_back(1);
+	idx.push_back(0); idx.push_back(3); idx.push_back(2);
+
+	wireIdx.push_back(0), wireIdx.push_back(1);
+	wireIdx.push_back(0), wireIdx.push_back(2);
+	wireIdx.push_back(0), wireIdx.push_back(3);
+	wireIdx.push_back(1), wireIdx.push_back(2);
+	wireIdx.push_back(3), wireIdx.push_back(2);
+	wireIdx.push_back(3), wireIdx.push_back(1);
+}
 
 void MeshCreator::CreateForeGround(std::vector<cv::Point> cont, std::vector<std::vector<cv::Point>> innerConts,
 	std::vector<glm::vec3>& vert, std::vector<float>& uv, std::vector<uint>& idx, std::vector<uint>& wireIdx, std::vector<int>& tetIdx, int& negaOfset) {

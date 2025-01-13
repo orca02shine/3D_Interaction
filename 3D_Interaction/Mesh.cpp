@@ -10,6 +10,9 @@ Mesh::Mesh()
 Mesh::~Mesh()
 {
 	delete _VertexObject;
+	delete _WireObject;
+	delete _MatShader;
+	delete _WireShader;
 }
 
 void Mesh::ProtoMesh() {
@@ -81,19 +84,18 @@ void Mesh::InsertMeshData(std::vector<vec3> vert, std::vector<float> uv, std::ve
 
 void Mesh::UpdateMesh() {
 
-	if (_EnableMat) {
-		_MatShader->SetActive();
 
+	if (_EnableMat) {
 		_VertexObject->Update();
+		_MatShader->SetActive();
 		_VertexObject->SetActive();
 		_Texture->SetActive();
 		glDrawElements(GL_TRIANGLES, _VertexObject->_NumIndices, GL_UNSIGNED_INT, 0);
 	}
 
 	if (_EnableWire) {
-		_WireShader->SetActive();
-
 		_WireObject->Update();
+		_WireShader->SetActive();
 		_WireObject->SetActive();
 		glDrawElements(GL_LINES, _WireObject->_NumIndices, GL_UNSIGNED_INT, 0);
 	}
@@ -132,4 +134,9 @@ void Mesh::LinkShader(Shader* mat, Shader* wire) {
 	_MatShader = mat;
 	_WireShader = wire;
 
+}
+
+void Mesh::ChangeVisiblity() {
+	_EnableMat = !_EnableMat;
+	_EnableWire = !_EnableWire;
 }
