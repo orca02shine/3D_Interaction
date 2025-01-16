@@ -251,7 +251,7 @@ bool SimulationWindow::LoopEvents() {
 
 	GetScreenPos(_ScreenPos[0], _ScreenPos[1]);
 
-	CursorPos();
+	//CursorPos();
 
 	MeshContoroller();
 
@@ -267,9 +267,11 @@ bool SimulationWindow::LoopEvents() {
 		_BackGround->UpdateMesh();
 	}
 
+	/*
 	if (_Cursor != nullptr) {
 		_Cursor->UpdateMesh();
 	}
+	*/
 
 	for (int i = 0; i < _Models.size(); ++i) {
 		_Models[i]->Update();
