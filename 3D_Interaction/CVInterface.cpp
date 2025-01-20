@@ -270,10 +270,10 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 
 
 	Mask_GC.create(im.size(), CV_8UC1);
-	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_FGD));
+	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_BGD));
 
 	cv::Rect rec= cv::Rect(1, 1, im.cols - 4, im.rows - 4);
-	Mask_GC(rec).setTo(cv::Scalar(cv::GC_PR_FGD));
+	Mask_GC(rec).setTo(cv::Scalar(cv::GC_PR_BGD));
 
 	for (int i = 0; i < Mask_GC.rows; ++i) {
 		for (int j = 0; j < Mask_GC.cols; ++j){
