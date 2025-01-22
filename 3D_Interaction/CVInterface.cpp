@@ -442,11 +442,11 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	}
 
 	cv::Mat showImg = img.clone();
-	cv::drawContours(showImg, Contours, -1, cv::Scalar(255, 100, 200), 4);
+	cv::drawContours(showImg, Contours, -1, cv::Scalar(255, 100, 200), 2);
 
 	//cv::flip(showImg, showImg, 0);
-	cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
-	cv::imshow("aaa", showImg);
+	//cv::cvtColor(showImg, showImg, cv::COLOR_RGBA2BGRA);
+	//cv::imshow("aaa", showImg);
 
 }
 
