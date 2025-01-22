@@ -480,7 +480,7 @@ void SimulationWindow::test_pbd() {
 
 		
 		cv::Mat fore = CVInterface::GetTexture(2);
-		//float meshSize = CVInterface::GetMeshRatio();
+		float meshSize = CVInterface::GetMeshRatio();
 		//std::cout << "MeshRatioSize  " << meshSize << std::endl;
 
 		Texture* t = new Texture(_Shader->GetShaderID());
