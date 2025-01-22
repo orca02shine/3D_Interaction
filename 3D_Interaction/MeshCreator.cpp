@@ -394,6 +394,8 @@ void MeshCreator::CreateQuad(float asp,
 		float vy = uvy * 2 - 1.0;
 		vx *= -1.0;
 		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
 		vert.push_back({ vx, vy, 1.0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
@@ -406,6 +408,8 @@ void MeshCreator::CreateQuad(float asp,
 		float vy = uvy * 2 - 1.0;
 		vx *= -1.0;
 		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
 		vert.push_back({ vx, vy, 1.0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
@@ -418,6 +422,8 @@ void MeshCreator::CreateQuad(float asp,
 		float vy = uvy * 2 - 1.0;
 		vx *= -1.0;
 		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
 		vert.push_back({ vx, vy, 1.0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);
@@ -430,6 +436,8 @@ void MeshCreator::CreateQuad(float asp,
 		float vy = uvy * 2 - 1.0;
 		vx *= -1.0;
 		vy *= -1.0;
+		vx *= asp;
+		vy *= asp;
 		vert.push_back({ vx, vy, 1.0 });
 		uv.push_back(uvx);
 		uv.push_back(uvy);

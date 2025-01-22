@@ -456,9 +456,7 @@ void SimulationWindow::test() {
 	MeshCreator MC;
 
 	//MC.CreateBackGround_NoWall(corner, boundary, vert, uv, idx, wireIdx);
-	float af = asp.first;
-	float as = asp.second;
-	float rat = max(af, as) / min(af,as);
+	float rat = max((float)size[0], (float)size[1]) / min((float)size[0], (float)size[1]);
 	MC.CreateQuad(rat,vert, uv, idx, wireIdx);
 
 	Mesh* m = new Mesh();
