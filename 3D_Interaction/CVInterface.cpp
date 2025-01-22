@@ -136,12 +136,10 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 
 	case cv::EVENT_LBUTTONUP:
 		IsClicked = 0;
-		GrabCut(Img_Clone, Result_Fore, Result_Back);
 		break;
 
 	case cv::EVENT_RBUTTONUP:
 		IsClicked = 0;
-		GrabCut(Img_Clone, Result_Fore, Result_Back);
 		break;
 
 	case cv::EVENT_MBUTTONUP:
@@ -272,10 +270,10 @@ void CVInterface::GrabCut(cv::Mat src,cv::Mat &fore, cv::Mat &back) {
 
 
 	Mask_GC.create(im.size(), CV_8UC1);
-	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_FGD));
+	Mask_GC.setTo(cv::Scalar::all(cv::GC_PR_BGD));
 
 	cv::Rect rec= cv::Rect(1, 1, im.cols - 4, im.rows - 4);
-	Mask_GC(rec).setTo(cv::Scalar(cv::GC_PR_FGD));
+	Mask_GC(rec).setTo(cv::Scalar(cv::GC_PR_BGD));
 
 	for (int i = 0; i < Mask_GC.rows; ++i) {
 		for (int j = 0; j < Mask_GC.cols; ++j){
@@ -437,7 +435,7 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	cv::findContours(gray, Contours, Hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_TC89_L1);
 
 	for (auto& con : Contours) {
-		double approxDist = 0.002*cv::arcLength(con, true);//‹ßŽ—¸“x
+		double approxDist = 0.005*cv::arcLength(con, true);//‹ßŽ—¸“x
 		cv::approxPolyDP(con, con, approxDist, true);
 	}
 
