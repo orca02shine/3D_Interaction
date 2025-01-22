@@ -386,7 +386,12 @@ void SimulationWindow::UpdateMVP() {
 		_Projection = glm::perspectiveFov(glm::radians(45.0f), size[0],size[1], 0.1f, 10.0f);
 	}
 	else {
-		_Projection = glm::ortho(-1.0*aspect, 1.0*aspect, -1.0, 1.0,0.1,10.0);
+		if (size[0] < size[1]) {
+			_Projection = glm::ortho(-1.0 * aspect, 1.0 * aspect, -1.0, 1.0, 0.1, 10.0);
+		}
+		else {
+			_Projection = glm::ortho(-1.0, 1.0, -1.0/aspect, 1.0/aspect, 0.1, 10.0);
+		}
 	}
 
 	_MVP = _Projection * _View * _Model;
