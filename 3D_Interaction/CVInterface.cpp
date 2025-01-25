@@ -76,7 +76,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	vector<cv::Point> ar = { cv::Point(x,y),PrePos };
 	vector<cv::Point> li = { cv::Point(x,y),ClickedPos };
 	int brushSize_S = 2;
-	int brushSize_L = 10;
+	int brushSize_L = 5;
 
 	cv::Mat buffer = Img_Roi.clone();;
 
@@ -435,7 +435,7 @@ void CVInterface::MakeContour(cv::Mat &img) {
 	cv::findContours(gray, Contours, Hierarchy, cv::RETR_CCOMP, cv::CHAIN_APPROX_TC89_L1);
 
 	for (auto& con : Contours) {
-		double approxDist = 0.005*cv::arcLength(con, true);//ãﬂéóê∏ìx
+		double approxDist = 0.003*cv::arcLength(con, true);//ãﬂéóê∏ìx
 		cv::approxPolyDP(con, con, approxDist, true);
 	}
 
