@@ -108,8 +108,8 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 	case cv::EVENT_MBUTTONDOWN:
 		if (IsClicked == 0) {
 			IsClicked = 3;
-			cv::circle(Img_Roi, { x,y }, brushSize_S, { 255,255,255 }, -1);
-			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
+			cv::circle(Img_Roi, { x,y }, brushSize_L, { 255,255,255 }, -1);
+			cv::circle(Mask_Constraint, { x,y }, brushSize_L, 255, -1);
 			ClickedPos = cv::Point(x, y);
 
 			BoundaryPoint.push_back(cv::Point(x+Ofs.first, y+Ofs.second));
@@ -117,10 +117,10 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 			buffer = Img_Roi.clone();
 		}
 		else if (IsClicked==3) {
-			cv::circle(Img_Roi, { x,y }, brushSize_S, { 255,255,255 }, -1);
-			cv::circle(Mask_Constraint, { x,y }, brushSize_S, 255, -1);
-			cv::polylines(Img_Roi, li, false, { 255,255,255 }, brushSize_S*2);
-			cv::polylines(Mask_Constraint, li, false, 255, brushSize_S*2);
+			cv::circle(Img_Roi, { x,y }, brushSize_L, { 255,255,255 }, -1);
+			cv::circle(Mask_Constraint, { x,y }, brushSize_L, 255, -1);
+			cv::polylines(Img_Roi, li, false, { 255,255,255 }, brushSize_L*2);
+			cv::polylines(Mask_Constraint, li, false, 255, brushSize_L*2);
 			ClickedPos = cv::Point(x, y);
 
 			BoundaryPoint.push_back(cv::Point(x+Ofs.first, y+Ofs.second));
@@ -157,7 +157,7 @@ void CVInterface::OnMouse(int event, int x, int y, int flags, void*) {
 		}
 		else if (IsClicked == 3) {
 			buffer = Img_Roi.clone();
-			cv::polylines(buffer, li, false, { 255,255,255 }, brushSize_S*2);
+			cv::polylines(buffer, li, false, { 255,255,255 }, brushSize_L*2);
 		}
 		break;
 	}
